@@ -52,9 +52,9 @@ let make = (_children) => {
       </form>
       <ul>
         {a_(
-          List.mapU(self.state.nameList, (. name) =>
-            <li key={name}>{s_(name)}</li>)
-          |. List.toArray
+          List.toArray(self.state.nameList)
+          |. SortArray.stableSortBy(Pervasives.compare)
+          |. Array.mapU((. name) => <li key={name}>{s_(name)}</li>)
         )}
       </ul>
     </div>,
