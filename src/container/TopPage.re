@@ -1,11 +1,16 @@
+open Belt;
+
 type state = {
-  text: string
+  name: string,
+  nameList: list(string)
 };
 
 type action =
+  | AddName(string)
   | ChangeText(string);
 
 let s_ = ReasonReact.stringToElement;
+let a_ = ReasonReact.arrayToElement;
 
 let component = ReasonReact.reducerComponent("TopPage");
 let make = (_children) => {
@@ -16,15 +21,23 @@ let make = (_children) => {
   };
   let handleSubmit = (e, self) => {
     ReactEventRe.Form.preventDefault(e);
+    self.ReasonReact.send(AddName(self.state.name));
   };
   {
   ...component,
   initialState: () => {
-    {text: ""};
+    {
+      name: "",
+      nameList: []
+    };
   },
   reducer: (action, state) => {
     switch(action) {
-    | ChangeText(text) => ReasonReact.Update({...state, text})
+    | ChangeText(name) => ReasonReact.Update({...state, name})
+    | AddName(name) => {
+      let nameList = state.nameList @ [name];
+      ReasonReact.Update({...state, nameList})
+    }
     }
   },
   render: self =>
@@ -36,7 +49,13 @@ let make = (_children) => {
         </label>
         <input _type="submit" />
       </form>
-      {s_(self.state.text)}
+      <ul>
+        {a_(
+          List.mapU(self.state.nameList, (. name) =>
+            <li key={name}>{s_(name)}</li>)
+          |. List.toArray
+        )}
+      </ul>
     </div>,
   };
 };
