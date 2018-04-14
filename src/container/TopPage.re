@@ -22,6 +22,7 @@ let make = (_children) => {
   let handleSubmit = (e, self) => {
     ReactEventRe.Form.preventDefault(e);
     self.ReasonReact.send(AddName(self.state.name));
+    self.ReasonReact.send(ChangeText(""));
   };
   {
   ...component,
@@ -45,7 +46,7 @@ let make = (_children) => {
       <form onSubmit={self.handle(handleSubmit)}>
         <label>
           {s_("Name:")}
-          <input _type="text" name="name" onChange={self.handle(handleChange)} />
+          <input _type="text" name="name" onChange={self.handle(handleChange)} value={self.state.name} />
         </label>
         <input _type="submit" />
       </form>
