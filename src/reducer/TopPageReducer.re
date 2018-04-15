@@ -2,10 +2,10 @@ open Belt;
 
 type state = {
   name: string,
-  nameArray: array(string),
+  nameSet: Set.String.t,
 };
 
-let initialState = () => {name: "", nameArray: [||]};
+let initialState = () => {name: "", nameSet: Set.String.empty};
 
 type action =
   | AddName(string)
@@ -15,8 +15,6 @@ let reducer = (action, state) =>
   switch (action) {
   | ChangeText(name) => ReasonReact.Update({...state, name})
   | AddName(name) =>
-    let nameArray =
-      Array.concat(state.nameArray, [|name|])
-      |. SortArray.stableSortBy(Pervasives.compare);
-    ReasonReact.Update({...state, nameArray});
+    let nameSet = Set.String.add(state.nameSet, name);
+    ReasonReact.Update({...state, nameSet});
   };

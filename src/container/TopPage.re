@@ -38,7 +38,8 @@ let make = _children => {
         <ul>
           (
             a_(
-              Array.mapU(self.state.nameArray, (. name) =>
+              Set.String.toArray(self.state.nameSet)
+              |. Array.mapU((. name) =>
                 <li key=name> (s_(name)) </li>
               ),
             )
