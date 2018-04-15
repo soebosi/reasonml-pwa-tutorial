@@ -1,10 +1,8 @@
 open Belt;
 
+open Util;
+
 open TopPageReducer;
-
-let s_ = ReasonReact.stringToElement;
-
-let a_ = ReasonReact.arrayToElement;
 
 let component = ReasonReact.reducerComponent("TopPage");
 

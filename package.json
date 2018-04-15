@@ -6,6 +6,7 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "fix": "refmt src/**/*.re --in-place",
     "webpack": "webpack -w",
     "webpack:production": "NODE_ENV=production webpack"
   },

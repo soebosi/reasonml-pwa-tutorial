@@ -1,11 +1,11 @@
+open Util;
+
 type state = {
   page: ReasonReact.reactElement,
 };
 
 type action =
   | ChangePage(ReasonReact.reactElement);
-
-let s_ = ReasonReact.stringToElement;
 
 let component = ReasonReact.reducerComponent("App");
 let make = (_children) => {
