@@ -1,5 +1,3 @@
-open Util;
-
 type state = {
   page: ReasonReact.reactElement,
 };
@@ -23,7 +21,7 @@ let make = (_children) => {
       () =>
         ReasonReact.Router.watchUrl(url =>
           switch(url.path) {
-          | [] => self.send(ChangePage(<TopPage />))
+          | _ => self.send(ChangePage(<TopPage />))
           }
         ),
       ReasonReact.Router.unwatchUrl
