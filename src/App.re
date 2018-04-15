@@ -19,15 +19,15 @@ let make = (_children) => {
     }
   },
   subscriptions: self => [
-  Sub(
-    () =>
-      ReasonReact.Router.watchUrl(url =>
-        switch(url.path) {
-        | [] => self.send(ChangePage(<TopPage />))
-        }
-      ),
-    ReasonReact.Router.unwatchUrl
-  )
-],
+    Sub(
+      () =>
+        ReasonReact.Router.watchUrl(url =>
+          switch(url.path) {
+          | [] => self.send(ChangePage(<TopPage />))
+          }
+        ),
+      ReasonReact.Router.unwatchUrl
+    )
+  ],
   render: self => self.state.page,
 };

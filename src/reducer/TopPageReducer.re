@@ -6,10 +6,8 @@ type state = {
 };
 
 let initialState = () => {
-  {
-    name: "",
-    nameArray: [||],
-  };
+  name: "",
+  nameArray: [||],
 };
 
 type action =
