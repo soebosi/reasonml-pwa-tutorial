@@ -1,13 +1,5 @@
 open Belt;
-
-type state = {
-  name: string,
-  nameArray: array(string),
-};
-
-type action =
-  | AddName(string)
-  | ChangeText(string);
+open TopPageReducer;
 
 let s_ = ReasonReact.stringToElement;
 let a_ = ReasonReact.arrayToElement;
@@ -26,28 +18,19 @@ let make = (_children) => {
   };
   {
   ...component,
-  initialState: () => {
-    {
-      name: "",
-      nameArray: [||],
-    };
-  },
-  reducer: (action, state) => {
-    switch(action) {
-    | ChangeText(name) => ReasonReact.Update({...state, name})
-    | AddName(name) => {
-      let nameArray = Array.concat(state.nameArray, [|name|])
-        |. SortArray.stableSortBy(Pervasives.compare);
-      ReasonReact.Update({...state, nameArray});
-    }
-    }
-  },
+  initialState,
+  reducer,
   render: self =>
     <div>
       <form onSubmit={self.handle(handleSubmit)}>
         <label>
           {s_("Name:")}
-          <input _type="text" name="name" onChange={self.handle(handleChange)} value={self.state.name} />
+          <input
+            _type="text"
+            name="name"
+            onChange={self.handle(handleChange)}
+            value={self.state.name}
+          />
         </label>
         <input _type="submit" />
       </form>
