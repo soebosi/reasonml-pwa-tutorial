@@ -2,7 +2,7 @@ open Belt;
 
 type state = {
   name: string,
-  nameList: list(string)
+  nameArray: array(string),
 };
 
 type action =
@@ -29,15 +29,16 @@ let make = (_children) => {
   initialState: () => {
     {
       name: "",
-      nameList: []
+      nameArray: [||],
     };
   },
   reducer: (action, state) => {
     switch(action) {
     | ChangeText(name) => ReasonReact.Update({...state, name})
     | AddName(name) => {
-      let nameList = state.nameList @ [name];
-      ReasonReact.Update({...state, nameList})
+      let nameArray = Array.concat(state.nameArray, [|name|])
+        |. SortArray.stableSortBy(Pervasives.compare);
+      ReasonReact.Update({...state, nameArray});
     }
     }
   },
@@ -52,9 +53,9 @@ let make = (_children) => {
       </form>
       <ul>
         {a_(
-          List.toArray(self.state.nameList)
-          |. SortArray.stableSortBy(Pervasives.compare)
-          |. Array.mapU((. name) => <li key={name}>{s_(name)}</li>)
+          Array.mapU(self.state.nameArray, (. name) =>
+            <li key={name}>{s_(name)}</li>
+          )
         )}
       </ul>
     </div>,
