@@ -17,6 +17,7 @@
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "reason-cli": "^3.1.0-linux",
     "reason-react": "^0.3.4"
   },
   "devDependencies": {
