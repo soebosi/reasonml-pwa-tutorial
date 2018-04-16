@@ -4,12 +4,6 @@ open Util;
 
 open TopPageReducer;
 
-module Styles = {
-  open Css;
-  let ulist = style([listStyleType(none), maxWidth(px(400))]);
-  let list = style([border(px(1), `solid, rgba(0, 0, 0, 0.3))]);
-};
-
 let component = ReasonReact.reducerComponent("TopPage");
 
 let make = _children => {
@@ -41,16 +35,12 @@ let make = _children => {
           </label>
           <input _type="submit" />
         </form>
-        <ul className=Styles.ulist>
-          (
-            a_(
-              Set.String.toArray(self.state.nameSet)
-              |. Array.mapU((. name) =>
-                   <li key=name className=Styles.list> (s_(name)) </li>
-                 ),
-            )
+        <MyList
+          items=(
+            Set.String.toArray(self.state.nameSet)
+            |. Array.mapU((. name) => <MyListItem id=name text=name />)
           )
-        </ul>
+        />
       </div>,
   };
 };
