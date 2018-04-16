@@ -38,7 +38,9 @@ let make = _children => {
         <MyList
           items=(
             Set.String.toArray(self.state.nameSet)
-            |. Array.mapU((. name) => <MyListItem key=name id=name text=name />)
+            |. Array.mapU((. name) =>
+                 <MyListItem key=name id=name text=name />
+               )
           )
         />
       </div>,
