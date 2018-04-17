@@ -26,11 +26,11 @@ let make = _children => {
         <form onSubmit=(self.handle(handleSubmit))>
           <label>
             (s_("Name:"))
-            <input
-              _type="text"
+            <MyInputText
               name="name"
-              onChange=(self.handle(handleChange))
               value=self.state.name
+              placeholder="name"
+              onChange=(self.handle(handleChange))
             />
           </label>
           <input _type="submit" />
