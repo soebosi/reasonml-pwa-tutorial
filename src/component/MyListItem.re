@@ -23,5 +23,5 @@ let component = ReasonReact.statelessComponent("MyListItem");
 
 let make = (~id, ~text, _children) => {
   ...component,
-  render: self => <li key=id className=Styles.li> (s_(text)) </li>,
+  render: self => <li id className=Styles.li> (s_(text)) </li>,
 };

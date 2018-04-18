@@ -2,16 +2,22 @@ open Util;
 
 module Styles = {
   open Css;
-  let input =
+  let button =
     style([
-      display(`block),
       fontSize(`rem(1.0)),
       lineHeight(1.5),
       padding2(`rem(0.375), `rem(0.75)),
+      color(rgb(256, 256, 256)),
       border(px(1), `solid, rgb(180, 180, 180)),
       borderRadius(`rem(0.25)),
-      transition(~duration=150, ~timingFunction=`easeInOut, "box-shadow"),
-      focus([
+      backgroundColor(`rgb((0, 150, 256))),
+      transition(
+        ~duration=150,
+        ~timingFunction=`easeInOut,
+        "background-color",
+      ),
+      hover([backgroundColor(rgb(0, 100, 255))]),
+      active([
         boxShadow(
           ~x=`px(0),
           ~y=`px(0),
@@ -23,18 +29,10 @@ module Styles = {
     ]);
 };
 
-let component = ReasonReact.statelessComponent("MyInputText");
+let component = ReasonReact.statelessComponent("MyButton");
 
-let make = (~id, ~name, ~value, ~onChange, ~placeholder, _children) => {
+let make = (~text, _children) => {
   ...component,
   render: self =>
-    <input
-      _type="text"
-      className=Styles.input
-      id
-      name
-      onChange
-      value
-      placeholder
-    />,
+    <button _type="submit" className=Styles.button> (s_(text)) </button>,
 };

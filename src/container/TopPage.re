@@ -24,16 +24,15 @@ let make = _children => {
     render: self =>
       <div>
         <form onSubmit=(self.handle(handleSubmit))>
-          <label>
-            (s_("Name:"))
-            <MyInputText
-              name="name"
-              value=self.state.name
-              placeholder="name"
-              onChange=(self.handle(handleChange))
-            />
-          </label>
-          <input _type="submit" />
+          <MyLabel htmlFor="nameInput" text="Name:" />
+          <MyInputText
+            id="nameInput"
+            name="name"
+            value=self.state.name
+            placeholder="name"
+            onChange=(self.handle(handleChange))
+          />
+          <MyButton text="submit" />
         </form>
         <MyList
           items=(
