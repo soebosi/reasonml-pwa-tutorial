@@ -7,7 +7,12 @@ module Styles = {
 
 let component = ReasonReact.statelessComponent("MyList");
 
-let make = (~items, children) => {
+let make = children => {
   ...component,
-  render: _self => <ul className=Styles.ulist> (a_(items)) </ul>,
+  render: _self =>
+    ReasonReact.createDomElement(
+      "ul",
+      ~props={"className": Styles.ulist},
+      children,
+    ),
 };

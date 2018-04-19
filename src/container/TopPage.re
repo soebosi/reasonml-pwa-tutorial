@@ -41,12 +41,12 @@ let make = _children => {
           </MyFormGroup>
           <MyButton text="submit" />
         </form>
-        <MyList
-          items=(
-            Set.String.toArray(self.state.nameSet)
-            |. Array.mapU((. name) => <MyListItem key=name text=name />)
-          )
-        />
+        <MyList>
+          ...(
+               Set.String.toArray(self.state.nameSet)
+               |. Array.mapU((. name) => <MyListItem key=name text=name />)
+             )
+        </MyList>
       </div>,
   };
 };
