@@ -4,6 +4,11 @@ open Util;
 
 open TopPageReducer;
 
+module Styles = {
+  open Css;
+  let contents = style([maxWidth(`percent(75.0))]);
+};
+
 let component = ReasonReact.reducerComponent("TopPage");
 
 let make = _children => {
@@ -22,24 +27,24 @@ let make = _children => {
     initialState,
     reducer,
     render: self =>
-      <div>
+      <div className=Styles.contents>
         <form onSubmit=(self.handle(handleSubmit))>
-          <MyLabel htmlFor="nameInput" text="Name:" />
-          <MyInputText
-            id="nameInput"
-            name="name"
-            value=self.state.name
-            placeholder="name"
-            onChange=(self.handle(handleChange))
-          />
+          <MyFormGroup>
+            <MyLabel htmlFor="nameInput" text="Name:" />
+            <MyInputText
+              id="nameInput"
+              name="name"
+              value=self.state.name
+              placeholder="name"
+              onChange=(self.handle(handleChange))
+            />
+          </MyFormGroup>
           <MyButton text="submit" />
         </form>
         <MyList
           items=(
             Set.String.toArray(self.state.nameSet)
-            |. Array.mapU((. name) =>
-                 <MyListItem key=name id=name text=name />
-               )
+            |. Array.mapU((. name) => <MyListItem key=name text=name />)
           )
         />
       </div>,

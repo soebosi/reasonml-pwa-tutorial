@@ -21,7 +21,7 @@ module Styles = {
 
 let component = ReasonReact.statelessComponent("MyListItem");
 
-let make = (~id, ~text, _children) => {
+let make = (~text, _children) => {
   ...component,
-  render: self => <li id className=Styles.li> (s_(text)) </li>,
+  render: self => <li className=Styles.li> (s_(text)) </li>,
 };

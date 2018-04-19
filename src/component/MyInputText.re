@@ -10,6 +10,7 @@ module Styles = {
       padding2(`rem(0.375), `rem(0.75)),
       border(px(1), `solid, rgb(180, 180, 180)),
       borderRadius(`rem(0.25)),
+      width(`percent(100.0)),
       transition(~duration=150, ~timingFunction=`easeInOut, "box-shadow"),
       focus([
         boxShadow(
