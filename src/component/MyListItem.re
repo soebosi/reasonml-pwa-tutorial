@@ -21,7 +21,12 @@ module Styles = {
 
 let component = ReasonReact.statelessComponent("MyListItem");
 
-let make = (~text, _children) => {
+let make = children => {
   ...component,
-  render: self => <li className=Styles.li> (s_(text)) </li>,
+  render: self =>
+    ReasonReact.createDomElement(
+      "li",
+      ~props={"className": Styles.li},
+      children,
+    ),
 };

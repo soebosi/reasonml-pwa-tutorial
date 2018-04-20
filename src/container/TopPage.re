@@ -39,12 +39,14 @@ let make = _children => {
               onChange=(self.handle(handleChange))
             />
           </MyFormGroup>
-          <MyButton text="submit" />
+          <MyButton> (s_("submit")) </MyButton>
         </form>
         <MyList>
           ...(
                Set.String.toArray(self.state.nameSet)
-               |. Array.mapU((. name) => <MyListItem key=name text=name />)
+               |. Array.mapU((. name) =>
+                    <MyListItem key=name> (s_(name)) </MyListItem>
+                  )
              )
         </MyList>
       </div>,
