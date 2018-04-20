@@ -2,7 +2,7 @@ open Belt;
 
 open Util;
 
-let defaultStyle =
+let baseStyle =
   Css.[
     fontSize(`rem(1.0)),
     lineHeight(1.5),
@@ -30,7 +30,7 @@ let make = (~styles=?, children) => {
   ...component,
   render: self => {
     let styles = Option.getWithDefault(styles, []);
-    let className = Css.(merge([styles, defaultStyle]) |. style);
+    let className = Css.(merge([styles, baseStyle]) |. style);
     ReasonReact.createDomElement(
       "button",
       ~props={"type": "submit", "className": className},
