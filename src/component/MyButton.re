@@ -26,11 +26,11 @@ let baseStyle =
 
 let component = ReasonReact.statelessComponent("MyButton");
 
-let make = (~styles=?, children) => {
+let make = (~style=?, children) => {
   ...component,
   render: self => {
-    let styles = Option.getWithDefault(styles, []);
-    let className = Css.(merge([styles, baseStyle]) |. style);
+    let customStyle = Option.getWithDefault(style, []);
+    let className = Css.(style @@ merge([customStyle, baseStyle]));
     ReasonReact.createDomElement(
       "button",
       ~props={"type": "submit", "className": className},
