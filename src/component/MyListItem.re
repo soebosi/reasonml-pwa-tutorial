@@ -1,5 +1,3 @@
-open Util;
-
 let baseStyle =
   Css.[
     firstChild([
@@ -20,7 +18,7 @@ let component = ReasonReact.statelessComponent("MyListItem");
 
 let make = children => {
   ...component,
-  render: self =>
+  render: _self =>
     ReasonReact.createDomElement(
       "li",
       ~props={"className": Css.style(baseStyle)},

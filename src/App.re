@@ -11,9 +11,9 @@ let make = (_children) => {
   initialState: () => {
     {page: <TopPage />};
   },
-  reducer: (action, state) => {
+  reducer: (action, _state) => {
     switch(action) {
-    | ChangePage(page) => ReasonReact.Update({...state, page})
+    | ChangePage(page) => ReasonReact.Update({page: page})
     }
   },
   subscriptions: self => [
