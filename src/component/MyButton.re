@@ -13,15 +13,7 @@ let baseStyle =
     backgroundColor(`rgb((0, 150, 256))),
     transition(~duration=150, ~timingFunction=`easeInOut, "background-color"),
     hover([backgroundColor(rgb(0, 100, 255))]),
-    active([
-      boxShadow(
-        ~x=`px(0),
-        ~y=`px(0),
-        ~blur=`px(0),
-        ~spread=`rem(0.2),
-        rgba(0, 123, 255, 0.25),
-      ),
-    ]),
+    active([MyBoxShadow.style]),
   ];
 
 let component = ReasonReact.statelessComponent("MyButton");

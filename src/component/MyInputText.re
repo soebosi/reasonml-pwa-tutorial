@@ -10,15 +10,7 @@ let baseStyle =
     borderRadius(`rem(0.25)),
     width(`percent(100.0)),
     transition(~duration=150, ~timingFunction=`easeInOut, "box-shadow"),
-    focus([
-      boxShadow(
-        ~x=`px(0),
-        ~y=`px(0),
-        ~blur=`px(0),
-        ~spread=`rem(0.2),
-        rgba(0, 123, 255, 0.25),
-      ),
-    ]),
+    focus([MyBoxShadow.style]),
   ];
 
 let component = ReasonReact.statelessComponent("MyInputText");
