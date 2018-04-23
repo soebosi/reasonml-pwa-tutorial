@@ -7,7 +7,7 @@ type state = {
 [@bs.deriving accessors]
 type action =
   | Item(ItemPageReducer.action)
-  | TopPage(TopPageReducer.action)
+  | Top(TopPageReducer.action)
   | ChangePage(ReasonReact.Router.url);
 
 let component = ReasonReact.reducerComponent("App");
@@ -23,7 +23,7 @@ let make = (_children) => {
   reducer: (action, state) => {
     let newState = switch(action) {
     | Item(itemAction) => {...state, item: ItemPageReducer.reducer(itemAction, state.item)}
-    | TopPage(topPageAction) => {...state, topPage: TopPageReducer.reducer(topPageAction, state.topPage)}
+    | Top(topPageAction) => {...state, topPage: TopPageReducer.reducer(topPageAction, state.topPage)}
     | ChangePage(url) => {...state, url}
     };
     ReasonReact.Update(newState);
@@ -44,13 +44,13 @@ let make = (_children) => {
       switch(self.state.url.path) {
       | ["items", name] =>
         <ItemPage
-          dispatch=((action) => self.send(TopPage(action)))
+          dispatch=((action) => self.send(Item(action)))
           itemPageState=self.state.item
           name
         />
       | _ =>
         <TopPage
-          dispatch=((action) => self.send(TopPage(action)))
+          dispatch=((action) => self.send(Top(action)))
           topPageState=self.state.topPage
         />
       }
