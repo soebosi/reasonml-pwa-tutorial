@@ -23,6 +23,7 @@ let make = (_children) => {
       () =>
         ReasonReact.Router.watchUrl(url =>
           switch(url.path) {
+          | ["items", name] => <ItemPage name />
           | _ => <TopPage />
           }
           |> changePage

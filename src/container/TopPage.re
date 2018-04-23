@@ -46,7 +46,7 @@ let make = _children => {
                Set.String.toArray(self.state.nameSet)
                |. Array.mapU((. name) =>
                     <MyListItem key=name>
-                      <Link href=("./" ++ name)> (s_(name)) </Link>
+                      <Link href=("/items/" ++ name)> (s_(name)) </Link>
                     </MyListItem>
                   )
              )
