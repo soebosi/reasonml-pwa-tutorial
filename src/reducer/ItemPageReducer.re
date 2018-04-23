@@ -13,8 +13,8 @@ type action =
 
 let reducer = (action, state) =>
   switch (action) {
-  | ChangeText(name) => ReasonReact.Update({...state, name})
+  | ChangeText(name) => {...state, name}
   | AddName(name) =>
     let nameSet = Set.String.add(state.nameSet, name);
-    ReasonReact.Update({...state, nameSet});
+    {...state, nameSet};
   };

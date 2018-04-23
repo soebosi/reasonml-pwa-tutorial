@@ -1,36 +1,59 @@
-[@bs.deriving abstract]
 type state = {
-  page: ReasonReact.reactElement,
+  item: ItemPageReducer.state,
+  topPage: TopPageReducer.state,
+  url: ReasonReact.Router.url,
 };
 
 [@bs.deriving accessors]
 type action =
-  | ChangePage(ReasonReact.reactElement);
+  | Item(ItemPageReducer.action)
+  | TopPage(TopPageReducer.action)
+  | ChangePage(ReasonReact.Router.url);
 
 let component = ReasonReact.reducerComponent("App");
 let make = (_children) => {
   ...component,
   initialState: () => {
-    state(~page=<TopPage />);
+    {
+      item: ItemPageReducer.initialState(),
+      topPage: TopPageReducer.initialState(),
+      url: {path: [""], hash: "", search: ""},
+    };
   },
-  reducer: (action, _state) => {
-    switch(action) {
-    | ChangePage(page) => ReasonReact.Update(state(~page))
-    }
+  reducer: (action, state) => {
+    let newState = switch(action) {
+    | Item(itemAction) => {...state, item: ItemPageReducer.reducer(itemAction, state.item)}
+    | TopPage(topPageAction) => {...state, topPage: TopPageReducer.reducer(topPageAction, state.topPage)}
+    | ChangePage(url) => {...state, url}
+    };
+    ReasonReact.Update(newState);
   },
   subscriptions: self => [
     Sub(
-      () =>
+      () => {
         ReasonReact.Router.watchUrl(url =>
-          switch(url.path) {
-          | ["items", name] => <ItemPage name />
-          | _ => <TopPage />
-          }
-          |> changePage
-          |> self.send
-        ),
+          url |. changePage |. self.send
+        );
+      },
       ReasonReact.Router.unwatchUrl
     )
   ],
-  render: self => page(self.state),
+  render: self => 
+    <div>
+    (
+      switch(self.state.url.path) {
+      | ["items", name] =>
+        <ItemPage
+          dispatch=((action) => self.send(TopPage(action)))
+          itemPageState=self.state.item
+          name
+        />
+      | _ =>
+        <TopPage
+          dispatch=((action) => self.send(TopPage(action)))
+          topPageState=self.state.topPage
+        />
+      }
+    )
+    </div>,
 };

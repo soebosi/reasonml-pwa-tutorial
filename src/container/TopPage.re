@@ -9,41 +9,39 @@ module Styles = {
   let contents = style([maxWidth(`percent(75.0))]);
 };
 
-let component = ReasonReact.reducerComponent("TopPage");
+let component = ReasonReact.statelessComponent("TopPage");
 
-let make = _children => {
-  let handleChange = (e, self) => {
+let make = (~dispatch, ~topPageState, _children) => {
+  let handleChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let name = ReactDOMRe.domElementToObj(dom)##value;
-    self.ReasonReact.send(ChangeText(name));
+    dispatch(ChangeText(name));
   };
-  let handleSubmit = (e, self) => {
+  let handleSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
-    self.ReasonReact.send(AddName(self.state.name));
-    self.ReasonReact.send(ChangeText(""));
+    dispatch(AddName(topPageState.name));
+    dispatch(ChangeText(""));
   };
   {
     ...component,
-    initialState,
-    reducer,
     render: self =>
       <div className=Styles.contents>
-        <form onSubmit=(self.handle(handleSubmit))>
+        <form onSubmit=handleSubmit>
           <MyFormGroup>
             <MyLabel htmlFor="nameInput"> (s_("Name:")) </MyLabel>
             <MyInputText
               id="nameInput"
               name="name"
-              value=self.state.name
+              value=topPageState.name
               placeholder="name"
-              onChange=(self.handle(handleChange))
+              onChange=handleChange
             />
           </MyFormGroup>
           <MyButton> (s_("submit")) </MyButton>
         </form>
         <MyList>
           ...(
-               Set.String.toArray(self.state.nameSet)
+               Set.String.toArray(topPageState.nameSet)
                |. Array.mapU((. name) =>
                     <MyListItem key=name>
                       <Link href=("/items/" ++ name)> (s_(name)) </Link>
