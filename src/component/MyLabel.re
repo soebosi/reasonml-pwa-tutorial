@@ -1,11 +1,20 @@
+open Belt;
+
 open Util;
 
 let baseStyle = Css.[display(`inlineBlock), marginBottom(`rem(0.5))];
 
 let component = ReasonReact.statelessComponent("MyLabel");
 
-let make = (~htmlFor, ~text, children) => {
+let make = (~htmlFor, ~style=?, children) => {
   ...component,
-  render: _self =>
-    <label className=(Css.style(baseStyle)) htmlFor> (s_(text)) </label>,
+  render: _self => {
+    let customStyle = Option.getWithDefault(style, []);
+    let className = Css.(style @@ merge([customStyle, baseStyle]));
+    ReasonReact.createDomElement(
+      "label",
+      ~props={"type": "submit", "className": className, "htmlFor": htmlFor},
+      children,
+    );
+  },
 };

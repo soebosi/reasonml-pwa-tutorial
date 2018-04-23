@@ -30,7 +30,7 @@ let make = _children => {
       <div className=Styles.contents>
         <form onSubmit=(self.handle(handleSubmit))>
           <MyFormGroup>
-            <MyLabel htmlFor="nameInput" text="Name:" />
+            <MyLabel htmlFor="nameInput"> (s_("Name:")) </MyLabel>
             <MyInputText
               id="nameInput"
               name="name"
@@ -46,7 +46,7 @@ let make = _children => {
                Set.String.toArray(self.state.nameSet)
                |. Array.mapU((. name) =>
                     <MyListItem key=name>
-                      <Link href=("./" ++ name) text=name />
+                      <Link href=("./" ++ name)> (s_(name)) </Link>
                     </MyListItem>
                   )
              )
