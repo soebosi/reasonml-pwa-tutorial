@@ -5,9 +5,13 @@ type state = {
 };
 
 [@bs.deriving accessors]
+type childAction =
+  | ItemPage(ItemPageReducer.action)
+  | TopPage(TopPageReducer.action);
+
+[@bs.deriving accessors]
 type action =
-  | Item(ItemPageReducer.action)
-  | Top(TopPageReducer.action)
+  | DispatchChildAction(childAction)
   | ChangePage(ReasonReact.Router.url);
 
 let component = ReasonReact.reducerComponent("App");
@@ -22,8 +26,10 @@ let make = (_children) => {
   },
   reducer: (action, state) => {
     let newState = switch(action) {
-    | Item(itemAction) => {...state, item: ItemPageReducer.reducer(itemAction, state.item)}
-    | Top(topPageAction) => {...state, topPage: TopPageReducer.reducer(topPageAction, state.topPage)}
+    | DispatchChildAction(action) => switch(action) {
+      | ItemPage(action) => {...state, item: ItemPageReducer.reducer(action, state.item)}
+      | TopPage(action) => {...state, topPage: TopPageReducer.reducer(action, state.topPage)}
+      }
     | ChangePage(url) => {...state, url}
     };
     ReasonReact.Update(newState);
@@ -31,29 +37,32 @@ let make = (_children) => {
   subscriptions: self => [
     Sub(
       () => {
-        ReasonReact.Router.watchUrl(url =>
-          url |. changePage |. self.send
-        );
+        ReasonReact.Router.watchUrl(url => url |. changePage |. self.send);
       },
       ReasonReact.Router.unwatchUrl
     )
   ],
-  render: self => 
+  render: self => {
+    let sendChildAction = (constructor, action) =>
+      constructor(action)
+      |. dispatchChildAction
+      |. self.send;
     <div>
     (
       switch(self.state.url.path) {
       | ["items", name] =>
         <ItemPage
-          dispatch=((action) => self.send(Item(action)))
+          dispatch=sendChildAction(itemPage)
           itemPageState=self.state.item
           name
         />
       | _ =>
         <TopPage
-          dispatch=((action) => self.send(Top(action)))
+          dispatch=sendChildAction(topPage)
           topPageState=self.state.topPage
         />
       }
     )
-    </div>,
+    </div>;
+  },
 };
