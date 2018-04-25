@@ -2,7 +2,7 @@ open Belt;
 
 open Util;
 
-open TopPageReducer;
+open TopPageModel;
 
 module Styles = {
   open Css;
