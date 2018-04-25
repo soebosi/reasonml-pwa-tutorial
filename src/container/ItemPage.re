@@ -2,12 +2,12 @@ open Belt;
 
 open Util;
 
-let component = ReasonReact.statelessComponent("ItemPage");
+[@bs.module] external reactMarkdown : ReasonReact.reactClass = "react-markdown";
 
-let make = (~name, ~dispatch, ~itemPageState, _children) => {
-  ...component,
-  render: self =>
-    <div>
-      (s_(name))
-    </div>,
+let make = (~name, ~dispatch, ~itemPageState, children) => {
+  ReasonReact.wrapJsForReason(
+    ~reactClass=reactMarkdown,
+    ~props={"source": name},
+    children,
+  );
 };
