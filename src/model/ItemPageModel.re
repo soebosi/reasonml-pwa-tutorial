@@ -1,20 +1,13 @@
 open Belt;
 
-type state = {
-  name: string,
-  nameSet: Set.String.t,
-};
+type state = {text: string};
 
-let initialState = () => {name: "", nameSet: Set.String.empty};
+let initialState = () => {text: ""};
 
 type action =
-  | AddName(string)
   | ChangeText(string);
 
 let reducer = (action, state) =>
   switch (action) {
-  | ChangeText(name) => {...state, name}
-  | AddName(name) =>
-    let nameSet = Set.String.add(state.nameSet, name);
-    {...state, nameSet};
+  | ChangeText(text) => {...state, text}
   };

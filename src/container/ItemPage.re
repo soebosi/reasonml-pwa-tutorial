@@ -2,12 +2,22 @@ open Belt;
 
 open Util;
 
-[@bs.module] external reactMarkdown : ReasonReact.reactClass = "react-markdown";
+open ItemPageModel;
 
-let make = (~name, ~dispatch, ~itemPageState, children) => {
-  ReasonReact.wrapJsForReason(
-    ~reactClass=reactMarkdown,
-    ~props={"source": name},
-    children,
-  );
+let component = ReasonReact.statelessComponent("ItemPage");
+
+let make = (~name, ~dispatch, ~itemPageState, _children) => {
+  let handleChange = e => {
+    let dom = ReactEventRe.Form.target(e);
+    let text = ReactDOMRe.domElementToObj(dom)##value;
+    dispatch(ChangeText(text));
+  };
+  {
+    ...component,
+    render: self =>
+      <div>
+        <textarea value=itemPageState.text onChange=handleChange />
+        <Markdown source=itemPageState.text />
+      </div>,
+  };
 };
