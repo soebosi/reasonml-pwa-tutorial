@@ -1,5 +1,5 @@
 type state = {
-  item: ItemPageModel.state,
+  itemPage: ItemPageModel.state,
   topPage: TopPageModel.state,
   url: ReasonReact.Router.url,
 };
@@ -19,7 +19,7 @@ let make = (_children) => {
   ...component,
   initialState: () => {
     {
-      item: ItemPageModel.initialState(),
+      itemPage: ItemPageModel.initialState(),
       topPage: TopPageModel.initialState(),
       url: {path: [""], hash: "", search: ""},
     };
@@ -27,7 +27,7 @@ let make = (_children) => {
   reducer: (action, state) => {
     let newState = switch(action) {
     | DispatchChildAction(action) => switch(action) {
-      | ItemPage(action) => {...state, item: ItemPageModel.reducer(action, state.item)}
+      | ItemPage(action) => {...state, itemPage: ItemPageModel.reducer(action, state.itemPage)}
       | TopPage(action) => {...state, topPage: TopPageModel.reducer(action, state.topPage)}
       }
     | ChangePage(url) => {...state, url}
@@ -53,7 +53,7 @@ let make = (_children) => {
       | ["items", name] =>
         <ItemPage
           dispatch=sendChildAction(itemPage)
-          itemPageState=self.state.item
+          itemPageState=self.state.itemPage
           name
         />
       | _ =>
