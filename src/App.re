@@ -5,14 +5,10 @@ let make = (_children) => {
   ...component,
   initialState,
   reducer,
-  subscriptions: self => [
-    Sub(
-      () => {
-        ReasonReact.Router.watchUrl(url => url |. changePage |. self.send);
-      },
-      ReasonReact.Router.unwatchUrl
-    )
-  ],
+  didMount: self => {
+    let watcherID = ReasonReact.Router.watchUrl(url => url |. changePage |. self.send);
+    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+  },
   render: self => {
     let sendChildAction = (constructor, action) =>
       constructor(action)
