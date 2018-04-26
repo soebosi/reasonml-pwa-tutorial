@@ -10,8 +10,8 @@ let make = (_children) => {
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
   },
   render: self => {
-    let sendChildAction = (constructor, action) =>
-      constructor(action)
+    let sendChildAction = (actionCreator, action) =>
+      actionCreator(action)
       |. dispatchChildAction
       |. self.send;
     <div>
