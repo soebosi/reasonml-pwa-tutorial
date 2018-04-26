@@ -6,7 +6,7 @@ let make = (_children) => {
   initialState,
   reducer,
   didMount: self => {
-    let watcherID = ReasonReact.Router.watchUrl(url => changePage(url) |. self.send);
+    let watcherID = ReasonReact.Router.watchUrl(url => changeUrl(url) |. self.send);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
   },
   render: self => {

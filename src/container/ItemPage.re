@@ -10,7 +10,7 @@ let make = (~name, ~dispatch, ~itemPageState, _children) => {
   let handleChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let text = ReactDOMRe.domElementToObj(dom)##value;
-    dispatch(ChangeText(text));
+    dispatch(changeText(text));
   };
   {
     ...component,

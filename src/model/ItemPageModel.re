@@ -4,6 +4,7 @@ type state = {text: string};
 
 let initialState = () => {text: ""};
 
+[@bs.deriving accessors]
 type action =
   | ChangeText(string);
 

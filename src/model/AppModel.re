@@ -18,7 +18,7 @@ type childAction =
 [@bs.deriving accessors]
 type action =
   | DispatchChildAction(childAction)
-  | ChangePage(ReasonReact.Router.url);
+  | ChangeUrl(ReasonReact.Router.url);
 
 let reducer = (action, state) => {
   let newState =
@@ -34,7 +34,7 @@ let reducer = (action, state) => {
           topPage: TopPageModel.reducer(action, state.topPage),
         }
       }
-    | ChangePage(url) => {...state, url}
+    | ChangeUrl(url) => {...state, url}
     };
   ReasonReact.Update(newState);
 };

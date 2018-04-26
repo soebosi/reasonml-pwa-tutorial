@@ -15,12 +15,12 @@ let make = (~dispatch, ~topPageState, _children) => {
   let handleChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let name = ReactDOMRe.domElementToObj(dom)##value;
-    dispatch(ChangeText(name));
+    dispatch(changeText(name));
   };
   let handleSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
-    dispatch(AddName(topPageState.name));
-    dispatch(ChangeText(""));
+    dispatch(addName(topPageState.name));
+    dispatch(changeText(""));
   };
   {
     ...component,

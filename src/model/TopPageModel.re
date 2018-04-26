@@ -7,6 +7,7 @@ type state = {
 
 let initialState = () => {name: "", nameSet: Set.String.empty};
 
+[@bs.deriving accessors]
 type action =
   | AddName(string)
   | ChangeText(string);
