@@ -6,7 +6,7 @@ let make = (_children) => {
   initialState,
   reducer,
   didMount: self => {
-    let watcherID = ReasonReact.Router.watchUrl(url => url |. changePage |. self.send);
+    let watcherID = ReasonReact.Router.watchUrl(url => changePage(url) |. self.send);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
   },
   render: self => {
@@ -15,21 +15,21 @@ let make = (_children) => {
       |. dispatchChildAction
       |. self.send;
     <div>
-    (
-      switch(self.state.url.path) {
-      | ["items", name] =>
-        <ItemPage
-          dispatch=sendChildAction(itemPage)
-          itemPageState=self.state.itemPage
-          name
-        />
-      | _ =>
-        <TopPage
-          dispatch=sendChildAction(topPage)
-          topPageState=self.state.topPage
-        />
-      }
-    )
+      (
+        switch(self.state.url.path) {
+        | ["items", name] =>
+          <ItemPage
+            dispatch=sendChildAction(itemPage)
+            itemPageState=self.state.itemPage
+            name
+          />
+        | _ =>
+          <TopPage
+            dispatch=sendChildAction(topPage)
+            topPageState=self.state.topPage
+          />
+        }
+      )
     </div>;
   },
 };

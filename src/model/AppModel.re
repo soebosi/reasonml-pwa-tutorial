@@ -7,11 +7,7 @@ type state = {
 let initialState = () => {
   itemPage: ItemPageModel.initialState(),
   topPage: TopPageModel.initialState(),
-  url: {
-    path: [""],
-    hash: "",
-    search: "",
-  },
+  url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
 [@bs.deriving accessors]
