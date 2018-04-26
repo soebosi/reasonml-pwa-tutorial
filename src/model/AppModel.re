@@ -12,8 +12,8 @@ let initialState = () => {
 
 [@bs.deriving accessors]
 type childAction =
-  | ItemPage(ItemPageModel.action)
-  | TopPage(TopPageModel.action);
+  | ItemPageAction(ItemPageModel.action)
+  | TopPageAction(TopPageModel.action);
 
 [@bs.deriving accessors]
 type action =
@@ -25,11 +25,11 @@ let reducer = (action, state) => {
     switch (action) {
     | DispatchChildAction(action) =>
       switch (action) {
-      | ItemPage(action) => {
+      | ItemPageAction(action) => {
           ...state,
           itemPage: ItemPageModel.reducer(action, state.itemPage),
         }
-      | TopPage(action) => {
+      | TopPageAction(action) => {
           ...state,
           topPage: TopPageModel.reducer(action, state.topPage),
         }
