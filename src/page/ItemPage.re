@@ -1,5 +1,3 @@
-open Belt;
-
 open Util;
 
 open ItemPageModel;
@@ -14,8 +12,9 @@ let make = (~name, ~dispatch, ~itemPageState, _children) => {
   };
   {
     ...component,
-    render: self =>
+    render: _self =>
       <div>
+        <h2> (s_(name)) </h2>
         <textarea value=itemPageState.text onChange=handleChange />
         <Markdown source=itemPageState.text />
       </div>,

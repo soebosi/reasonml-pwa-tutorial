@@ -24,7 +24,7 @@ let make = (~dispatch, ~topPageState, _children) => {
   };
   {
     ...component,
-    render: self =>
+    render: _self =>
       <div className=Styles.contents>
         <form onSubmit=handleSubmit>
           <MyFormGroup>

@@ -1,5 +1,3 @@
-open Util;
-
 let baseStyle =
   Css.[
     display(`block),
@@ -17,7 +15,7 @@ let component = ReasonReact.statelessComponent("MyInputText");
 
 let make = (~id, ~name, ~value, ~onChange, ~placeholder, _children) => {
   ...component,
-  render: self =>
+  render: _self =>
     <input
       _type="text"
       className=(Css.style(baseStyle))

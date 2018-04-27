@@ -1,10 +1,8 @@
-open Util;
-
 let component = ReasonReact.statelessComponent("Link");
 
 let make = (~href, children) => {
   ...component,
-  render: self =>
+  render: _self =>
     ReasonReact.createDomElement(
       "a",
       ~props={

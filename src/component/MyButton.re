@@ -1,7 +1,5 @@
 open Belt;
 
-open Util;
-
 let baseStyle =
   Css.[
     fontSize(`rem(1.0)),
@@ -20,9 +18,9 @@ let component = ReasonReact.statelessComponent("MyButton");
 
 let make = (~style=?, children) => {
   ...component,
-  render: self => {
+  render: _self => {
     let customStyle = Option.getWithDefault(style, []);
-    let className = Css.(style @@ merge([customStyle, baseStyle]));
+    let className = Css.style @@ Css.merge([customStyle, baseStyle]);
     ReasonReact.createDomElement(
       "button",
       ~props={"type": "submit", "className": className},

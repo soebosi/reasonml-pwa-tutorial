@@ -1,5 +1,3 @@
-open Belt;
-
 type state = {text: string};
 
 let initialState = () => {text: ""};

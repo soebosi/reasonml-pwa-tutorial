@@ -1,5 +1,3 @@
-open Util;
-
 let baseStyle = Css.[listStyleType(none), maxWidth(px(400))];
 
 let component = ReasonReact.statelessComponent("MyList");

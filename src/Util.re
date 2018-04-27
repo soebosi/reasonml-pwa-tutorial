@@ -1,3 +1,3 @@
-let s_ = ReasonReact.stringToElement;
+let s_ = ReasonReact.string;
 
-let a_ = ReasonReact.arrayToElement;
+let a_ = ReasonReact.array;
