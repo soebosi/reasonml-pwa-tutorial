@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "bs-css": "^6.6.0",
+    "bs-most": "^0.1.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-markdown": "^3.3.0",

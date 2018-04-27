@@ -19,7 +19,8 @@
   "namespace": true,
   "bs-dependencies": [
     "reason-react",
-    "bs-css"
+    "bs-css",
+    "bs-most"
   ],
   "refmt": 3,
   "warnings": {
