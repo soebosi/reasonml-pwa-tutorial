@@ -20,21 +20,24 @@ type action =
   | DispatchChildAction(childAction)
   | ChangeUrl(ReasonReact.Router.url);
 
-let reducer = (action, state) => {
-  let newState =
+let reducer = (action, state) =>
+  switch (action) {
+  | DispatchChildAction(action) =>
     switch (action) {
-    | DispatchChildAction(action) =>
-      switch (action) {
-      | ItemPageAction(action) => {
-          ...state,
-          itemPage: ItemPageModel.reducer(action, state.itemPage),
-        }
-      | TopPageAction(action) => {
-          ...state,
-          topPage: TopPageModel.reducer(action, state.topPage),
-        }
-      }
-    | ChangeUrl(url) => {...state, url}
-    };
-  ReasonReact.Update(newState);
-};
+    | ItemPageAction(action) =>
+      ItemPageModel.reducer(
+        action,
+        state.itemPage,
+        itemPage => {...state, itemPage},
+        dispatchChildAction,
+      )
+    | TopPageAction(action) =>
+      TopPageModel.reducer(
+        action,
+        state.topPage,
+        topPage => {...state, topPage},
+        dispatchChildAction,
+      )
+    }
+  | ChangeUrl(url) => ReasonReact.Update({...state, url})
+  };

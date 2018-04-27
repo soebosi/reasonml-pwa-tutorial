@@ -12,10 +12,10 @@ type action =
   | AddName(string)
   | ChangeText(string);
 
-let reducer = (action, state) =>
+let reducer = (action, state, store, _dispatch) =>
   switch (action) {
-  | ChangeText(name) => {...state, name}
+  | ChangeText(name) => ReasonReact.Update(store({...state, name}))
   | AddName(name) =>
     let nameSet = Set.String.add(state.nameSet, name);
-    {...state, nameSet};
+    ReasonReact.Update(store({...state, nameSet}));
   };

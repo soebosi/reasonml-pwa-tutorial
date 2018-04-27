@@ -6,7 +6,7 @@ let initialState = () => {text: ""};
 type action =
   | ChangeText(string);
 
-let reducer = (action, state) =>
+let reducer = (action, _state, store, _dispatch) =>
   switch (action) {
-  | ChangeText(text) => {...state, text}
+  | ChangeText(text) => ReasonReact.Update(store({text: text}))
   };
