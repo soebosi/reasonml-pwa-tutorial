@@ -4,11 +4,11 @@ open ItemPageModel;
 
 let component = ReasonReact.statelessComponent("ItemPage");
 
-let make = (~name, ~dispatch, ~itemPageState, _children) => {
+let make = (~name, ~send, ~itemPageState, _children) => {
   let handleChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let text = ReactDOMRe.domElementToObj(dom)##value;
-    dispatch(changeText(text));
+    send(changeText(text));
   };
   {
     ...component,

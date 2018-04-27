@@ -19,13 +19,13 @@ let make = (_children) => {
         switch(self.state.url.path) {
         | ["items", name] =>
           <ItemPage
-            dispatch=sendChildAction(itemPageAction)
+            send=sendChildAction(itemPageAction)
             itemPageState=self.state.itemPage
             name
           />
         | _ =>
           <TopPage
-            dispatch=sendChildAction(topPageAction)
+            send=sendChildAction(topPageAction)
             topPageState=self.state.topPage
           />
         }
