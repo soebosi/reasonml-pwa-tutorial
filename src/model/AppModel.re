@@ -1,4 +1,4 @@
-open Belt;
+open Util;
 
 type state = {
   itemPage: ItemPageModel.state,
@@ -20,30 +20,34 @@ type action =
 
 let sub = Most.Subject.make();
 
-let filterMap = (f, stream) =>
-  Most.(
-    stream
-    |> filter(x =>
-         switch (f(x)) {
-         | Some(_) => true
-         | None => false
-         }
-       )
-    |> map(x => Option.getExn(f(x)))
-  );
-
-let middleware = (send, stream) =>
-  Most.(
-    stream
-    |> filterMap(x =>
-         switch (x) {
-         | ItemPageAction(ChangeText(text)) => Some(text)
-         | _ => None
-         }
-       )
-    |> debounce(200)
-    |> observe(x => send(ItemPageAction(ChangeSource(x))))
-  );
+let observe = (stream, send) => {
+  TopPageObserver.observe(
+    filterMap(
+      a =>
+        switch (a) {
+        | TopPageAction(a) => Some(a)
+        | _ => None
+        },
+      stream,
+    ),
+    x =>
+    send(TopPageAction(x))
+  )
+  |. ignore;
+  ItemPageObserver.observe(
+    filterMap(
+      a =>
+        switch (a) {
+        | ItemPageAction(a) => Some(a)
+        | _ => None
+        },
+      stream,
+    ),
+    x =>
+    send(ItemPageAction(x))
+  )
+  |. ignore;
+};
 
 let reducer = (action, state) => {
   let newState =
