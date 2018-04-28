@@ -16,7 +16,7 @@ let make = (~name, ~send, ~itemPageState, _children) => {
       <div>
         <h2> (s_(name)) </h2>
         <textarea value=itemPageState.text onChange=handleChange />
-        <Markdown source=itemPageState.text />
+        <Markdown source=itemPageState.source />
       </div>,
   };
 };

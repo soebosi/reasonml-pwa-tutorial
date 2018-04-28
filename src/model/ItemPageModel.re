@@ -1,12 +1,17 @@
-type state = {text: string};
+type state = {
+  text: string,
+  source: string,
+};
 
-let initialState = () => {text: ""};
+let initialState = () => {text: "", source: ""};
 
 [@bs.deriving accessors]
 type action =
-  | ChangeText(string);
+  | ChangeText(string)
+  | ChangeSource(string);
 
-let reducer = (action, _state, store, _dispatch) =>
+let reducer = (action, state) =>
   switch (action) {
-  | ChangeText(text) => ReasonReact.Update(store({text: text}))
+  | ChangeText(text) => {...state, text}
+  | ChangeSource(source) => {...state, source}
   };
