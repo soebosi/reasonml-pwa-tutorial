@@ -8,11 +8,11 @@ let make = (_children) => {
   didMount: self => {
     let watcherID = ReasonReact.Router.watchUrl(url => changeUrl(url) |. self.send);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+    middleware(self.send, Most.Subject.asStream(sub)) |. ignore;
   },
   render: self => {
     let sendChildAction = (actionCreator, action) =>
       actionCreator(action)
-      |. dispatchChildAction
       |. self.send;
     <div>
       (

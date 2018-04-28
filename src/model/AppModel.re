@@ -1,3 +1,5 @@
+open Belt;
+
 type state = {
   itemPage: ItemPageModel.state,
   topPage: TopPageModel.state,
@@ -16,9 +18,35 @@ type action =
   | TopPageAction(TopPageModel.action)
   | ChangeUrl(ReasonReact.Router.url);
 
-let reducer = (action, state) =>
-  switch (action) {
-  | DispatchChildAction(action) =>
+let sub = Most.Subject.make();
+
+let filterMap = (f, stream) =>
+  Most.(
+    stream
+    |> filter(x =>
+         switch (f(x)) {
+         | Some(_) => true
+         | None => false
+         }
+       )
+    |> map(x => Option.getExn(f(x)))
+  );
+
+let middleware = (send, stream) =>
+  Most.(
+    stream
+    |> filterMap(x =>
+         switch (x) {
+         | ItemPageAction(ChangeText(text)) => Some(text)
+         | _ => None
+         }
+       )
+    |> debounce(200)
+    |> observe(x => send(ItemPageAction(ChangeSource(x))))
+  );
+
+let reducer = (action, state) => {
+  let newState =
     switch (action) {
     | ItemPageAction(action) => {
         ...state,
@@ -30,5 +58,8 @@ let reducer = (action, state) =>
       }
     | ChangeUrl(url) => {...state, url}
     };
-  ReasonReact.Update(newState);
+  ReasonReact.UpdateWithSideEffects(
+    newState,
+    _self => Most.Subject.next(action, sub) |> ignore,
+  );
 };
