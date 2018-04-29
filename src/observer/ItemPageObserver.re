@@ -13,4 +13,5 @@ let observe = (stream, send) =>
        )
     |> debounce(200)
     |> observe(x => send(ChangeSource(x)))
-  );
+  )
+  |> ignore;
