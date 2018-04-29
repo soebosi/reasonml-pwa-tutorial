@@ -1,5 +1,3 @@
-open Util;
-
 type state = {
   itemPage: ItemPageModel.state,
   topPage: TopPageModel.state,
@@ -29,15 +27,6 @@ let getItemPageAction = a =>
   | ItemPageAction(a) => Some(a)
   | _ => None
   };
-
-let observe = (stream, send) => {
-  stream
-  |> filterMap(getTopPageAction)
-  |> TopPageObserver.observe(action => send(TopPageAction(action)));
-  stream
-  |> filterMap(getItemPageAction)
-  |> ItemPageObserver.observe(action => send(ItemPageAction(action)));
-};
 
 let actionSubject = Most.Subject.make();
 
