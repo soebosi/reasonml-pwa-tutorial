@@ -18,30 +18,24 @@ type action =
   | TopPageAction(TopPageModel.action)
   | ChangeUrl(ReasonReact.Router.url);
 
+let getTopPageAction = a =>
+  switch (a) {
+  | TopPageAction(a) => Some(a)
+  | _ => None
+  };
+
+let getItemPageAction = a =>
+  switch (a) {
+  | ItemPageAction(a) => Some(a)
+  | _ => None
+  };
+
 let observe = (stream, send) => {
-  TopPageObserver.observe(
-    filterMap(
-      a =>
-        switch (a) {
-        | TopPageAction(a) => Some(a)
-        | _ => None
-        },
-      stream,
-    ),
-    x =>
+  TopPageObserver.observe(filterMap(getTopPageAction, stream), x =>
     send(TopPageAction(x))
   )
   |. ignore;
-  ItemPageObserver.observe(
-    filterMap(
-      a =>
-        switch (a) {
-        | ItemPageAction(a) => Some(a)
-        | _ => None
-        },
-      stream,
-    ),
-    x =>
+  ItemPageObserver.observe(filterMap(getItemPageAction, stream), x =>
     send(ItemPageAction(x))
   )
   |. ignore;
