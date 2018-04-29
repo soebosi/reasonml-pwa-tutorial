@@ -15,3 +15,9 @@ let reducer = (action, state) =>
   | ChangeText(text) => {...state, text}
   | ChangeSource(source) => {...state, source}
   };
+
+let getChangeText = x =>
+  switch (x) {
+  | ChangeText(text) => Some(text)
+  | _ => None
+  };
