@@ -2,7 +2,7 @@ open Util;
 
 open ItemPageModel;
 
-let observe = (stream, send) =>
+let observe = (send, stream) =>
   Most.(
     stream
     |> filterMap(getChangeText)

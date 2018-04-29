@@ -31,12 +31,12 @@ let getItemPageAction = a =>
   };
 
 let observe = (stream, send) => {
-  TopPageObserver.observe(filterMap(getTopPageAction, stream), x =>
-    send(TopPageAction(x))
-  );
-  ItemPageObserver.observe(filterMap(getItemPageAction, stream), x =>
-    send(ItemPageAction(x))
-  );
+  stream
+  |> filterMap(getTopPageAction)
+  |> TopPageObserver.observe(action => send(TopPageAction(action)));
+  stream
+  |> filterMap(getItemPageAction)
+  |> ItemPageObserver.observe(action => send(ItemPageAction(action)));
 };
 
 let actionSubject = Most.Subject.make();
