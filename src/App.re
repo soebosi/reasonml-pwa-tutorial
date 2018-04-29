@@ -8,7 +8,7 @@ let make = (_children) => {
   didMount: self => {
     let watcherID = ReasonReact.Router.watchUrl(url => changeUrl(url) |. self.send);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
-    observe(Most.Subject.asStream(sub), self.send) |. ignore;
+    observe(Most.Subject.asStream(actionSubject), self.send) |. ignore;
   },
   render: self => {
     let sendChildAction = (actionCreator, action) =>

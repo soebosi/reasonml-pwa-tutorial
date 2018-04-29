@@ -18,8 +18,6 @@ type action =
   | TopPageAction(TopPageModel.action)
   | ChangeUrl(ReasonReact.Router.url);
 
-let sub = Most.Subject.make();
-
 let observe = (stream, send) => {
   TopPageObserver.observe(
     filterMap(
@@ -49,6 +47,8 @@ let observe = (stream, send) => {
   |. ignore;
 };
 
+let actionSubject = Most.Subject.make();
+
 let reducer = (action, state) => {
   let newState =
     switch (action) {
@@ -64,6 +64,6 @@ let reducer = (action, state) => {
     };
   ReasonReact.UpdateWithSideEffects(
     newState,
-    _self => Most.Subject.next(action, sub) |> ignore,
+    _self => Most.Subject.next(action, actionSubject) |> ignore,
   );
 };
