@@ -6,7 +6,7 @@ let a_ = ReasonReact.array;
 
 let compose = (f, g) => x => f(g(x));
 
-let (@@@) = compose;
+let (<<) = compose;
 
 let filterMap = (f, stream) =>
   Most.(
