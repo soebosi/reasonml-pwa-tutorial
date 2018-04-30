@@ -5,7 +5,7 @@ open ItemPageModel;
 let component = ReasonReact.statelessComponent("ItemPage");
 
 let make = (~name, ~send, ~itemPageState, _children) => {
-  let handleChange = e => {
+  let onChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let text = ReactDOMRe.domElementToObj(dom)##value;
     send @@ changeText(text);
@@ -15,7 +15,7 @@ let make = (~name, ~send, ~itemPageState, _children) => {
     render: _self =>
       <div>
         <h2> (s_(name)) </h2>
-        <textarea value=itemPageState.text onChange=handleChange />
+        <textarea value=itemPageState.text onChange />
         <Markdown source=itemPageState.source />
       </div>,
   };

@@ -8,8 +8,11 @@ let make = (_children) => {
   initialState,
   reducer,
   didMount: ({send, onUnmount}) => {
-    let watcherID = ReasonReact.Router.watchUrl(send << changeUrl);
-    onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+    {
+      open ReasonReact.Router;
+      let watcherID = watchUrl(send << changeUrl);
+      onUnmount(() => unwatchUrl(watcherID));
+    };
     let actionStream = Most.Subject.asStream(actionSubject);
     AppObserver.observe(actionStream, send);
   },

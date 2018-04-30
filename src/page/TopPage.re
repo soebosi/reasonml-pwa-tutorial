@@ -12,12 +12,12 @@ module Styles = {
 let component = ReasonReact.statelessComponent("TopPage");
 
 let make = (~send, ~topPageState, _children) => {
-  let handleChange = e => {
+  let onChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let name = ReactDOMRe.domElementToObj(dom)##value;
     send @@ changeText(name);
   };
-  let handleSubmit = e => {
+  let onSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
     send @@ addName(topPageState.name);
     send @@ changeText("");
@@ -26,7 +26,7 @@ let make = (~send, ~topPageState, _children) => {
     ...component,
     render: _self =>
       <div className=Styles.contents>
-        <form onSubmit=handleSubmit>
+        <form onSubmit>
           <MyFormGroup>
             <MyLabel htmlFor="nameInput"> (s_("Name:")) </MyLabel>
             <MyInputText
@@ -34,7 +34,7 @@ let make = (~send, ~topPageState, _children) => {
               name="name"
               value=topPageState.name
               placeholder="name"
-              onChange=handleChange
+              onChange
             />
           </MyFormGroup>
           <MyButton> (s_("submit")) </MyButton>
