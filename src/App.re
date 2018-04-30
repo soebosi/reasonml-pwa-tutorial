@@ -14,20 +14,18 @@ let make = (_children) => {
     AppObserver.observe(actionStream, send);
   },
   render: ({send, state}) => {
-    let sendChildAction = (actionCreator, action) =>
-      send @@ actionCreator(action);
     <div>
       (
         switch(state.url.path) {
         | ["items", name] =>
           <ItemPage
-            send=sendChildAction(itemPageAction)
+            send=(send << itemPageAction)
             itemPageState=state.itemPage
             name
           />
         | _ =>
           <TopPage
-            send=sendChildAction(topPageAction)
+            send=(send << topPageAction)
             topPageState=state.topPage
           />
         }
