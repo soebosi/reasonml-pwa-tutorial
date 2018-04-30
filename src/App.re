@@ -20,13 +20,13 @@ let make = (_children) => {
         | ["items", name] =>
           <ItemPage
             send=(send << itemPageAction)
-            itemPageState=state.itemPage
+            itemPageState=state.itemPageState
             name
           />
         | _ =>
           <TopPage
             send=(send << topPageAction)
-            topPageState=state.topPage
+            topPageState=state.topPageState
           />
         }
       )

@@ -1,12 +1,12 @@
 type state = {
-  itemPage: ItemPageModel.state,
-  topPage: TopPageModel.state,
+  itemPageState: ItemPageModel.state,
+  topPageState: TopPageModel.state,
   url: ReasonReact.Router.url,
 };
 
 let initialState = () => {
-  itemPage: ItemPageModel.initialState(),
-  topPage: TopPageModel.initialState(),
+  itemPageState: ItemPageModel.initialState(),
+  topPageState: TopPageModel.initialState(),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
@@ -35,11 +35,11 @@ let reducer = (action, state) => {
     switch (action) {
     | ItemPageAction(action) => {
         ...state,
-        itemPage: ItemPageModel.reducer(action, state.itemPage),
+        itemPageState: ItemPageModel.reducer(action, state.itemPageState),
       }
     | TopPageAction(action) => {
         ...state,
-        topPage: TopPageModel.reducer(action, state.topPage),
+        topPageState: TopPageModel.reducer(action, state.topPageState),
       }
     | ChangeUrl(url) => {...state, url}
     };
