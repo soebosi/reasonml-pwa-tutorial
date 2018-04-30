@@ -1,1 +1,1 @@
-let observe = (send, stream) => ignore();
+let observe = (_send, _stream) => ignore();

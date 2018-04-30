@@ -7,6 +7,6 @@ let observe = (send, stream) =>
     stream
     |> filterMap(getChangeText)
     |> debounce(200)
-    |> observe(x => send(ChangeSource(x)))
-  )
-  |> ignore;
+    |> observe(send @@@ changeSource)
+    |> ignore
+  );
