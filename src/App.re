@@ -7,28 +7,28 @@ let make = (_children) => {
   ...component,
   initialState,
   reducer,
-  didMount: self => {
-    let watcherID = ReasonReact.Router.watchUrl(self.send @@@ changeUrl);
-    self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+  didMount: ({send, onUnmount}) => {
+    let watcherID = ReasonReact.Router.watchUrl(send @@@ changeUrl);
+    onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
     let actionStream = Most.Subject.asStream(actionSubject);
-    AppObserver.observe(actionStream, self.send);
+    AppObserver.observe(actionStream, send);
   },
-  render: self => {
+  render: ({send, state}) => {
     let sendChildAction = (actionCreator, action) =>
-      self.send @@ actionCreator(action);
+      send @@ actionCreator(action);
     <div>
       (
-        switch(self.state.url.path) {
+        switch(state.url.path) {
         | ["items", name] =>
           <ItemPage
             send=sendChildAction(itemPageAction)
-            itemPageState=self.state.itemPage
+            itemPageState=state.itemPage
             name
           />
         | _ =>
           <TopPage
             send=sendChildAction(topPageAction)
-            topPageState=self.state.topPage
+            topPageState=state.topPage
           />
         }
       )
