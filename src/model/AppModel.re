@@ -45,6 +45,6 @@ let reducer = (action, state) => {
     };
   ReasonReact.UpdateWithSideEffects(
     newState,
-    _self => Most.Subject.next(action, actionSubject) |> ignore,
+    _self => Most.Subject.next(action, actionSubject) |. ignore,
   );
 };

@@ -5,8 +5,8 @@ open AppModel;
 let observe = (stream, send) => {
   stream
   |> filterMap(getTopPageAction)
-  |> TopPageObserver.observe(action => send(TopPageAction(action)));
+  |> TopPageObserver.observe(send @@@ topPageAction);
   stream
   |> filterMap(getItemPageAction)
-  |> ItemPageObserver.observe(action => send(ItemPageAction(action)));
+  |> ItemPageObserver.observe(send @@@ itemPageAction);
 };

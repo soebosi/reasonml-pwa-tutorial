@@ -1,3 +1,5 @@
+open Util;
+
 open AppModel;
 
 let component = ReasonReact.reducerComponent("App");
@@ -6,15 +8,14 @@ let make = (_children) => {
   initialState,
   reducer,
   didMount: self => {
-    let watcherID = ReasonReact.Router.watchUrl(url => changeUrl(url) |. self.send);
+    let watcherID = ReasonReact.Router.watchUrl(self.send @@@ changeUrl);
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
     let actionStream = Most.Subject.asStream(actionSubject);
     AppObserver.observe(actionStream, self.send);
   },
   render: self => {
     let sendChildAction = (actionCreator, action) =>
-      actionCreator(action)
-      |. self.send;
+      self.send @@ actionCreator(action);
     <div>
       (
         switch(self.state.url.path) {

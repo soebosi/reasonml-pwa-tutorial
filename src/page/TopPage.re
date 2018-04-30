@@ -15,12 +15,12 @@ let make = (~send, ~topPageState, _children) => {
   let handleChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let name = ReactDOMRe.domElementToObj(dom)##value;
-    send(changeText(name));
+    send @@ changeText(name);
   };
   let handleSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
-    send(addName(topPageState.name));
-    send(changeText(""));
+    send @@ addName(topPageState.name);
+    send @@ changeText("");
   };
   {
     ...component,
