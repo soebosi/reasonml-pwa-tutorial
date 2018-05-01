@@ -2,11 +2,16 @@ open Util;
 
 open AppModel;
 
-let observe = (stream, send) => {
-  stream
-  |> filterMap(getTopPageAction)
-  |> TopPageObserver.observe(send << topPageAction);
-  stream
-  |> filterMap(getItemPageAction)
-  |> ItemPageObserver.observe(send << itemPageAction);
-};
+let observe = stream =>
+  Most.(
+    mergeArray([|
+      stream
+      |> filterMap(getTopPageAction)
+      |> TopPageObserver.observe
+      |> map(topPageAction),
+      stream
+      |> filterMap(getItemPageAction)
+      |> ItemPageObserver.observe
+      |> map(itemPageAction),
+    |])
+  );

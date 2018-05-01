@@ -19,3 +19,9 @@ let reducer = (action, state) =>
     let nameSet = Set.String.add(state.nameSet, name);
     {...state, nameSet};
   };
+
+let getChangeText = x =>
+  switch (x) {
+  | ChangeText(text) => Some(text)
+  | _ => None
+  };

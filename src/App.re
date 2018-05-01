@@ -14,7 +14,9 @@ let make = (_children) => {
       onUnmount(() => unwatchUrl(watcherID));
     };
     let actionStream = Most.Subject.asStream(actionSubject);
-    AppObserver.observe(actionStream, send);
+    AppObserver.observe(actionStream)
+    |> Most.observe(send)
+    |> ignore;
   },
   render: ({send, state}) => {
     <div>

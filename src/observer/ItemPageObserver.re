@@ -2,11 +2,7 @@ open Util;
 
 open ItemPageModel;
 
-let observe = (send, stream) =>
+let observe = stream =>
   Most.(
-    stream
-    |> filterMap(getChangeText)
-    |> debounce(200)
-    |> observe(send << changeSource)
-    |> ignore
+    stream |> filterMap(getChangeText) |> debounce(200) |> map(changeSource)
   );
