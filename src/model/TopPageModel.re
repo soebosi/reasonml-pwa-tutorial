@@ -1,3 +1,5 @@
+open Util;
+
 open Belt;
 
 type state = {
@@ -25,3 +27,5 @@ let getChangeText = x =>
   | ChangeText(text) => Some(text)
   | _ => None
   };
+
+let epic = stream => Most.(stream |> filter(_a => false));

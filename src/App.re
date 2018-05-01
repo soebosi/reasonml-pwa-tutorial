@@ -13,10 +13,13 @@ let make = (_children) => {
       let watcherID = watchUrl(send << changeUrl);
       onUnmount(() => unwatchUrl(watcherID));
     };
-    let actionStream = Most.Subject.asStream(actionSubject);
-    AppObserver.observe(actionStream)
-    |> Most.observe(send)
-    |> ignore;
+    {
+      open Most;
+      Subject.asStream(actionSubject)
+      |> actionEpic
+      |> observe(send)
+      |> ignore;
+    };
   },
   render: ({send, state}) => {
     <div>

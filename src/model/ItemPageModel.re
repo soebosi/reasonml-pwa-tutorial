@@ -1,3 +1,5 @@
+open Util;
+
 type state = {
   text: string,
   source: string,
@@ -21,3 +23,8 @@ let getChangeText = x =>
   | ChangeText(text) => Some(text)
   | _ => None
   };
+
+let epic = stream =>
+  Most.(
+    stream |> filterMap(getChangeText) |> debounce(200) |> map(changeSource)
+  );

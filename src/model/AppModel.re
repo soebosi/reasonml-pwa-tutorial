@@ -1,3 +1,5 @@
+open Util;
+
 type state = {
   itemPageState: ItemPageModel.state,
   topPageState: TopPageModel.state,
@@ -48,3 +50,17 @@ let reducer = (action, state) => {
     _self => Most.Subject.next(action, actionSubject) |. ignore,
   );
 };
+
+let actionEpic = stream =>
+  Most.(
+    mergeArray([|
+      stream
+      |> filterMap(getTopPageAction)
+      |> TopPageModel.epic
+      |> map(topPageAction),
+      stream
+      |> filterMap(getItemPageAction)
+      |> ItemPageModel.epic
+      |> map(itemPageAction),
+    |])
+  );
