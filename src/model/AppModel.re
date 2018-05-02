@@ -18,18 +18,6 @@ type action =
   | TopPageAction(TopPageModel.action)
   | ChangeUrl(ReasonReact.Router.url);
 
-let getTopPageAction = a =>
-  switch (a) {
-  | TopPageAction(a) => Some(a)
-  | _ => None
-  };
-
-let getItemPageAction = a =>
-  switch (a) {
-  | ItemPageAction(a) => Some(a)
-  | _ => None
-  };
-
 let actionSubject = Most.Subject.make();
 
 let reducer = (action, state) => {
@@ -51,16 +39,27 @@ let reducer = (action, state) => {
   );
 };
 
-let actionEpic = stream =>
-  Most.(
-    mergeArray([|
-      stream
-      |> filterMap(getTopPageAction)
-      |> TopPageModel.epic
-      |> map(topPageAction),
-      stream
-      |> filterMap(getItemPageAction)
-      |> ItemPageModel.epic
-      |> map(itemPageAction),
-    |])
-  );
+let actionEpic = stream => {
+  open Most;
+  let topPageActionSubject = Most.Subject.make();
+  let itemPageActionSubject = Most.Subject.make();
+  stream
+  |> observe(action =>
+       switch (action) {
+       | TopPageAction(action) =>
+         Subject.next(action, topPageActionSubject) |. ignore
+       | ItemPageAction(action) =>
+         Subject.next(action, itemPageActionSubject) |. ignore
+       | _ => ignore()
+       }
+     )
+  |> ignore;
+  mergeArray([|
+    Subject.asStream(topPageActionSubject)
+    |> TopPageModel.epic
+    |> map(topPageAction),
+    Subject.asStream(itemPageActionSubject)
+    |> ItemPageModel.epic
+    |> map(itemPageAction),
+  |]);
+};
