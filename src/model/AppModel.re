@@ -55,11 +55,11 @@ let actionEpic = stream =>
   Most.(
     mergeArray([|
       stream
-      |> filterMap(getTopPageAction)
+      |> keepMap(getTopPageAction)
       |> TopPageModel.epic
       |> map(topPageAction),
       stream
-      |> filterMap(getItemPageAction)
+      |> keepMap(getItemPageAction)
       |> ItemPageModel.epic
       |> map(itemPageAction),
     |])

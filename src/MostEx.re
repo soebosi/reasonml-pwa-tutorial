@@ -2,7 +2,7 @@ open Belt;
 
 module Most = {
   include Most;
-  let filterMap = (f, stream) =>
+  let keepMap = (f, stream) =>
     stream
     |> map(f)
     |> filter(Option.isSome)

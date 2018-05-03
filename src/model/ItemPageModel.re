@@ -26,5 +26,5 @@ let getChangeText = x =>
 
 let epic = stream =>
   Most.(
-    stream |> filterMap(getChangeText) |> debounce(200) |> map(changeSource)
+    stream |> keepMap(getChangeText) |> debounce(200) |> map(changeSource)
   );
