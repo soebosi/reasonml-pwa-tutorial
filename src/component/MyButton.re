@@ -8,7 +8,7 @@ let baseStyle =
     color(rgb(256, 256, 256)),
     border(px(1), `solid, rgb(180, 180, 180)),
     borderRadius(`rem(0.25)),
-    backgroundColor(`rgb((0, 150, 256))),
+    backgroundColor(`rgb((0, 0, 139))),
     transition(~duration=150, ~timingFunction=`easeInOut, "background-color"),
     hover([backgroundColor(rgb(0, 100, 255))]),
     active([MyBoxShadow.style]),

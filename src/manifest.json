@@ -1,0 +1,10 @@
+{
+  "name": "reasonml pwa tutorial",
+  "short_name": "ReasonPWA",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "reasonml pwa tutorial",
+  "icons": [],
+  "related_applications": []
+}
