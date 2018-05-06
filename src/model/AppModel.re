@@ -8,8 +8,6 @@ type action =
   | TopPageAction(TopPageModel.action)
   | ChangeUrl(ReasonReact.Router.url);
 
-type parentAction = action;
-
 let getTopPageAction = a =>
   switch (a) {
   | TopPageAction(a) => Some(a)
@@ -39,39 +37,37 @@ let getItemPageState = a =>
   | _ => None
   };
 
-module TopPageModel2 =
-  ModelAdaptor.Make(
-    {
-      type adaptedState = childState;
-      type adaptedAction = action;
-      include TopPageModel;
-      let createState = topPageState;
-      let getState = getTopPageState;
-      let createAction = topPageAction;
-      let getAction = getTopPageAction;
-    },
-  );
-
-module ItemPageModel2 =
-  ModelAdaptor.Make(
-    {
-      type adaptedState = childState;
-      type adaptedAction = action;
-      include ItemPageModel;
-      let createState = itemPageState;
-      let getState = getItemPageState;
-      let createAction = itemPageAction;
-      let getAction = getItemPageAction;
-    },
-  );
-
 module type AdaptedModel = {
-  let reducer: (parentAction, childState) => childState;
+  let reducer: (action, childState) => childState;
+  let initialState: unit => childState;
+  let epic: Most.stream(action) => Most.stream(action);
 };
 
 let models: array((module AdaptedModel)) = [|
-  (module TopPageModel2),
-  (module ItemPageModel2),
+  (module
+   ModelAdaptor.Make(
+     {
+       type adaptedState = childState;
+       type adaptedAction = action;
+       include TopPageModel;
+       let createState = topPageState;
+       let getState = getTopPageState;
+       let createAction = topPageAction;
+       let getAction = getTopPageAction;
+     },
+   )),
+  (module
+   ModelAdaptor.Make(
+     {
+       type adaptedState = childState;
+       type adaptedAction = action;
+       include ItemPageModel;
+       let createState = itemPageState;
+       let getState = getItemPageState;
+       let createAction = itemPageAction;
+       let getAction = getItemPageAction;
+     },
+   )),
 |];
 
 type state = {
@@ -80,10 +76,10 @@ type state = {
 };
 
 let initialState = () => {
-  childStates: [|
-    TopPageModel2.initialState(),
-    ItemPageModel2.initialState(),
-  |],
+  childStates:
+    Array.mapU(models, (. (module M): (module AdaptedModel)) =>
+      M.initialState()
+    ),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
@@ -107,15 +103,5 @@ let reducer = (action, state) => {
 };
 
 let actionEpic = stream =>
-  Most.(
-    mergeArray([|
-      stream
-      |> keepMap(getTopPageAction)
-      |> TopPageModel.epic
-      |> map(topPageAction),
-      stream
-      |> keepMap(getItemPageAction)
-      |> ItemPageModel.epic
-      |> map(itemPageAction),
-    |])
-  );
+  Array.mapU(models, (. (module M): (module AdaptedModel)) => M.epic(stream))
+  |. Most.mergeArray;

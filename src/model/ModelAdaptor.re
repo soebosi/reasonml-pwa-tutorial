@@ -1,3 +1,5 @@
+open MostEx;
+
 module type Model = {
   type state;
   type adaptedState;
@@ -21,4 +23,6 @@ module Make = (M: Model) => {
     | (Some(a), Some(s)) => M.reducer(a, s) |. M.createState
     | _ => state
     };
+  let epic = stream =>
+    Most.(stream |> keepMap(M.getAction) |> M.epic |> map(M.createAction));
 };
