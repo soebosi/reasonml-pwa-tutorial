@@ -2,21 +2,27 @@ open Belt;
 
 open MostEx;
 
-[@bs.deriving accessors]
-type action =
-  | ItemPageAction(ItemPageModel.action)
-  | TopPageAction(TopPageModel.action)
-  | ChangeUrl(ReasonReact.Router.url);
+type action = [
+  | `ItemPageAction(ItemPageModel.action)
+  | `TopPageAction(TopPageModel.action)
+  | `ChangeUrl(ReasonReact.Router.url)
+];
+
+let itemPageAction = a => `ItemPageAction(a);
+
+let topPageAction = a => `TopPageAction(a);
+
+let changeUrl = a => `ChangeUrl(a);
 
 let getTopPageAction = a =>
   switch (a) {
-  | TopPageAction(a) => Some(a)
+  | `TopPageAction(a) => Some(a)
   | _ => None
   };
 
 let getItemPageAction = a =>
   switch (a) {
-  | ItemPageAction(a) => Some(a)
+  | `ItemPageAction(a) => Some(a)
   | _ => None
   };
 
@@ -88,7 +94,7 @@ let actionSubject = Most.Subject.make();
 let reducer = (action, state) => {
   let newState =
     switch (action) {
-    | ChangeUrl(url) => {...state, url}
+    | `ChangeUrl(url) => {...state, url}
     | _ =>
       let childStates =
         Array.mapWithIndexU(models, (. i, (module M): (module AdaptedModel)) =>
