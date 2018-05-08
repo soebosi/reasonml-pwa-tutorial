@@ -27,7 +27,7 @@ let getItemPageAction = a =>
   };
 
 [@bs.deriving accessors]
-type childState =
+type pageState =
   | ItemPageState(ItemPageModel.state)
   | TopPageState(TopPageModel.state);
 
@@ -44,8 +44,8 @@ let getItemPageState = a =>
   };
 
 module type AdaptedModel = {
-  let reducer: (action, childState) => childState;
-  let initialState: unit => childState;
+  let reducer: (action, pageState) => pageState;
+  let initialState: unit => pageState;
   let epic: Most.stream(action) => Most.stream(action);
 };
 
@@ -53,7 +53,7 @@ let models: array((module AdaptedModel)) = [|
   (module
    ModelAdaptor.Make(
      {
-       type adaptedState = childState;
+       type adaptedState = pageState;
        type adaptedAction = action;
        include TopPageModel;
        let createState = topPageState;
@@ -65,7 +65,7 @@ let models: array((module AdaptedModel)) = [|
   (module
    ModelAdaptor.Make(
      {
-       type adaptedState = childState;
+       type adaptedState = pageState;
        type adaptedAction = action;
        include ItemPageModel;
        let createState = itemPageState;
@@ -77,12 +77,12 @@ let models: array((module AdaptedModel)) = [|
 |];
 
 type state = {
-  childStates: array(childState),
+  pageStates: array(pageState),
   url: ReasonReact.Router.url,
 };
 
 let initialState = () => {
-  childStates:
+  pageStates:
     Array.mapU(models, (. (module M): (module AdaptedModel)) =>
       M.initialState()
     ),
@@ -96,11 +96,11 @@ let reducer = (action, state) => {
     switch (action) {
     | `ChangeUrl(url) => {...state, url}
     | _ =>
-      let childStates =
+      let pageStates =
         Array.mapWithIndexU(models, (. i, (module M): (module AdaptedModel)) =>
-          M.reducer(action, Option.getExn(state.childStates[i]))
+          M.reducer(action, Option.getExn(state.pageStates[i]))
         );
-      {...state, childStates};
+      {...state, pageStates};
     };
   ReasonReact.UpdateWithSideEffects(
     newState,
