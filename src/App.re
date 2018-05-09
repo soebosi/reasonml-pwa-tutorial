@@ -29,14 +29,14 @@ let make = (_children) => {
         switch(state.url.path) {
         | ["items", name] =>
           <ItemPage
-            send=(send << AdaptedModels.itemPageAction)
-            itemPageState=Option.getExn(AdaptedModels.getItemPageState(Option.getExn(state.pageStates[1])))
+            send=(send << Adaptor.itemPageAction)
+            itemPageState=Option.getExn(Adaptor.getItemPageState(Option.getExn(state.pageStates[1])))
             name
           />
         | _ =>
           <TopPage
-            send=(send << AdaptedModels.topPageAction)
-            topPageState=Option.getExn(AdaptedModels.getTopPageState(Option.getExn(state.pageStates[0])))
+            send=(send << Adaptor.topPageAction)
+            topPageState=Option.getExn(Adaptor.getTopPageState(Option.getExn(state.pageStates[0])))
           />
         }
       )

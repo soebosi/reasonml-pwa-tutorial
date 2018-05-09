@@ -2,23 +2,20 @@ open Belt;
 
 open MostEx;
 
-let models = AdaptedModels.models;
+let models = Adaptor.models;
 
-type action = [
-  AdaptedModels.adaptedAction
-  | `ChangeUrl(ReasonReact.Router.url)
-];
+type action = [ Adaptor.adaptedAction | `ChangeUrl(ReasonReact.Router.url)];
 
 let changeUrl = a => `ChangeUrl(a);
 
 type state = {
-  pageStates: array(AdaptedModels.adaptedState),
+  pageStates: array(Adaptor.adaptedState),
   url: ReasonReact.Router.url,
 };
 
 let initialState = () => {
   pageStates:
-    Array.mapU(models, (. (module M): (module AdaptedModels.AdaptedModel)) =>
+    Array.mapU(models, (. (module M): (module Adaptor.AdaptedModel)) =>
       M.initialState()
     ),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
@@ -33,7 +30,7 @@ let reducer = (action, state) => {
     | _ =>
       let pageStates =
         Array.mapWithIndexU(
-          models, (. i, (module M): (module AdaptedModels.AdaptedModel)) =>
+          models, (. i, (module M): (module Adaptor.AdaptedModel)) =>
           M.reducer(action, Option.getExn(state.pageStates[i]))
         );
       {...state, pageStates};
@@ -45,7 +42,7 @@ let reducer = (action, state) => {
 };
 
 let actionEpic = stream =>
-  Array.mapU(models, (. (module M): (module AdaptedModels.AdaptedModel)) =>
+  Array.mapU(models, (. (module M): (module Adaptor.AdaptedModel)) =>
     M.epic(stream)
   )
   |. Most.mergeArray;
