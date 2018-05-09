@@ -30,13 +30,13 @@ let make = (_children) => {
         | ["items", name] =>
           <ItemPage
             send=(send << Adaptor.itemPageAction)
-            itemPageState=Option.getExn(Adaptor.getItemPageState(Option.getExn(state.pageStates[1])))
+            itemPageState=Option.getExn(Adaptor.getItemPageState(Map.String.getExn(state.pageStates, "ItemPage")))
             name
           />
         | _ =>
           <TopPage
             send=(send << Adaptor.topPageAction)
-            topPageState=Option.getExn(Adaptor.getTopPageState(Option.getExn(state.pageStates[0])))
+            topPageState=Option.getExn(Adaptor.getTopPageState(Map.String.getExn(state.pageStates, "TopPage")))
           />
         }
       )

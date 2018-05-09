@@ -1,3 +1,5 @@
+open Belt;
+
 open MostEx;
 
 type adaptedAction = [
@@ -69,25 +71,35 @@ module Make = (M: Model) => {
     Most.(stream |> keepMap(M.getAction) |> M.epic |> map(M.createAction));
 };
 
-let models: array((module AdaptedModel)) = [|
-  (module
-   Make(
-     {
-       include TopPageModel;
-       let createState = topPageState;
-       let getState = getTopPageState;
-       let createAction = topPageAction;
-       let getAction = getTopPageAction;
-     },
-   )),
-  (module
-   Make(
-     {
-       include ItemPageModel;
-       let createState = itemPageState;
-       let getState = getItemPageState;
-       let createAction = itemPageAction;
-       let getAction = getItemPageAction;
-     },
-   )),
-|];
+let e: Map.String.t((module AdaptedModel)) = Map.String.empty;
+
+let models =
+  Map.String.(
+    e
+    |. set(
+         "TopPage",
+         (module
+          Make(
+            {
+              include TopPageModel;
+              let createState = topPageState;
+              let getState = getTopPageState;
+              let createAction = topPageAction;
+              let getAction = getTopPageAction;
+            },
+          )),
+       )
+    |. set(
+         "ItemPage",
+         (module
+          Make(
+            {
+              include ItemPageModel;
+              let createState = itemPageState;
+              let getState = getItemPageState;
+              let createAction = itemPageAction;
+              let getAction = getItemPageAction;
+            },
+          )),
+       )
+  );
