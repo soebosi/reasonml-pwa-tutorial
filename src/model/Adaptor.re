@@ -11,15 +11,15 @@ type adaptedState =
   | TopPageState(TopPageModel.state);
 
 module type Model = {
-  type state;
-  let getState: adaptedState => option(state);
-  let createState: state => adaptedState;
   type action;
-  let getAction: [> adaptedAction] => option(action);
-  let createAction: action => [> adaptedAction];
+  type state;
   let initialState: unit => state;
   let reducer: (action, state) => state;
   let epic: Most.stream(action) => Most.stream(action);
+  let getState: adaptedState => option(state);
+  let createState: state => adaptedState;
+  let getAction: [> adaptedAction] => option(action);
+  let createAction: action => [> adaptedAction];
 };
 
 let itemPageAction = a => `ItemPageAction(a);
