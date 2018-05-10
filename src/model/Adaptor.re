@@ -25,16 +25,12 @@ module type Model = {
 };
 
 module type AdaptedModel = {
-  type action;
-  type state;
   let initialState: unit => adaptedState;
   let reducer: ([> adaptedAction], adaptedState) => adaptedState;
   let epic: Most.stream([> adaptedAction]) => Most.stream([> adaptedAction]);
 };
 
 module Make = (M: Model) => {
-  type state = M.state;
-  type action = M.action;
   let initialState = () => M.createState(M.initialState());
   let reducer = (action: [> adaptedAction], state) =>
     switch (M.getAction(action), M.getState(state)) {
