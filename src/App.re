@@ -4,6 +4,8 @@ open Util;
 
 open AppModel;
 
+exception Unreachable;
+
 let component = ReasonReact.reducerComponent("App");
 let make = (_children) => {
   ...component,
@@ -27,17 +29,27 @@ let make = (_children) => {
     <div>
       (
         switch(state.url.path) {
-        | ["items", name] =>
+        | ["items", name] => {
+          let itemPageState = switch(Map.String.getExn(state.pageStates, "ItemPage")) {
+            | ItemPageState(s) => s
+            | _ => raise(Unreachable)
+          };
           <ItemPage
-            send=(send << Adaptor.itemPageAction)
-            itemPageState=Option.getExn(Adaptor.getItemPageState(Map.String.getExn(state.pageStates, "ItemPage")))
+            send=(send << (a => `ItemPageAction(a)))
+            itemPageState
             name
           />
-        | _ =>
+        }
+        | _ => {
+          let topPageState = switch(Map.String.getExn(state.pageStates, "TopPage")) {
+            | TopPageState(s) => s
+            | _ => raise(Unreachable)
+          };
           <TopPage
-            send=(send << Adaptor.topPageAction)
-            topPageState=Option.getExn(Adaptor.getTopPageState(Map.String.getExn(state.pageStates, "TopPage")))
+            send=(send << (a => `TopPageAction(a)))
+            topPageState
           />
+        }
         }
       )
     </div>;

@@ -24,37 +24,11 @@ module type Model = {
   let createAction: action => [> adaptedAction];
 };
 
-let itemPageAction = a => `ItemPageAction(a);
-
-let topPageAction = a => `TopPageAction(a);
-
-let getTopPageAction = a =>
-  switch (a) {
-  | `TopPageAction(a) => Some(a)
-  | _ => None
-  };
-
-let getItemPageAction = a =>
-  switch (a) {
-  | `ItemPageAction(a) => Some(a)
-  | _ => None
-  };
-
-let getTopPageState = a =>
-  switch (a) {
-  | TopPageState(a) => Some(a)
-  | _ => None
-  };
-
-let getItemPageState = a =>
-  switch (a) {
-  | ItemPageState(a) => Some(a)
-  | _ => None
-  };
-
 module type AdaptedModel = {
-  let reducer: ([> adaptedAction], adaptedState) => adaptedState;
+  type action;
+  type state;
   let initialState: unit => adaptedState;
+  let reducer: ([> adaptedAction], adaptedState) => adaptedState;
   let epic: Most.stream([> adaptedAction]) => Most.stream([> adaptedAction]);
 };
 
@@ -83,9 +57,17 @@ let models =
             {
               include TopPageModel;
               let createState = topPageState;
-              let getState = getTopPageState;
-              let createAction = topPageAction;
-              let getAction = getTopPageAction;
+              let getState = a =>
+                switch (a) {
+                | TopPageState(a) => Some(a)
+                | _ => None
+                };
+              let createAction = a => `TopPageAction(a);
+              let getAction = a =>
+                switch (a) {
+                | `TopPageAction(a) => Some(a)
+                | _ => None
+                };
             },
           )),
        )
@@ -96,9 +78,17 @@ let models =
             {
               include ItemPageModel;
               let createState = itemPageState;
-              let getState = getItemPageState;
-              let createAction = itemPageAction;
-              let getAction = getItemPageAction;
+              let getState = a =>
+                switch (a) {
+                | ItemPageState(a) => Some(a)
+                | _ => None
+                };
+              let createAction = a => `ItemPageAction(a);
+              let getAction = a =>
+                switch (a) {
+                | `ItemPageAction(a) => Some(a)
+                | _ => None
+                };
             },
           )),
        )
