@@ -2,7 +2,7 @@ open Belt;
 
 open MostEx;
 
-let models = Adaptor.models;
+let models = Adaptor.make();
 
 type action = [ Adaptor.adaptedAction | `ChangeUrl(ReasonReact.Router.url)];
 

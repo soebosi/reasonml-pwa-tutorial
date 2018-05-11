@@ -43,7 +43,7 @@ module Make = (M: Model) => {
 
 let e: Map.String.t((module AdaptedModel)) = Map.String.empty;
 
-let models =
+let make = () =>
   Map.String.(
     e
     |. set(
