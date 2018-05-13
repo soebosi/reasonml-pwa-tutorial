@@ -2,7 +2,7 @@ open Belt;
 
 open MostEx;
 
-let models = Adaptor.make();
+let models = AdaptedModels.make();
 
 type action = [
   AdaptedModel.adaptedAction
