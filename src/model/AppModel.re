@@ -4,18 +4,21 @@ open MostEx;
 
 let models = Adaptor.make();
 
-type action = [ Adaptor.adaptedAction | `ChangeUrl(ReasonReact.Router.url)];
+type action = [
+  AdaptedModel.adaptedAction
+  | `ChangeUrl(ReasonReact.Router.url)
+];
 
 let changeUrl = a => `ChangeUrl(a);
 
 type state = {
-  pageStates: Map.String.t(Adaptor.adaptedState),
+  pageStates: Map.String.t(AdaptedModel.adaptedState),
   url: ReasonReact.Router.url,
 };
 
 let initialState = () => {
   pageStates:
-    Map.String.mapU(models, (. (module M): (module Adaptor.AdaptedModel)) =>
+    Map.String.mapU(models, (. (module M): (module AdaptedModel.T)) =>
       M.initialState()
     ),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
@@ -30,7 +33,7 @@ let reducer = (action, state) => {
     | _ =>
       let pageStates =
         Map.String.mapWithKeyU(
-          models, (. key, (module M): (module Adaptor.AdaptedModel)) =>
+          models, (. key, (module M): (module AdaptedModel.T)) =>
           M.reducer(action, Map.String.getExn(state.pageStates, key))
         );
       {...state, pageStates};
@@ -42,7 +45,7 @@ let reducer = (action, state) => {
 };
 
 let actionEpic = stream =>
-  Map.String.mapU(models, (. (module M): (module Adaptor.AdaptedModel)) =>
+  Map.String.mapU(models, (. (module M): (module AdaptedModel.T)) =>
     M.epic(stream)
   )
   |. Map.String.valuesToArray
