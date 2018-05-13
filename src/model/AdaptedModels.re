@@ -2,13 +2,30 @@ open AdaptedModel;
 
 open Belt;
 
-let e: Map.String.t((module T)) = Map.String.empty;
+[@bs.deriving jsConverter]
+type key =
+  | TopPage
+  | ItemPage;
+
+module PageCmp =
+  Belt.Id.MakeComparable(
+    {
+      type t = key;
+      let cmp = (a, b) => keyToJs(a) - keyToJs(b);
+    },
+  );
+
+type t = Map.t(PageCmp.t, (module T), PageCmp.identity);
+
+type id = PageCmp.identity;
+
+let m: t = Map.make(~id=(module PageCmp));
 
 let make = () =>
-  Map.String.(
-    e
+  Map.(
+    m
     |. set(
-         "TopPage",
+         TopPage,
          (module
           Make(
             {
@@ -29,7 +46,7 @@ let make = () =>
           )),
        )
     |. set(
-         "ItemPage",
+         ItemPage,
          (module
           Make(
             {

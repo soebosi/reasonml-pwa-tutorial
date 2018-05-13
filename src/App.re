@@ -30,7 +30,7 @@ let make = (_children) => {
       (
         switch(state.url.path) {
         | ["items", name] => {
-          let itemPageState = switch(Map.String.getExn(state.pageStates, "ItemPage")) {
+          let itemPageState = switch(Map.getExn(state.pageStates, ItemPage)) {
             | ItemPageState(s) => s
             | _ => raise(Unreachable)
           };
@@ -41,7 +41,7 @@ let make = (_children) => {
           />
         }
         | _ => {
-          let topPageState = switch(Map.String.getExn(state.pageStates, "TopPage")) {
+          let topPageState = switch(Map.getExn(state.pageStates, TopPage)) {
             | TopPageState(s) => s
             | _ => raise(Unreachable)
           };
