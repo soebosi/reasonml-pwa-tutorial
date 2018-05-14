@@ -17,9 +17,9 @@ module type Model = {
   let reducer: (action, state) => state;
   let epic: Most.stream(action) => Most.stream(action);
   let getState: adaptedState => option(state);
-  let createState: state => adaptedState;
+  let adaptState: state => adaptedState;
   let getAction: [> adaptedAction] => option(action);
-  let createAction: action => [> adaptedAction];
+  let adaptAction: action => [> adaptedAction];
 };
 
 module type T = {
@@ -29,12 +29,12 @@ module type T = {
 };
 
 module Make = (M: Model) => {
-  let initialState = () => M.createState(M.initialState());
+  let initialState = () => M.adaptState(M.initialState());
   let reducer = (action: [> adaptedAction], state) =>
     switch (M.getAction(action), M.getState(state)) {
-    | (Some(a), Some(s)) => M.reducer(a, s) |. M.createState
+    | (Some(a), Some(s)) => M.reducer(a, s) |. M.adaptState
     | _ => state
     };
   let epic = stream : Most.stream([> adaptedAction]) =>
-    Most.(stream |> keepMap(M.getAction) |> M.epic |> map(M.createAction));
+    Most.(stream |> keepMap(M.getAction) |> M.epic |> map(M.adaptAction));
 };

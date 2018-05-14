@@ -27,13 +27,13 @@ let make = () =>
           Make(
             {
               include TopPageModel;
-              let createState = topPageState;
+              let adaptState = topPageState;
               let getState = a =>
                 switch (a) {
                 | TopPageState(a) => Some(a)
                 | _ => None
                 };
-              let createAction = a => `TopPageAction(a);
+              let adaptAction = a => `TopPageAction(a);
               let getAction = a =>
                 switch (a) {
                 | `TopPageAction(a) => Some(a)
@@ -48,13 +48,13 @@ let make = () =>
           Make(
             {
               include ItemPageModel;
-              let createState = itemPageState;
+              let adaptState = itemPageState;
               let getState = a =>
                 switch (a) {
                 | ItemPageState(a) => Some(a)
                 | _ => None
                 };
-              let createAction = a => `ItemPageAction(a);
+              let adaptAction = a => `ItemPageAction(a);
               let getAction = a =>
                 switch (a) {
                 | `ItemPageAction(a) => Some(a)
