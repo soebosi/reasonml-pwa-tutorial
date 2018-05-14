@@ -28,11 +28,11 @@ module type T = {
   let epic: Most.stream([> adaptedAction]) => Most.stream([> adaptedAction]);
 };
 
-module Make = (M: Model) => {
-  let initialState = () => M.adaptState(M.initialState());
+module Make = (M: Model): T => {
+  let initialState = () => M.(initialState() |. adaptState);
   let reducer = (action: [> adaptedAction], state) =>
-    switch (M.getAction(action), M.getState(state)) {
-    | (Some(a), Some(s)) => M.reducer(a, s) |. M.adaptState
+    switch (M.(getAction(action), getState(state))) {
+    | (Some(a), Some(s)) => M.(reducer(a, s) |. adaptState)
     | _ => state
     };
   let epic = stream : Most.stream([> adaptedAction]) =>
