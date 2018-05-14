@@ -28,7 +28,7 @@ module type T = {
   let epic: Most.stream([> adaptedAction]) => Most.stream([> adaptedAction]);
 };
 
-module Make = (M: Model): T => {
+module Make = (M: Model) : T => {
   let initialState = () => M.(initialState() |. adaptState);
   let reducer = (action: [> adaptedAction], state) =>
     switch (M.(getAction(action), getState(state))) {
