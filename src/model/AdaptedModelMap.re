@@ -1,7 +1,5 @@
 open AdaptedModel;
 
-open Belt;
-
 [@bs.deriving jsConverter]
 type key =
   | TopPage
@@ -15,14 +13,13 @@ module PageCmp =
     },
   );
 
-type t = Map.t(PageCmp.t, (module T), PageCmp.identity);
-
 type id = PageCmp.identity;
 
-let m: t = Map.make(~id=(module PageCmp));
+let m: Belt.Map.t(PageCmp.t, (module T), id) =
+  Belt.Map.make(~id=(module PageCmp));
 
 let make = () =>
-  Map.(
+  Belt.Map.(
     m
     |. set(
          TopPage,
