@@ -19,9 +19,8 @@ type state = {
 
 let initialState = () => {
   pageStates:
-    Map.mapU(models, (. (module M): (module AdaptedModel.T)) =>
-      M.initialState()
-    ),
+    models
+    |. Map.mapU((. (module M): (module AdaptedModel.T)) => M.initialState()),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
@@ -31,12 +30,14 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) => {...state, url}
-    | _ =>
-      let pageStates =
-        Map.mapWithKeyU(models, (. key, (module M): (module AdaptedModel.T)) =>
-          M.reducer(action, Map.getExn(state.pageStates, key))
-        );
-      {...state, pageStates};
+    | _ => {
+        ...state,
+        pageStates:
+          models
+          |. Map.mapWithKeyU((. key, (module M): (module AdaptedModel.T)) =>
+               M.reducer(action, Map.getExn(state.pageStates, key))
+             ),
+      }
     };
   ReasonReact.UpdateWithSideEffects(
     newState,
@@ -45,6 +46,7 @@ let reducer = (action, state) => {
 };
 
 let actionEpic = stream =>
-  Map.mapU(models, (. (module M): (module AdaptedModel.T)) => M.epic(stream))
+  models
+  |. Map.mapU((. (module M): (module AdaptedModel.T)) => M.epic(stream))
   |. Map.valuesToArray
   |. Most.mergeArray;
