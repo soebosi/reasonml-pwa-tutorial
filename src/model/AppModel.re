@@ -2,7 +2,7 @@ open Belt;
 
 open MostEx;
 
-let models = AdaptedModels.make();
+let models = AdaptedModelMap.make();
 
 type action = [
   AdaptedModel.adaptedAction
@@ -13,7 +13,7 @@ let changeUrl = a => `ChangeUrl(a);
 
 type state = {
   pageStates:
-    Map.t(AdaptedModels.key, AdaptedModel.adaptedState, AdaptedModels.id),
+    Map.t(AdaptedModelMap.key, AdaptedModel.adaptedState, AdaptedModelMap.id),
   url: ReasonReact.Router.url,
 };
 
