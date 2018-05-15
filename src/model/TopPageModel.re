@@ -3,23 +3,23 @@ open MostEx;
 open Belt;
 
 type state = {
-  name: string,
-  nameSet: Set.String.t,
+  text: string,
+  itemSet: Set.String.t,
 };
 
-let initialState = () => {name: "", nameSet: Set.String.empty};
+let initialState = () => {text: "", itemSet: Set.String.empty};
 
 [@bs.deriving accessors]
 type action =
-  | AddName(string)
+  | AddItem(string)
   | ChangeText(string);
 
 let reducer = (action, state) =>
   switch (action) {
-  | ChangeText(name) => {...state, name}
-  | AddName(name) =>
-    let nameSet = Set.String.add(state.nameSet, name);
-    {...state, nameSet};
+  | ChangeText(text) => {...state, text}
+  | AddItem(name) =>
+    let itemSet = Set.String.add(state.itemSet, name);
+    {...state, itemSet};
   };
 
 let getChangeText = x =>

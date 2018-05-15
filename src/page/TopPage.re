@@ -19,7 +19,7 @@ let make = (~send, ~topPageState, _children) => {
   };
   let onSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
-    send @@ addName(topPageState.name);
+    send @@ addItem(topPageState.text);
     send @@ changeText("");
   };
   {
@@ -32,7 +32,7 @@ let make = (~send, ~topPageState, _children) => {
             <MyInputText
               id="nameInput"
               name="name"
-              value=topPageState.name
+              value=topPageState.text
               placeholder="name"
               onChange
             />
@@ -41,7 +41,7 @@ let make = (~send, ~topPageState, _children) => {
         </form>
         <MyList>
           ...(
-               Set.String.toArray(topPageState.nameSet)
+               Set.String.toArray(topPageState.itemSet)
                |. Array.mapU((. name) =>
                     <MyListItem key=name>
                       <Link href=("/items/" ++ name)> (s_(name)) </Link>
