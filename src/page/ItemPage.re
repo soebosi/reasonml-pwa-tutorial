@@ -2,6 +2,17 @@ open Util;
 
 open ItemPageModel;
 
+module Styles = {
+  open Css;
+  let textarea =
+    style([
+      float(`left),
+      width(`percent(40.0)),
+      height(`px(500)),
+      margin(`px(10)),
+    ]);
+};
+
 let component = ReasonReact.statelessComponent("ItemPage");
 
 let make = (~name, ~send, ~itemPageState, _children) => {
@@ -15,8 +26,14 @@ let make = (~name, ~send, ~itemPageState, _children) => {
     render: _self =>
       <div>
         <h2> (s_(name)) </h2>
-        <textarea value=itemPageState.text onChange />
-        <Markdown source=itemPageState.source />
+        <textarea
+          className=Styles.textarea
+          value=itemPageState.text
+          onChange
+        />
+        <div className=Styles.textarea>
+          <Markdown source=itemPageState.source />
+        </div>
       </div>,
   };
 };
