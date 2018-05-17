@@ -7,6 +7,7 @@ open TopPageModel;
 module Styles = {
   open Css;
   let contents = style([maxWidth(`percent(75.0))]);
+  let removeBtn = style([textAlign(`right)]);
 };
 
 let component = ReasonReact.statelessComponent("TopPage");
@@ -21,6 +22,10 @@ let make = (~send, ~topPageState, _children) => {
     ReactEventRe.Form.preventDefault(e);
     send @@ addItem(topPageState.text);
     send @@ changeText("");
+  };
+  let onSubmitRemove = (name, e) => {
+    ReactEventRe.Form.preventDefault(e);
+    send @@ removeItem(name);
   };
   {
     ...component,
@@ -45,6 +50,11 @@ let make = (~send, ~topPageState, _children) => {
                |. Array.mapU((. name) =>
                     <MyListItem key=name>
                       <Link href=("/items/" ++ name)> (s_(name)) </Link>
+                      <form
+                        onSubmit=(onSubmitRemove(name))
+                        className=Styles.removeBtn>
+                        <MyButton> (s_("remove")) </MyButton>
+                      </form>
                     </MyListItem>
                   )
              )
