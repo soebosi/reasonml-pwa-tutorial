@@ -7,6 +7,7 @@ let baseStyle =
     border(px(1), `solid, rgb(180, 180, 180)),
     borderRadius(`rem(0.25)),
     width(`percent(100.0)),
+    maxWidth(px(400)),
     transition(~duration=150, ~timingFunction=`easeInOut, "box-shadow"),
     focus([MyBoxShadow.style]),
   ];
