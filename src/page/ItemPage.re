@@ -26,11 +26,7 @@ let make = (~name, ~send, ~itemPageState, _children) => {
     render: _self =>
       <div>
         <h2> (s_(name)) </h2>
-        <textarea
-          className=Styles.textarea
-          value=itemPageState.text
-          onChange
-        />
+        <MyTextarea onChange value=itemPageState.text />
         <div className=Styles.textarea>
           <Markdown source=itemPageState.source />
         </div>
