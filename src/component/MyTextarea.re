@@ -6,6 +6,7 @@ let baseStyle =
     width(`percent(40.0)),
     height(`px(500)),
     margin(`px(10)),
+    borderRadius(`rem(0.25)),
   ];
 
 let component = ReasonReact.statelessComponent("MyTextarea");
