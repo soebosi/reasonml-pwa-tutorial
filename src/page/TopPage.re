@@ -42,7 +42,7 @@ let make = (~send, ~topPageState, _children) => {
               onChange
             />
           </MyFormGroup>
-          <MyButton> (s_("submit")) </MyButton>
+          <MyButton type_=Add> (s_("submit")) </MyButton>
         </form>
         <MyList>
           ...(
@@ -53,7 +53,7 @@ let make = (~send, ~topPageState, _children) => {
                       <form
                         onSubmit=(onSubmitRemove(name))
                         className=Styles.removeBtn>
-                        <MyButton> (s_("remove")) </MyButton>
+                        <MyButton type_=Remove> (s_("remove")) </MyButton>
                       </form>
                     </MyListItem>
                   )
