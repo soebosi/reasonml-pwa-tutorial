@@ -7,6 +7,7 @@ let baseStyle =
     height(`px(500)),
     margin(`px(10)),
     borderRadius(`rem(0.25)),
+    focus([MyBoxShadow.style]),
   ];
 
 let component = ReasonReact.statelessComponent("MyTextarea");
