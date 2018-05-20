@@ -8,6 +8,7 @@ let baseStyle =
     margin(`px(10)),
     borderRadius(`rem(0.25)),
     focus([MyBoxShadow.style]),
+    transition(~duration=150, ~timingFunction=`easeInOut, "box-shadow"),
   ];
 
 let component = ReasonReact.statelessComponent("MyTextarea");
