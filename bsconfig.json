@@ -23,6 +23,7 @@
     "bs-most"
   ],
   "refmt": 3,
+//  "bsc-flags": ["-bs-g"],
   "warnings": {
     "error": "+5"
   }
