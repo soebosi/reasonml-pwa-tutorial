@@ -23,7 +23,7 @@ let baseColor = type_ =>
   | Add =>
     Css.[
       backgroundColor(`rgb((0, 0, 139))),
-      hover([backgroundColor(rgb(0, 100, 255))]),
+      hover([backgroundColor(rgb(0, 0, 105))]),
     ]
   | Remove =>
     Css.[
