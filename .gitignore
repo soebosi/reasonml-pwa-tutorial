@@ -7,3 +7,4 @@ npm-debug.log
 src/**/*.bs.js
 public/Index.js
 build/
+server/target/
