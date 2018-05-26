@@ -24,7 +24,7 @@
     "reason-react": "^0.4.0"
   },
   "devDependencies": {
-    "bs-platform": "^3.1.0",
+    "bs-platform": "^3.1.4",
     "reason-cli": "^3.2.0-linux",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.0.15"
