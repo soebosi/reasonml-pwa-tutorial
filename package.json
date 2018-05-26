@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "bs-platform": "^3.1.0",
-    "reason-cli": "^3.1.0-linux",
+    "reason-cli": "^3.2.0-linux",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.0.15"
   }
