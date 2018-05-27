@@ -48,6 +48,7 @@ let make = (_children) => {
             })
           />
         }
+        | _ => <ErrorPage/>
         }
       )
     </div>;
