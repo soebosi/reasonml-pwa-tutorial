@@ -2,8 +2,8 @@
   "name": "reasonml-pwa-tutorial",
   "version": "0.1.0",
   "scripts": {
-    "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
+    "build": "bsb -make-world && npm run webpack:production",
+    "start": "bsb -make-world -w & npm run webpack",
     "clean": "bsb -clean-world",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix": "refmt src/**/*.re --in-place",
