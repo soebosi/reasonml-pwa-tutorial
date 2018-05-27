@@ -39,7 +39,7 @@ let make = (_children) => {
             name
           />
         }
-        | _ => {
+        | [] => {
           <TopPage
             send=(send << (a => `TopPageAction(a)))
             topPageState=(switch(Map.getExn(state.pageStates, TopPage)) {
