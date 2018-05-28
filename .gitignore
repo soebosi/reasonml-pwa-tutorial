@@ -1,4 +1,6 @@
 .DS_Store
+doc/node_modules/
+doc/*.svg
 client/.merlin
 client/.bsb.lock
 client/npm-debug.log
