@@ -1,11 +1,13 @@
 const Viz                = require('viz.js');
 const { Module, render } = require('viz.js/full.render.js');
+const fs                 = require('fs').promises;
 
 const viz = new Viz({ Module, render });
 
-async function generateSVG(dot) {
+async function generateSVG(dotfile) {
+  const dot    = await fs.readFile(dotfile, 'utf8');
   const result = await viz.renderString(dot);
   console.log(result);
 }
 
-generateSVG('digraph { a -> b }');
+generateSVG('client_architecture.dot');
