@@ -1,21 +1,23 @@
 digraph {
+  subgraph cluster_0 {
+    label = "ReasonReact";
+    color = blue;
+    Dispatcher;
+    GlobalState;
+  }
   App -> TopPage
   App -> ItemPage
 
-  TopPage -> ReasonReact
-  ItemPage -> ReasonReact
+  TopPage -> Dispatcher
+  ItemPage -> Dispatcher
 
-  ReasonReact -> AppModel
+  Dispatcher -> AppModel
 
   AppModel -> PageModel
   PageModel -> AppModel
 
-  AppModel -> ReasonReact
-
-  ReasonReact -> GlobalState
-  GlobalState -> ReasonReact
-
-  ReasonReact -> App
+  AppModel -> GlobalState
+  GlobalState -> App
 
   PageModel -> TopPageModel
   PageModel -> ItemPageModel
