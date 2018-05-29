@@ -1,3 +1,22 @@
 digraph {
-  a -> b
+  App -> TopPage
+  App -> ItemPage
+
+  TopPage -> ReasonReact
+  ItemPage -> ReasonReact
+
+  ReasonReact -> AppModel
+
+  AppModel -> PageModel
+  PageModel -> AppModel
+
+  AppModel -> ReasonReact
+
+  ReasonReact -> GlobalState
+  GlobalState -> ReasonReact
+
+  ReasonReact -> App
+
+  PageModel -> TopPageModel
+  PageModel -> ItemPageModel
 }
