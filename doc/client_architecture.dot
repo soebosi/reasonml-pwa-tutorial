@@ -5,20 +5,24 @@ digraph {
     Dispatcher;
     GlobalState;
   }
-  App -> TopPage
-  App -> ItemPage
+  App -> TopPage;
+  App -> ItemPage;
 
-  TopPage -> Dispatcher
-  ItemPage -> Dispatcher
+  App -> Dispatcher;
+  TopPage -> Dispatcher [style = dotted];
+  ItemPage -> Dispatcher [style = dotted];
 
-  Dispatcher -> AppModel
+  Dispatcher -> AppModel;
 
-  AppModel -> PageModel
-  PageModel -> AppModel
+  AppModel -> PageModel;
+  PageModel -> AppModel;
 
-  AppModel -> GlobalState
-  GlobalState -> App
+  AppModel -> GlobalState;
+  GlobalState -> App;
 
-  PageModel -> TopPageModel
-  PageModel -> ItemPageModel
+  PageModel -> TopPageModel;
+  PageModel -> ItemPageModel;
+
+  TopPageModel -> GlobalState [style = dotted];
+  ItemPageModel -> GlobalState [style = dotted];
 }
