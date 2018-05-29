@@ -11,7 +11,7 @@ module PageCmp =
 
 type id = PageCmp.identity;
 
-let m: Belt.Map.t(PageCmp.t, (module AdaptedModel.T), id) =
+let m: Belt.Map.t(PageCmp.t, (module PageModel.T), id) =
   Belt.Map.make(~id=(module PageCmp));
 
 let make = () =>
@@ -20,8 +20,8 @@ let make = () =>
     |. set(
          TopPage,
          (module
-          AdaptedModel.Make({
-            open AdaptedModel;
+          PageModel.Make({
+            open PageModel;
             include TopPageModel;
             let adaptState = topPageState;
             let getState = a =>
@@ -40,8 +40,8 @@ let make = () =>
     |. set(
          ItemPage,
          (module
-          AdaptedModel.Make({
-            open AdaptedModel;
+          PageModel.Make({
+            open PageModel;
             include ItemPageModel;
             let adaptState = itemPageState;
             let getState = a =>
