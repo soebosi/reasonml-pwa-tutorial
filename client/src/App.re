@@ -16,6 +16,7 @@ let make = (_children) => {
       open ReasonReact.Router;
       let watcherID = watchUrl(send << changeUrl);
       onUnmount(() => unwatchUrl(watcherID));
+      send @@ changeUrl @@ dangerouslyGetInitialUrl();
     };
     {
       open Most;
