@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix": "refmt src/**/*.re --in-place",
     "webpack": "webpack -w",
-    "webpack:production": "NODE_ENV=production webpack"
+    "webpack:production": "NODE_ENV=production webpack",
+    "webpack:analyze": "NODE_ENV=production webpack --json | webpack-bundle-size-analyzer"
   },
   "keywords": [
     "BuckleScript"
@@ -21,7 +22,8 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-markdown": "^3.3.0",
-    "reason-react": "^0.4.0"
+    "reason-react": "^0.4.0",
+    "webpack-bundle-size-analyzer": "^2.7.0"
   },
   "devDependencies": {
     "bs-platform": "^3.1.4",
