@@ -1,13 +1,9 @@
-open Belt;
-
 open Util;
 
 open AppModel;
 
-exception Unreachable;
-
 let component = ReasonReact.reducerComponent("App");
-let make = (_children) => {
+let make = _children => {
   ...component,
   initialState,
   reducer,
@@ -18,40 +14,13 @@ let make = (_children) => {
       onUnmount(() => unwatchUrl(watcherID));
       send @@ changeUrl @@ dangerouslyGetInitialUrl();
     };
-    {
-      open Most;
+    Most.(
       Subject.asStream(actionSubject)
       |> actionEpic
       |> observe(send)
-      |> ignore;
-    };
+      |> ignore
+    );
   },
-  render: ({send, state}) => {
-    <div>
-      (
-        switch(state.url.path) {
-        | ["items", name] => {
-          <ItemPage
-            send=(send << (a => `ItemPageAction(a)))
-            itemPageState=(switch(Map.getExn(state.pageStates, ItemPage)) {
-              | ItemPageState(s) => s
-              | _ => raise(Unreachable)
-            })
-            name
-          />
-        }
-        | [] => {
-          <TopPage
-            send=(send << (a => `TopPageAction(a)))
-            topPageState=(switch(Map.getExn(state.pageStates, TopPage)) {
-              | TopPageState(s) => s
-              | _ => raise(Unreachable)
-            })
-          />
-        }
-        | _ => <ErrorPage/>
-        }
-      )
-    </div>;
-  },
+  render: ({send, state}) =>
+    <div> Router.(getPageMap(send, state) |. page) </div>,
 };

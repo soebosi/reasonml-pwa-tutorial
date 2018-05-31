@@ -4,10 +4,7 @@ open MostEx;
 
 let models = PageModelMap.make();
 
-type action = [
-  PageModel.adaptedAction
-  | `ChangeUrl(ReasonReact.Router.url)
-];
+type action = [ PageModel.adaptedAction | `ChangeUrl(ReasonReact.Router.url)];
 
 let changeUrl = a => `ChangeUrl(a);
 
