@@ -2,97 +2,36 @@ open Util;
 open Belt;
 exception Unreachable;
 
-[@bs.deriving abstract]
-type pageMap = {
-  page: ReasonReact.reactElement,
-  model: (module PageModel.T),
-};
-
-let getPageMap = (send, state: AppModel.state) =>
-  switch (state.url.path) {
-  | ["items", name] =>
-    pageMap(
-      ~page=
+let getPage = (url: ReasonReact.Router.url) =>
+  switch (url.path) {
+  | ["items", name] => (
+      (send, state: AppModel.state) => {
+        let pageState = Map.getExn(state.pageStates, ItemPage);
         <ItemPage
           send=(send << (a => `ItemPageAction(a)))
           itemPageState=(
-            switch (Map.getExn(state.pageStates, ItemPage)) {
+            switch (pageState) {
             | ItemPageState(s) => s
             | _ => raise(Unreachable)
             }
           )
           name
-        />,
-      ~model=
-        (module
-         PageModel.Make({
-           open PageModel;
-           include ItemPageModel;
-           let adaptState = itemPageState;
-           let getState = a =>
-             switch (a) {
-             | ItemPageState(a) => Some(a)
-             | _ => None
-             };
-           let adaptAction = a => `ItemPageAction(a);
-           let getAction = a =>
-             switch (a) {
-             | `ItemPageAction(a) => Some(a)
-             | _ => None
-             };
-         })),
+        />;
+      }
     )
-  | [] =>
-    pageMap(
-      ~page=
+  | [] => (
+      (send, state) => {
+        let pageState = Map.getExn(state.pageStates, TopPage);
         <TopPage
           send=(send << (a => `TopPageAction(a)))
           topPageState=(
-            switch (Map.getExn(state.pageStates, TopPage)) {
+            switch (pageState) {
             | TopPageState(s) => s
             | _ => raise(Unreachable)
             }
           )
-        />,
-      ~model=
-        (module
-         PageModel.Make({
-           open PageModel;
-           include TopPageModel;
-           let adaptState = topPageState;
-           let getState = a =>
-             switch (a) {
-             | TopPageState(a) => Some(a)
-             | _ => None
-             };
-           let adaptAction = a => `TopPageAction(a);
-           let getAction = a =>
-             switch (a) {
-             | `TopPageAction(a) => Some(a)
-             | _ => None
-             };
-         })),
+        />;
+      }
     )
-  | _ =>
-    pageMap(
-      ~page=<ErrorPage />,
-      ~model=
-        (module
-         PageModel.Make({
-           open PageModel;
-           include TopPageModel;
-           let adaptState = topPageState;
-           let getState = a =>
-             switch (a) {
-             | TopPageState(a) => Some(a)
-             | _ => None
-             };
-           let adaptAction = a => `TopPageAction(a);
-           let getAction = a =>
-             switch (a) {
-             | `TopPageAction(a) => Some(a)
-             | _ => None
-             };
-         })),
-    )
+  | _ => ((send, state) => <ErrorPage />)
   };

@@ -21,6 +21,8 @@ let make = _children => {
       |> ignore
     );
   },
-  render: ({send, state}) =>
-    <div> Router.(getPageMap(send, state) |. page) </div>,
+  render: ({send, state}) => {
+    let page = Router.getPage(state.url);
+    <div> (page(send, state)) </div>;
+  },
 };
