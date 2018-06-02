@@ -1,5 +1,11 @@
 open MostEx;
 
+[@bs.deriving jsConverter]
+type key =
+  | TopPage
+  | ItemPage(string)
+  | ErrorPage;
+
 type adaptedAction = [
   | `ItemPageAction(ItemPageModel.action)
   | `TopPageAction(TopPageModel.action)
