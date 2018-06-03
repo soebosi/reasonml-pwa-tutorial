@@ -2,8 +2,6 @@ open Util;
 
 open AppModel;
 
-exception Unreachable;
-
 let component = ReasonReact.reducerComponent("App");
 let make = _children => {
   ...component,
