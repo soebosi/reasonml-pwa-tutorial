@@ -1,16 +1,3 @@
-exception Unreachable;
-
-module PageCmp =
-  Belt.Id.MakeComparable({
-    type t = PageModel.key;
-    let cmp = (a, b) => Pervasives.compare(a, b);
-  });
-
-type id = PageCmp.identity;
-
-let m: Belt.Map.t(PageCmp.t, (module PageModel.T), id) =
-  Belt.Map.make(~id=(module PageCmp));
-
 let getModel = (key: PageModel.key): (module PageModel.T) =>
   switch (key) {
   | TopPage =>
@@ -49,7 +36,7 @@ let getModel = (key: PageModel.key): (module PageModel.T) =>
             | _ => None
             };
         }))
-    | ErrorPage => raise(Unreachable)
+    | ErrorPage => raise(Not_found)
     };
 
 let models = [|getModel(TopPage), getModel(ItemPage(""))|];
