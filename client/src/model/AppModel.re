@@ -65,6 +65,6 @@ let reducer = (action, state) => {
 };
 
 let actionEpic = stream =>
-  [|PageModelMap.getModel(TopPage), PageModelMap.getModel(ItemPage(""))|]
+  PageModelMap.models
   |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
   |. Most.mergeArray;

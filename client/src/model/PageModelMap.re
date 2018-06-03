@@ -48,3 +48,5 @@ let getModel = (key: PageModel.key): (module PageModel.T) =>
             };
         }))
     };
+
+let models = [|getModel(TopPage), getModel(ItemPage(""))|];
