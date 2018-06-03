@@ -1,8 +1,8 @@
 let getKey = (url: ReasonReact.Router.url) =>
   PageModel.(
     switch (url.path) {
-    | ["items", name] => ItemPage(name)
     | [] => TopPage
+    | ["items", name] => ItemPage(name)
     | _ => ErrorPage
     }
   );

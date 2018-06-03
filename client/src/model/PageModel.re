@@ -7,14 +7,14 @@ type key =
   | ErrorPage;
 
 type adaptedAction = [
-  | `ItemPageAction(ItemPageModel.action)
   | `TopPageAction(TopPageModel.action)
+  | `ItemPageAction(ItemPageModel.action)
 ];
 
 [@bs.deriving accessors]
 type adaptedState =
-  | ItemPageState(ItemPageModel.state)
-  | TopPageState(TopPageModel.state);
+  | TopPageState(TopPageModel.state)
+  | ItemPageState(ItemPageModel.state);
 
 module type Model = {
   type action;
