@@ -1,3 +1,5 @@
+exception Unreachable;
+
 module PageCmp =
   Belt.Id.MakeComparable({
     type t = PageModel.key;
@@ -47,6 +49,7 @@ let getModel = (key: PageModel.key): (module PageModel.T) =>
             | _ => None
             };
         }))
+    | ErrorPage => raise(Unreachable)
     };
 
 let models = [|getModel(TopPage), getModel(ItemPage(""))|];

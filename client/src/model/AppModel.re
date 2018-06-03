@@ -41,7 +41,7 @@ let reducer = (action, state) => {
             }
           }
         );
-      {...state, url, pageStates};
+      {url, pageStates};
     }
     | _ => {
       let key = Router.getKey @@ state.url;

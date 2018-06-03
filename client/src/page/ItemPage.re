@@ -6,7 +6,7 @@ module Styles = {
   open Css;
   let textarea =
     style([
-      float(`left),
+      Css.float(`left),
       width(`percent(40.0)),
       height(`px(500)),
       margin(`px(10)),
