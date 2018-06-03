@@ -14,14 +14,12 @@ let make = _children => {
     let watcherID = watchUrl(send << changeUrl);
     onUnmount(() => unwatchUrl(watcherID));
     send @@ changeUrl @@ dangerouslyGetInitialUrl();
-    /*
-     Most.(
-       Subject.asStream(actionSubject)
-       |> actionEpic
-       |> observe(send)
-       |> ignore
-     );
-     */
+    Most.(
+      Subject.asStream(actionSubject)
+      |> actionEpic
+      |> observe(send)
+      |> ignore
+    );
   },
   render: ({send, state}) => {
     let key = Router.getKey(state.url);

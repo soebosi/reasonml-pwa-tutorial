@@ -64,10 +64,7 @@ let reducer = (action, state) => {
   );
 };
 
-/*
 let actionEpic = stream =>
-  models
-  |. Map.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
-  |. Map.valuesToArray
+  [|PageModelMap.getModel(TopPage), PageModelMap.getModel(ItemPage(""))|]
+  |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
   |. Most.mergeArray;
-  */
