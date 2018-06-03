@@ -13,8 +13,7 @@ module PageCmp =
   });
 
 type state = {
-  pageStates:
-    Map.t(PageModel.key, PageModel.adaptedState, PageCmp.identity),
+  pageStates: Map.t(PageModel.key, PageModel.adaptedState, PageCmp.identity),
   url: ReasonReact.Router.url,
 };
 
@@ -28,35 +27,32 @@ let actionSubject: Most.Subject.t(action) = Most.Subject.make();
 let reducer = (action, state) => {
   let newState =
     switch (action) {
-    | `ChangeUrl(url) => {
+    | `ChangeUrl(url) =>
       let key = Router.getKey @@ url;
       let pageStates =
         state.pageStates
         |. Map.updateU(key, (. value) =>
-          switch(value) {
-            | Some(v) => v |. Some
-            | None => {
-              let (module M) = PageModelMap.getModel(key);
-              M.initialState() |. Some;
-            }
-          }
-        );
+             switch (value) {
+             | Some(v) => Some(v)
+             | None =>
+               let (module M) = PageModelMap.getModel(key);
+               Some(M.initialState());
+             }
+           );
       {url, pageStates};
-    }
-    | _ => {
+    | _ =>
       let key = Router.getKey @@ state.url;
       let pageStates =
         state.pageStates
         |. Map.updateU(key, (. value) =>
-          switch(value) {
-            | Some(v) =>
-              let (module M) = PageModelMap.getModel(key);
-              M.reducer(action, v) |. Some;
-            | None => None
-          }
-        );
+             switch (value) {
+             | Some(v) =>
+               let (module M) = PageModelMap.getModel(key);
+               Some(M.reducer(action, v));
+             | None => None
+             }
+           );
       {...state, pageStates};
-    }
     };
   ReasonReact.UpdateWithSideEffects(
     newState,
