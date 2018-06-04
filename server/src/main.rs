@@ -13,17 +13,17 @@ use rocket::response::NamedFile;
 
 #[get("/")]
 fn index() -> io::Result<NamedFile> {
-    NamedFile::open("../public/index.html")
+    NamedFile::open("../static/index.html")
 }
 
-#[get("/public/<file..>", rank = 2)]
+#[get("/static/<file..>", rank = 2)]
 fn files(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("../public/").join(file)).ok()
+    NamedFile::open(Path::new("../static/").join(file)).ok()
 }
 
 #[get("/<_file..>", rank = 3)]
 fn fallback(_file: PathBuf) -> io::Result<NamedFile> {
-    NamedFile::open("../public/index.html")
+    NamedFile::open("../static/index.html")
 }
 
 fn rocket() -> rocket::Rocket {

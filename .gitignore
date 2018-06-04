@@ -7,6 +7,6 @@ client/npm-debug.log
 client/lib/bs/
 client/node_modules/
 client/src/**/*.bs.js
-public/Index.js
+static/Index.js
 build/
 server/target/

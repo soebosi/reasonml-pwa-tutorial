@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="description" content="reasonml pwa tutorial">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="manifest" href="/public/manifest.json">
+  <link rel="manifest" href="/static/manifest.json">
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/public/service-worker.js');
+      navigator.serviceWorker.register('/static/service-worker.js');
     });
   }
   </script>
@@ -19,6 +19,6 @@
 </head>
 <body>
   <div id="app"></div>
-  <script src="/public/Index.js"></script>
+  <script src="/static/Index.js"></script>
 </body>
 </html>
