@@ -31,11 +31,11 @@ module AdaptedItemPageModel =
       };
   });
 
-let getModel = (id: PageModel.id) : (module PageModel.T) =>
+let getModel = (id: PageModel.id) : option((module PageModel.T)) =>
   switch (id) {
-  | TopPage => (module AdaptedTopPageModel)
-  | ItemPage(_) => (module AdaptedItemPageModel)
-  | ErrorPage => raise(Not_found)
+  | TopPage => Some((module AdaptedTopPageModel))
+  | ItemPage(_) => Some((module AdaptedItemPageModel))
+  | ErrorPage => None
   };
 
 let models: array((module PageModel.T)) = [|
