@@ -26,13 +26,9 @@ let make = _children => {
       (
         switch (id, pageState) {
         | (TopPage, Some(TopPageState(s))) =>
-          <TopPage send=(send << (a => `TopPageAction(a))) topPageState=s />
+          <TopPage send=(send << (a => `TopPageAction(a))) state=s />
         | (ItemPage(name), Some(ItemPageState(s))) =>
-          <ItemPage
-            send=(send << (a => `ItemPageAction(a)))
-            itemPageState=s
-            name
-          />
+          <ItemPage send=(send << (a => `ItemPageAction(a))) state=s name />
         | (ErrorPage, _) => <ErrorPage />
         | (_, _) => s_("Now Loading")
         }

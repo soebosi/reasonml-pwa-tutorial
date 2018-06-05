@@ -12,7 +12,7 @@ module Styles = {
 
 let component = ReasonReact.statelessComponent("TopPage");
 
-let make = (~send, ~topPageState, _children) => {
+let make = (~send, ~state, _children) => {
   let onChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let name = ReactDOMRe.domElementToObj(dom)##value;
@@ -20,7 +20,7 @@ let make = (~send, ~topPageState, _children) => {
   };
   let onSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
-    send @@ addItem(topPageState.text);
+    send @@ addItem(state.text);
     send @@ changeText("");
   };
   let onSubmitRemove = (name, e) => {
@@ -37,7 +37,7 @@ let make = (~send, ~topPageState, _children) => {
             <MyInputText
               id="nameInput"
               name="name"
-              value=topPageState.text
+              value=state.text
               placeholder="name"
               onChange
             />
@@ -46,7 +46,7 @@ let make = (~send, ~topPageState, _children) => {
         </form>
         <MyList>
           ...(
-               Set.String.toArray(topPageState.itemSet)
+               Set.String.toArray(state.itemSet)
                |. Array.mapU((. name) =>
                     <MyListItem key=name>
                       <Link href=("/items/" ++ name)> (s_(name)) </Link>
