@@ -20,11 +20,11 @@ let make = _children => {
     );
   },
   render: ({send, state}) => {
-    let key = Router.getKey(state.url);
-    let pageState = Belt.Map.get(state.pageStates, key);
+    let id = Router.getModelId(state.url);
+    let pageState = Belt.Map.get(state.pageStates, id);
     <div>
       (
-        switch (key, pageState) {
+        switch (id, pageState) {
         | (TopPage, Some(TopPageState(s))) =>
           <TopPage send=(send << (a => `TopPageAction(a))) topPageState=s />
         | (ItemPage(name), Some(ItemPageState(s))) =>

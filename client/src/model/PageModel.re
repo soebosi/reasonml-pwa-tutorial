@@ -1,7 +1,7 @@
 open MostEx;
 
 [@bs.deriving jsConverter]
-type key =
+type id =
   | TopPage
   | ItemPage(string)
   | ErrorPage;

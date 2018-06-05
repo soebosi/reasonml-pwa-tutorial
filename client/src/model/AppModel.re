@@ -8,12 +8,12 @@ let changeUrl = a => `ChangeUrl(a);
 
 module PageCmp =
   Id.MakeComparable({
-    type t = PageModel.key;
+    type t = PageModel.id;
     let cmp = (a, b) => Pervasives.compare(a, b);
   });
 
 type state = {
-  pageStates: Map.t(PageModel.key, PageModel.adaptedState, PageCmp.identity),
+  pageStates: Map.t(PageModel.id, PageModel.adaptedState, PageCmp.identity),
   url: ReasonReact.Router.url,
 };
 
@@ -28,26 +28,26 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) =>
-      let key = Router.getKey @@ url;
+      let id = Router.getModelId @@ url;
       let pageStates =
         state.pageStates
-        |. Map.updateU(key, (. value) =>
+        |. Map.updateU(id, (. value) =>
              switch (value) {
              | Some(v) => Some(v)
              | None =>
-               let (module M) = PageModelMap.getModel(key);
+               let (module M) = PageModelMap.getModel(id);
                Some(M.initialState());
              }
            );
       {url, pageStates};
     | _ =>
-      let key = Router.getKey @@ state.url;
+      let id = Router.getModelId @@ state.url;
       let pageStates =
         state.pageStates
-        |. Map.updateU(key, (. value) =>
+        |. Map.updateU(id, (. value) =>
              switch (value) {
              | Some(v) =>
-               let (module M) = PageModelMap.getModel(key);
+               let (module M) = PageModelMap.getModel(id);
                Some(M.reducer(action, v));
              | None => None
              }

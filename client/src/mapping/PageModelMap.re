@@ -31,8 +31,8 @@ module AdaptedItemPageModel =
       };
   });
 
-let getModel = (key: PageModel.key) : (module PageModel.T) =>
-  switch (key) {
+let getModel = (id: PageModel.id) : (module PageModel.T) =>
+  switch (id) {
   | TopPage => (module AdaptedTopPageModel)
   | ItemPage(_) => (module AdaptedItemPageModel)
   | ErrorPage => raise(Not_found)
