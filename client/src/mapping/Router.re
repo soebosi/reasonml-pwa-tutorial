@@ -1,4 +1,4 @@
-let getModelId = (url: ReasonReact.Router.url) =>
+let getStateID = (url: ReasonReact.Router.url) =>
   PageModel.(
     switch (url.path) {
     | [] => TopPage

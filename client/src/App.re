@@ -20,7 +20,7 @@ let make = _children => {
     );
   },
   render: ({send, state}) => {
-    let id = Router.getModelId(state.url);
+    let id = Router.getStateID(state.url);
     let pageState = Belt.Map.get(state.pageStates, id);
     <div>
       (
