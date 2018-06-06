@@ -28,7 +28,7 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) =>
-      let id = Router.getStateID @@ url;
+      let id = Router.getStateID(url);
       let model = PageModelMap.getModel(id);
       let pageStates =
         state.pageStates
@@ -40,7 +40,7 @@ let reducer = (action, state) => {
            );
       {url, pageStates};
     | _ =>
-      let id = Router.getStateID @@ state.url;
+      let id = Router.getStateID(state.url);
       let model = PageModelMap.getModel(id);
       let pageStates =
         state.pageStates
