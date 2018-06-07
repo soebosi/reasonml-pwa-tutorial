@@ -3,17 +3,31 @@
 
 extern crate rocket;
 
+#[macro_use] extern crate rocket_contrib;
+#[macro_use] extern crate serde_derive;
+
 #[cfg(test)]
 mod tests;
 
 use std::io;
 use std::path::{Path, PathBuf};
 
+use rocket_contrib::{Json, Value};
 use rocket::response::NamedFile;
+
+#[derive(Serialize, Deserialize)]
+struct Message {
+    name: String
+}
 
 #[get("/")]
 fn index() -> io::Result<NamedFile> {
     NamedFile::open("../static/index.html")
+}
+
+#[post("/api/v1/items", format = "application/json", data = "<_message>")]
+fn new_item(_message: Json<Message>) -> Json<Value> {
+    Json(json!({ "id": "xxxx" }))
 }
 
 #[get("/static/<file..>", rank = 2)]
@@ -27,7 +41,7 @@ fn fallback(_file: PathBuf) -> io::Result<NamedFile> {
 }
 
 fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/", routes![index, files, fallback])
+    rocket::ignite().mount("/", routes![index, files, fallback, new_item])
 }
 
 fn main() {
