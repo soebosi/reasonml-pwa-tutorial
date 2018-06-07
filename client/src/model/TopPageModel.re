@@ -12,6 +12,7 @@ let initialState = () => {text: "", itemSet: Set.String.empty};
 [@bs.deriving accessors]
 type action =
   | AddItem(string)
+  | AddedItem(string)
   | RemoveItem(string)
   | ChangeText(string);
 
@@ -21,15 +22,53 @@ let reducer = (action, state) =>
   | RemoveItem(name) =>
     let itemSet = Set.String.remove(state.itemSet, name);
     {...state, itemSet};
-  | AddItem(name) =>
-    let itemSet = Set.String.add(state.itemSet, name);
+  | AddedItem(id) =>
+    let itemSet = Set.String.add(state.itemSet, id);
     {...state, itemSet};
+  | _ => state
   };
 
-let getChangeText = x =>
+let getAddItem = x =>
   switch (x) {
-  | ChangeText(text) => Some(text)
+  | AddItem(text) => Some(text)
   | _ => None
   };
 
-let epic = stream => Most.(stream |> filter(_a => false));
+let epic = stream =>
+  Most.(
+    stream
+    |> keepMap(getAddItem)
+    |> flatMap(name => {
+         let payload = Js.Dict.empty();
+         Js.Dict.set(payload, "name", Js.Json.string(name));
+         fromPromise @@
+         Js.Promise.(
+           Fetch.(
+             fetchWithInit(
+               "/api/v1/items/",
+               RequestInit.make(
+                 ~method_=Post,
+                 ~body=
+                   Fetch.BodyInit.make(
+                     Js.Json.stringify(Js.Json.object_(payload)),
+                   ),
+                 ~headers=
+                   Fetch.HeadersInit.make({
+                     "Content-Type": "application/json",
+                   }),
+                 (),
+               ),
+             )
+           )
+           |> then_(Fetch.Response.json)
+         );
+       })
+    |> keepMap(response =>
+         Js.Json.decodeObject(response)
+         |. Belt.Option.getExn
+         |. Js.Dict.get("id")
+         |. Belt.Option.getExn
+         |. Js.Json.decodeString
+       )
+    |> map(id => addedItem(id))
+  );
