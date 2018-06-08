@@ -25,9 +25,9 @@ fn index() -> io::Result<NamedFile> {
     NamedFile::open("../static/index.html")
 }
 
-#[post("/api/v1/items", format = "application/json", data = "<_message>")]
-fn new_item(_message: Json<Message>) -> Json<Value> {
-    Json(json!({ "id": "xxxx" }))
+#[post("/api/v1/items", format = "application/json", data = "<message>")]
+fn new_item(message: Json<Message>) -> Json<Value> {
+    Json(json!({ "id": "xxxx", "name": message.name }))
 }
 
 #[get("/static/<file..>", rank = 2)]
