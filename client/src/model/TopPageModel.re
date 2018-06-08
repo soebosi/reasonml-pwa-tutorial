@@ -64,11 +64,14 @@ let epic = stream =>
          );
        })
     |> keepMap(response =>
-         Js.Json.decodeObject(response)
-         |. Belt.Option.getExn
-         |. Js.Dict.get("id")
-         |. Belt.Option.getExn
-         |. Js.Json.decodeString
+         switch (Js.Json.decodeObject(response)) {
+         | Some(dict) =>
+           switch (Js.Dict.get(dict, "id")) {
+           | Some(str) => Js.Json.decodeString(str)
+           | None => None
+           }
+         | None => None
+         }
        )
     |> map(id => addedItem(id))
   );
