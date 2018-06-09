@@ -46,17 +46,19 @@ let make = (~send, ~state, _children) => {
         </form>
         <MyList>
           ...(
-               Set.String.toArray(state.itemSet)
-               |. Array.mapU((. name) =>
-                    <MyListItem key=name>
-                      <Link href=("/items/" ++ name)> (s_(name)) </Link>
-                      <form
-                        onSubmit=(onSubmitRemove(name))
-                        className=Styles.removeBtn>
-                        <MyButton type_=Remove> (s_("remove")) </MyButton>
-                      </form>
-                    </MyListItem>
-                  )
+               Map.mapU(state.itemSet, (. item) =>
+                 <MyListItem key=(item |. name)>
+                   <Link href=("/items/" ++ (item |. id))>
+                     (s_(item |. name))
+                   </Link>
+                   <form
+                     onSubmit=(onSubmitRemove(item |. id))
+                     className=Styles.removeBtn>
+                     <MyButton type_=Remove> (s_("remove")) </MyButton>
+                   </form>
+                 </MyListItem>
+               )
+               |. Map.valuesToArray
              )
         </MyList>
       </div>,

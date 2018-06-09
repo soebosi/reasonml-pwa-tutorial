@@ -2,28 +2,42 @@ open MostEx;
 
 open Belt;
 
-type state = {
-  text: string,
-  itemSet: Set.String.t,
+[@bs.deriving abstract]
+type item = {
+  id: string,
+  name: string,
 };
 
-let initialState = () => {text: "", itemSet: Set.String.empty};
+[@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => item = "parse";
+
+module ItemCmp =
+  Id.MakeComparable({
+    type t = string;
+    let cmp = (a, b) => Pervasives.compare(a, b);
+  });
+
+type state = {
+  text: string,
+  itemSet: Map.t(ItemCmp.t, item, ItemCmp.identity),
+};
+
+let initialState = () => {text: "", itemSet: Map.make(~id=(module ItemCmp))};
 
 [@bs.deriving accessors]
 type action =
   | AddItem(string)
-  | AddedItem(string)
+  | AddedItem(item)
   | RemoveItem(string)
   | ChangeText(string);
 
 let reducer = (action, state) =>
   switch (action) {
   | ChangeText(text) => {...state, text}
-  | RemoveItem(name) =>
-    let itemSet = Set.String.remove(state.itemSet, name);
+  | RemoveItem(id) =>
+    let itemSet = Map.remove(state.itemSet, id);
     {...state, itemSet};
-  | AddedItem(id) =>
-    let itemSet = Set.String.add(state.itemSet, id);
+  | AddedItem(item) =>
+    let itemSet = Map.set(state.itemSet, item |. id, item);
     {...state, itemSet};
   | _ => state
   };
@@ -60,18 +74,8 @@ let epic = stream =>
                ),
              )
            )
-           |> then_(Fetch.Response.json)
+           |> then_(Fetch.Response.text)
          );
        })
-    |> keepMap(response =>
-         switch (Js.Json.decodeObject(response)) {
-         | Some(dict) =>
-           switch (Js.Dict.get(dict, "id")) {
-           | Some(str) => Js.Json.decodeString(str)
-           | None => None
-           }
-         | None => None
-         }
-       )
-    |> map(id => addedItem(id))
+    |> map(res => addedItem @@ parseIntoItem(res))
   );
