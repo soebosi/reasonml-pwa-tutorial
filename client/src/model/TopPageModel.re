@@ -2,13 +2,11 @@ open MostEx;
 
 open Belt;
 
-[@bs.deriving abstract]
-type item = {
-  id: string,
-  name: string,
-};
+open Util;
 
-[@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => item = "parse";
+type item = HttpClient.item;
+let id = HttpClient.id;
+let name = HttpClient.name;
 
 module ItemCmp =
   Id.MakeComparable({
@@ -52,30 +50,6 @@ let epic = stream =>
   Most.(
     stream
     |> keepMap(getAddItem)
-    |> flatMap(name => {
-         let payload = Js.Dict.empty();
-         Js.Dict.set(payload, "name", Js.Json.string(name));
-         fromPromise @@
-         Js.Promise.(
-           Fetch.(
-             fetchWithInit(
-               "/api/v1/items/",
-               RequestInit.make(
-                 ~method_=Post,
-                 ~body=
-                   Fetch.BodyInit.make(
-                     Js.Json.stringify(Js.Json.object_(payload)),
-                   ),
-                 ~headers=
-                   Fetch.HeadersInit.make({
-                     "Content-Type": "application/json",
-                   }),
-                 (),
-               ),
-             )
-           )
-           |> then_(Fetch.Response.text)
-         );
-       })
-    |> map(res => addedItem @@ parseIntoItem(res))
+    |> flatMap(fromPromise << HttpClient.postNewItem)
+    |> map(addedItem)
   );
