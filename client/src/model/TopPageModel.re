@@ -16,10 +16,10 @@ module ItemCmp =
 
 type state = {
   text: string,
-  itemSet: Map.t(ItemCmp.t, item, ItemCmp.identity),
+  itemMap: Map.t(ItemCmp.t, item, ItemCmp.identity),
 };
 
-let initialState = () => {text: "", itemSet: Map.make(~id=(module ItemCmp))};
+let initialState = () => {text: "", itemMap: Map.make(~id=(module ItemCmp))};
 
 [@bs.deriving accessors]
 type action =
@@ -32,11 +32,11 @@ let reducer = (action, state) =>
   switch (action) {
   | ChangeText(text) => {...state, text}
   | RemoveItem(id) =>
-    let itemSet = Map.remove(state.itemSet, id);
-    {...state, itemSet};
+    let itemMap = Map.remove(state.itemMap, id);
+    {...state, itemMap};
   | AddedItem(item) =>
-    let itemSet = Map.set(state.itemSet, item |. id, item);
-    {...state, itemSet};
+    let itemMap = Map.set(state.itemMap, item |. id, item);
+    {...state, itemMap};
   | _ => state
   };
 

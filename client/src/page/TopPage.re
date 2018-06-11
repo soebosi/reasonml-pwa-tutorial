@@ -46,7 +46,7 @@ let make = (~send, ~state, _children) => {
         </form>
         <MyList>
           ...(
-               Map.mapU(state.itemSet, (. item) =>
+               Map.mapU(state.itemMap, (. item) =>
                  <MyListItem key=(item |. name)>
                    <Link href=("/items/" ++ (item |. id))>
                      (s_(item |. name))
