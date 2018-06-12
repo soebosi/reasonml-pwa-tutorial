@@ -10,3 +10,4 @@ client/src/**/*.bs.js
 static/Index.js
 build/
 server/target/
+server/**/*.bk
