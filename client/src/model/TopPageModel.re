@@ -11,7 +11,7 @@ let name = HttpClient.name;
 module ItemCmp =
   Id.MakeComparable({
     type t = string;
-    let cmp = (a, b) => Pervasives.compare(a, b);
+    let cmp = Pervasives.compare;
   });
 
 type state = {
