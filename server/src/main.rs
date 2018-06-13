@@ -10,31 +10,15 @@ extern crate serde_derive;
 
 use std::io;
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::AtomicUsize;
 
-use rocket_contrib::{Json, Value};
 use rocket::response::NamedFile;
-use rocket::State;
 
-struct SequenceNumber(AtomicUsize);
-
-#[derive(Serialize, Deserialize)]
-struct Message {
-    name: String,
-}
+mod v1;
 
 #[get("/")]
 fn index() -> io::Result<NamedFile> {
     NamedFile::open("../static/index.html")
-}
-
-#[post("/api/v1/items", format = "application/json", data = "<message>")]
-fn new_item(message: Json<Message>, sequence_number: State<SequenceNumber>) -> Json<Value> {
-    sequence_number.0.fetch_add(1, Ordering::Relaxed);
-    Json(json!({
-      "id": sequence_number.0.load(Ordering::Relaxed).to_string(),
-      "name": message.name,
-    }))
 }
 
 #[get("/static/<file..>", rank = 2)]
@@ -49,8 +33,8 @@ fn fallback(_file: PathBuf) -> io::Result<NamedFile> {
 
 fn rocket() -> rocket::Rocket {
     rocket::ignite()
-        .mount("/", routes![index, files, fallback, new_item])
-        .manage(SequenceNumber(AtomicUsize::new(0)))
+        .mount("/", routes![index, files, fallback, v1::item::new_item])
+        .manage(v1::item::SequenceNumber(AtomicUsize::new(0)))
 
 }
 
