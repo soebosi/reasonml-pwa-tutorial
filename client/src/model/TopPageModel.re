@@ -4,9 +4,9 @@ open Belt;
 
 open Util;
 
-type item = HttpClient.item;
-let id = HttpClient.id;
-let name = HttpClient.name;
+type item = ItemModel.item;
+let id = ItemModel.id;
+let name = ItemModel.name;
 
 module ItemCmp =
   Id.MakeComparable({
@@ -50,6 +50,6 @@ let epic = stream =>
   Most.(
     stream
     |> keepMap(getAddItem)
-    |> flatMap(fromPromise << HttpClient.postNewItem)
+    |> flatMap(fromPromise << ItemModel.postNewItem)
     |> map(addedItem)
   );
