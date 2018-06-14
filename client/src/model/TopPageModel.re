@@ -4,7 +4,7 @@ open Belt;
 
 open Util;
 
-type item = ItemModel.item;
+type item = ItemModel.t;
 let id = ItemModel.id;
 let name = ItemModel.name;
 
@@ -16,7 +16,7 @@ module ItemCmp =
 
 type state = {
   text: string,
-  itemMap: Map.t(ItemCmp.t, item, ItemCmp.identity),
+  itemMap: Map.t(ItemCmp.t, ItemModel.t, ItemCmp.identity),
 };
 
 let initialState = () => {text: "", itemMap: Map.make(~id=(module ItemCmp))};
@@ -24,7 +24,7 @@ let initialState = () => {text: "", itemMap: Map.make(~id=(module ItemCmp))};
 [@bs.deriving accessors]
 type action =
   | AddItem(string)
-  | AddedItem(item)
+  | AddedItem(ItemModel.t)
   | RemoveItem(string)
   | ChangeText(string);
 

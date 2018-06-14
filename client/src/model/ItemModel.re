@@ -1,12 +1,12 @@
 open Util;
 
 [@bs.deriving abstract]
-type item = {
+type t = {
   id: string,
   name: string,
 };
 
-[@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => item = "parse";
+[@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => t = "parse";
 
 let createItem = name => {
   let payload = Js.Dict.empty();
