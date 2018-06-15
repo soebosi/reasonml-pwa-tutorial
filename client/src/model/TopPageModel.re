@@ -4,10 +4,6 @@ open Belt;
 
 open Util;
 
-type item = ItemModel.t;
-let id = ItemModel.id;
-let name = ItemModel.name;
-
 module ItemCmp =
   Id.MakeComparable({
     type t = string;
@@ -35,7 +31,7 @@ let reducer = (action, state) =>
     let itemMap = Map.remove(state.itemMap, id);
     {...state, itemMap};
   | AddedItem(item) =>
-    let itemMap = Map.set(state.itemMap, item |. id, item);
+    let itemMap = Map.set(state.itemMap, item |. ItemModel.id, item);
     {...state, itemMap};
   | _ => state
   };

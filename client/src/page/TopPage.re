@@ -47,12 +47,12 @@ let make = (~send, ~state, _children) => {
         <MyList>
           ...(
                Map.mapU(state.itemMap, (. item) =>
-                 <MyListItem key=(item |. name)>
-                   <Link href=("/items/" ++ (item |. id))>
-                     (s_(item |. name))
+                 <MyListItem key=(item |. ItemModel.name)>
+                   <Link href=("/items/" ++ (item |. ItemModel.id))>
+                     (s_(item |. ItemModel.name))
                    </Link>
                    <form
-                     onSubmit=(onSubmitRemove(item |. id))
+                     onSubmit=(onSubmitRemove(item |. ItemModel.id))
                      className=Styles.removeBtn>
                      <MyButton type_=Remove> (s_("remove")) </MyButton>
                    </form>
