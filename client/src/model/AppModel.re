@@ -32,10 +32,10 @@ let reducer = (action, state) => {
       let model = PageModelMap.getModel(id);
       let pageStates =
         state.pageStates
-        |. Map.updateU(id, (. value) =>
-             switch (value, model) {
+        |. Map.updateU(id, (. state) =>
+             switch (state, model) {
              | (None, Some((module M))) => Some(M.initialState())
-             | (v, _) => v
+             | (s, _) => s
              }
            );
       {url, pageStates};
@@ -44,9 +44,9 @@ let reducer = (action, state) => {
       let model = PageModelMap.getModel(id);
       let pageStates =
         state.pageStates
-        |. Map.updateU(id, (. value) =>
-             switch (value, model) {
-             | (Some(v), Some((module M))) => Some(M.reducer(action, v))
+        |. Map.updateU(id, (. state) =>
+             switch (state, model) {
+             | (Some(s), Some((module M))) => Some(M.reducer(action, s))
              | (_, _) => None
              }
            );
