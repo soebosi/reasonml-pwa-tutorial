@@ -31,7 +31,7 @@ let reducer = (action, state) =>
     let itemMap = Map.remove(state.itemMap, id);
     {...state, itemMap};
   | AddedItem(item) =>
-    let itemMap = Map.set(state.itemMap, item |. ItemModel.id, item);
+    let itemMap = Map.set(state.itemMap, ItemModel.id(item), item);
     {...state, itemMap};
   | _ => state
   };
