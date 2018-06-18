@@ -8,7 +8,7 @@ type t = {
 
 [@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => t = "parse";
 
-let createItem = name => {
+let create = name => {
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "name", Js.Json.string(name));
   let body = Fetch.BodyInit.make @@ dict2string(payload);

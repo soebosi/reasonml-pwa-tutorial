@@ -46,6 +46,6 @@ let epic = stream =>
   Most.(
     stream
     |> keepMap(getAddItem)
-    |> flatMap(fromPromise << ItemModel.createItem)
+    |> flatMap(fromPromise << ItemModel.create)
     |> map(addedItem)
   );
