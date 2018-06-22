@@ -6,3 +6,12 @@ let getStateID = (url: ReasonReact.Router.url) =>
     | _ => ErrorPage
     }
   );
+
+let getURL = id =>
+  PageModel.(
+    switch (id) {
+    | TopPage => "/"
+    | ItemPage(name) => "/items/" ++ name
+    | _ => ""
+    }
+  );

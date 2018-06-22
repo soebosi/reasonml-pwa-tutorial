@@ -50,7 +50,7 @@ let make = (~send, ~state, _children) => {
                  state.itemMap,
                  (. item) => {
                    let (id, name) = item |. ItemModel.(id, name);
-                   let href = "/items/" ++ id;
+                   let href = Router.getURL @@ ItemPage(id);
                    let onSubmit = onSubmitRemove(id);
                    <MyListItem key=id>
                      <Link href> (s_(name)) </Link>
