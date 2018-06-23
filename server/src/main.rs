@@ -33,9 +33,17 @@ fn fallback(_file: PathBuf) -> io::Result<NamedFile> {
 
 fn rocket() -> rocket::Rocket {
     rocket::ignite()
-        .mount("/", routes![index, files, fallback, v1::item::new_item])
+        .mount(
+            "/",
+            routes![
+                index,
+                files,
+                fallback,
+                v1::item::new_item,
+                v1::item::delete_item,
+            ],
+        )
         .manage(v1::item::SequenceNumber(AtomicUsize::new(0)))
-
 }
 
 fn main() {

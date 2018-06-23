@@ -18,3 +18,10 @@ pub fn new_item(message: Json<Message>, sequence_number: State<SequenceNumber>) 
       "name": message.name,
     }))
 }
+
+#[delete("/api/v1/items/<id>")]
+pub fn delete_item(id: String) -> Json<Value> {
+    Json(json!({
+      "id": id,
+    }))
+}
