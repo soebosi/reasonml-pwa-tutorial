@@ -19,33 +19,47 @@ let initialState = () => {text: "", itemMap: Map.make(~id=(module ItemCmp))};
 
 [@bs.deriving accessors]
 type action =
-  | AddItem(string)
-  | AddedItem(ItemModel.t)
-  | RemoveItem(string)
+  | CreateItem(string)
+  | CreatedItem(ItemModel.t)
+  | DeleteItem(string)
+  | DeletedItem(string)
   | ChangeText(string);
 
 let reducer = (action, state) =>
   switch (action) {
   | ChangeText(text) => {...state, text}
-  | RemoveItem(id) =>
+  | DeletedItem(id) =>
     let itemMap = Map.remove(state.itemMap, id);
     {...state, itemMap};
-  | AddedItem(item) =>
-    let itemMap = Map.set(state.itemMap, ItemModel.id(item), item);
+  | CreatedItem(item) =>
+    let id = ItemModel.id(item);
+    let itemMap = Map.set(state.itemMap, id, item);
     {...state, itemMap};
   | _ => state
   };
 
 let getAddItem = x =>
   switch (x) {
-  | AddItem(text) => Some(text)
+  | CreateItem(name) => Some(name)
+  | _ => None
+  };
+
+let getDeleteItem = x =>
+  switch (x) {
+  | DeleteItem(id) => Some(id)
   | _ => None
   };
 
 let epic = stream =>
   Most.(
-    stream
-    |> keepMap(getAddItem)
-    |> flatMap(fromPromise << ItemModel.create)
-    |> map(addedItem)
+    mergeArray([|
+      stream
+      |> keepMap(getAddItem)
+      |> flatMap(fromPromise << ItemModel.create)
+      |> map(createdItem),
+      stream
+      |> keepMap(getDeleteItem)
+      |> flatMap(fromPromise << ItemModel.delete)
+      |> map(deletedItem),
+    |])
   );

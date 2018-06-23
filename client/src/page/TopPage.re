@@ -20,12 +20,12 @@ let make = (~send, ~state, _children) => {
   };
   let onSubmit = e => {
     ReactEventRe.Form.preventDefault(e);
-    send @@ addItem(state.text);
+    send @@ createItem(state.text);
     send @@ changeText("");
   };
-  let onSubmitRemove = (name, e) => {
+  let onSubmitRemove = (id, e) => {
     ReactEventRe.Form.preventDefault(e);
-    send @@ removeItem(name);
+    send @@ deleteItem(id);
   };
   {
     ...component,

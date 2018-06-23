@@ -37,5 +37,5 @@ let delete = id => {
     Fetch.RequestInit.make(~method_=Delete, ~headers, ()),
   )
   |> Js.Promise.then_(Fetch.Response.text)
-  |> Js.Promise.then_(Js.Promise.resolve << parseIntoError);
+  |> Js.Promise.then_(_ => Js.Promise.resolve(id));
 };
