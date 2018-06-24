@@ -24,32 +24,32 @@ let initialState = () => {
 
 let actionSubject: Most.Subject.t(action) = Most.Subject.make();
 
+let updatePageState = (pageStates, url, updater) => {
+  let id = Router.getStateID(url);
+  let model = PageModelMap.getModel(id);
+  Map.updateU(pageStates, id, (. state) => updater(state, model));
+};
+
 let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) =>
-      let id = Router.getStateID(url);
-      let model = PageModelMap.getModel(id);
       let pageStates =
-        state.pageStates
-        |. Map.updateU(id, (. state) =>
-             switch (state, model) {
-             | (None, Some((module M))) => Some(M.initialState())
-             | (s, _) => s
-             }
-           );
+        updatePageState(state.pageStates, url, (state, model) =>
+          switch (state, model) {
+          | (None, Some((module M))) => Some(M.initialState())
+          | (s, _) => s
+          }
+        );
       {url, pageStates};
     | _ =>
-      let id = Router.getStateID(state.url);
-      let model = PageModelMap.getModel(id);
       let pageStates =
-        state.pageStates
-        |. Map.updateU(id, (. state) =>
-             switch (state, model) {
-             | (Some(s), Some((module M))) => Some(M.reducer(action, s))
-             | (_, _) => None
-             }
-           );
+        updatePageState(state.pageStates, state.url, (state, model) =>
+          switch (state, model) {
+          | (Some(s), Some((module M))) => Some(M.reducer(action, s))
+          | (_, _) => None
+          }
+        );
       {...state, pageStates};
     };
   ReasonReact.UpdateWithSideEffects(
