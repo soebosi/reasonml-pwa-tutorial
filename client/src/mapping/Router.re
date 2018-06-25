@@ -2,7 +2,7 @@ let getStateID = (url: ReasonReact.Router.url) =>
   PageModel.(
     switch (url.path) {
     | [] => TopPage
-    | ["items", name] => ItemPage(name)
+    | ["items", id] => ItemPage(id)
     | _ => ErrorPage
     }
   );
