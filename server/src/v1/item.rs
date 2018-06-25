@@ -8,18 +8,20 @@ pub struct Message {
     name: String,
 }
 
-pub struct SequenceNumber(pub AtomicUsize);
+pub struct SequenceNumber {
+    pub id: AtomicUsize,
+}
 
-#[post("/api/v1/items", format = "application/json", data = "<message>")]
+#[post("/items", format = "application/json", data = "<message>")]
 pub fn new_item(message: Json<Message>, sequence_number: State<SequenceNumber>) -> Json<Value> {
-    sequence_number.0.fetch_add(1, Ordering::Relaxed);
+    sequence_number.id.fetch_add(1, Ordering::Relaxed);
     Json(json!({
-      "id": sequence_number.0.load(Ordering::Relaxed).to_string(),
+      "id": sequence_number.id.load(Ordering::Relaxed).to_string(),
       "name": message.name,
     }))
 }
 
-#[delete("/api/v1/items/<id>")]
+#[delete("/items/<id>")]
 pub fn delete_item(id: String) -> Json<Value> {
     Json(json!({
       "id": id,
