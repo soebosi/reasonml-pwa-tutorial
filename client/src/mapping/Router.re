@@ -29,9 +29,23 @@ let epic = stream =>
     mergeArray([|
       stream
       |> keepMap(getChangeUrl)
-      |> map(((id, state)) =>
+      |> keepMap(((id, state)) =>
            switch (id, state) {
-           | _ => `InitialPageState(id)
+           | (PageModel.TopPage, None) =>
+             Some(
+               `InitialPageState((
+                 id,
+                 `TopPageAction(TopPageModel.Initialize),
+               )),
+             )
+           | (PageModel.ItemPage(_), None) =>
+             Some(
+               `InitialPageState((
+                 id,
+                 `ItemPageAction(ItemPageModel.Initialize),
+               )),
+             )
+           | _ => None
            }
          ),
     |])

@@ -19,6 +19,7 @@ let initialState = () => {text: "", itemMap: Map.make(~id=(module ItemCmp))};
 
 [@bs.deriving accessors]
 type action =
+  | Initialize
   | CreateItem(string)
   | CreatedItem(ItemModel.t)
   | DeleteItem(string)
@@ -27,6 +28,7 @@ type action =
 
 let reducer = (action, state) =>
   switch (action) {
+  | Initialize => state
   | ChangeText(text) => {...state, text}
   | DeletedItem(id) =>
     let itemMap = Map.remove(state.itemMap, id);

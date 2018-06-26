@@ -9,11 +9,13 @@ let initialState = () => {text: "", source: ""};
 
 [@bs.deriving accessors]
 type action =
+  | Initialize
   | ChangeText(string)
   | ChangeSource(string);
 
 let reducer = (action, state) =>
   switch (action) {
+  | Initialize => state
   | ChangeText(text) => {...state, text}
   | ChangeSource(source) => {...state, source}
   };

@@ -5,7 +5,7 @@ open MostEx;
 type action = [
   PageModel.adaptedAction
   | `ChangeUrl(ReasonReact.Router.url)
-  | `InitialPageState(PageModel.id)
+  | `InitialPageState(PageModel.id, PageModel.adaptedAction)
 ];
 
 let changeUrl = a => `ChangeUrl(a);
@@ -33,12 +33,13 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) => {...state, url}
-    | `InitialPageState(id) =>
+    | `InitialPageState(id, action) =>
       let model = PageModelMap.getModel(id);
       let pageStates =
         Map.updateU(state.pageStates, id, (. state) =>
           switch (state, model) {
-          | (None, Some((module M))) => Some(M.initialState())
+          | (None, Some((module M))) =>
+            Some(M.reducer(action, M.initialState()))
           | (s, _) => s
           }
         );
