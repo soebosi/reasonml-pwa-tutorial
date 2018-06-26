@@ -21,7 +21,7 @@ module type Model = {
   type state;
   let initialState: unit => state;
   let reducer: (action, state) => state;
-  let epic: Most.stream(action) => Most.stream(action);
+  let epic: Most.stream((action, option(state))) => Most.stream(action);
   let getState: adaptedState => option(state);
   let adaptState: state => adaptedState;
   let getAction: [> adaptedAction] => option(action);
@@ -31,7 +31,9 @@ module type Model = {
 module type T = {
   let initialState: unit => adaptedState;
   let reducer: ([> adaptedAction], adaptedState) => adaptedState;
-  let epic: Most.stream([> adaptedAction]) => Most.stream([> adaptedAction]);
+  let epic:
+    Most.stream(([> adaptedAction], option(adaptedState))) =>
+    Most.stream([> adaptedAction]);
 };
 
 module Make = (M: Model) : T => {
@@ -42,5 +44,16 @@ module Make = (M: Model) : T => {
     | _ => state
     };
   let epic = stream : Most.stream([> adaptedAction]) =>
-    Most.(stream |> keepMap(M.getAction) |> M.epic |> map(M.adaptAction));
+    Most.(
+      stream
+      |> keepMap(((action, state)) =>
+           switch (M.getAction(action), state) {
+           | (Some(a), Some(s)) => Some((a, M.getState(s)))
+           | (Some(a), None) => Some((a, None))
+           | _ => None
+           }
+         )
+      |> M.epic
+      |> map(M.adaptAction)
+    );
 };

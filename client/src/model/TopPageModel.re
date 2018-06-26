@@ -38,14 +38,14 @@ let reducer = (action, state) =>
   | _ => state
   };
 
-let getAddItem = x =>
-  switch (x) {
+let getAddItem = ((a, _s)) =>
+  switch (a) {
   | CreateItem(name) => Some(name)
   | _ => None
   };
 
-let getDeleteItem = x =>
-  switch (x) {
+let getDeleteItem = ((a, _s)) =>
+  switch (a) {
   | DeleteItem(id) => Some(id)
   | _ => None
   };

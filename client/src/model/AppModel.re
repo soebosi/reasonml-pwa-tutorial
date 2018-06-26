@@ -22,7 +22,8 @@ let initialState = () => {
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
-let actionSubject: Most.Subject.t(action) = Most.Subject.make();
+let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
+  Most.Subject.make();
 
 let updatePageState = (pageStates, url, updater) => {
   let id = Router.getStateID(url);
@@ -52,13 +53,16 @@ let reducer = (action, state) => {
         );
       {...state, pageStates};
     };
+  let id = Router.getStateID(newState.url);
+  let pageState = Map.get(state.pageStates, id);
   ReasonReact.UpdateWithSideEffects(
     newState,
-    _self => Most.Subject.next(action, actionSubject) |. ignore,
+    _self => Most.Subject.next((action, pageState), actionSubject) |. ignore,
   );
 };
 
 let actionEpic = stream =>
   PageModelMap.models
   |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
+  |. Array.concat([||])
   |. Most.mergeArray;
