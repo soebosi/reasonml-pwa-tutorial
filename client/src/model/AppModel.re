@@ -2,7 +2,11 @@ open Belt;
 
 open MostEx;
 
-type action = [ PageModel.adaptedAction | `ChangeUrl(ReasonReact.Router.url)];
+type action = [
+  PageModel.adaptedAction
+  | `ChangeUrl(ReasonReact.Router.url)
+  | `InitialPageState(PageModel.id)
+];
 
 let changeUrl = a => `ChangeUrl(a);
 
@@ -25,27 +29,25 @@ let initialState = () => {
 let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
   Most.Subject.make();
 
-let updatePageState = (pageStates, url, updater) => {
-  let id = Router.getStateID(url);
-  let model = PageModelMap.getModel(id);
-  Map.updateU(pageStates, id, (. state) => updater(state, model));
-};
-
 let reducer = (action, state) => {
   let newState =
     switch (action) {
-    | `ChangeUrl(url) =>
+    | `ChangeUrl(url) => {...state, url}
+    | `InitialPageState(id) =>
+      let model = PageModelMap.getModel(id);
       let pageStates =
-        updatePageState(state.pageStates, url, (state, model) =>
+        Map.updateU(state.pageStates, id, (. state) =>
           switch (state, model) {
           | (None, Some((module M))) => Some(M.initialState())
           | (s, _) => s
           }
         );
-      {url, pageStates};
+      {...state, pageStates};
     | _ =>
+      let id = Router.getStateID(state.url);
+      let model = PageModelMap.getModel(id);
       let pageStates =
-        updatePageState(state.pageStates, state.url, (state, model) =>
+        Map.updateU(state.pageStates, id, (. state) =>
           switch (state, model) {
           | (Some(s), Some((module M))) => Some(M.reducer(action, s))
           | (_, _) => None
@@ -64,5 +66,5 @@ let reducer = (action, state) => {
 let actionEpic = stream =>
   PageModelMap.models
   |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
-  |. Array.concat([||])
+  |. Array.concat([|Router.epic(stream)|])
   |. Most.mergeArray;
