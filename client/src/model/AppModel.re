@@ -64,8 +64,14 @@ let reducer = (action, state) => {
   );
 };
 
+let getChangeUrl = ((a, s)) =>
+  switch (a) {
+  | `ChangeUrl(url) => Some((Router.getStateID(url), s))
+  | _ => None
+  };
+
 let actionEpic = stream =>
   PageModelMap.models
   |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
-  |. Array.concat([|Router.epic(stream)|])
+  |. Array.concat([|stream |> Most.keepMap(getChangeUrl) |> Router.epic|])
   |. Most.mergeArray;

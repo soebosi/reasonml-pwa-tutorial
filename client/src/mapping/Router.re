@@ -18,9 +18,15 @@ let getURL = id =>
     }
   );
 
-let getChangeUrl = ((a, s)) =>
-  switch (a) {
-  | `ChangeUrl(url) => Some((getStateID(url), s))
+let getTopPageID = ((id, state)) =>
+  switch (id, state) {
+  | (PageModel.TopPage, None) => Some(id)
+  | _ => None
+  };
+
+let getItemPageID = ((id, state)) =>
+  switch (id, state) {
+  | (PageModel.ItemPage(_), None) => Some(id)
   | _ => None
   };
 
@@ -28,25 +34,14 @@ let epic = stream =>
   Most.(
     mergeArray([|
       stream
-      |> keepMap(getChangeUrl)
-      |> keepMap(((id, state)) =>
-           switch (id, state) {
-           | (PageModel.TopPage, None) =>
-             Some(
-               `InitialPageState((
-                 id,
-                 `TopPageAction(TopPageModel.Initialize),
-               )),
-             )
-           | (PageModel.ItemPage(_), None) =>
-             Some(
-               `InitialPageState((
-                 id,
-                 `ItemPageAction(ItemPageModel.Initialize),
-               )),
-             )
-           | _ => None
-           }
+      |> keepMap(getTopPageID)
+      |> map(id =>
+           `InitialPageState((id, `TopPageAction(TopPageModel.Initialize)))
+         ),
+      stream
+      |> keepMap(getItemPageID)
+      |> map(id =>
+           `InitialPageState((id, `ItemPageAction(ItemPageModel.Initialize)))
          ),
     |])
   );
