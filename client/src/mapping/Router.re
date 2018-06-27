@@ -1,3 +1,5 @@
+open Util;
+
 open MostEx;
 
 let getStateID = (url: ReasonReact.Router.url) =>
@@ -26,7 +28,7 @@ let getTopPageID = ((id, state)) =>
 
 let getItemPageID = ((id, state)) =>
   switch (id, state) {
-  | (PageModel.ItemPage(_), None) => Some(id)
+  | (PageModel.ItemPage(id), None) => Some(id)
   | _ => None
   };
 
@@ -40,8 +42,13 @@ let epic = stream =>
          ),
       stream
       |> keepMap(getItemPageID)
-      |> map(id =>
-           `InitialPageState((id, `ItemPageAction(ItemPageModel.Initialize)))
-         ),
+      |> flatMap(fromPromise << ItemModel.retrieve)
+      |> map(item => {
+           let id = ItemModel.id(item);
+           `InitialPageState((
+             PageModel.ItemPage(id),
+             `ItemPageAction(ItemPageModel.Initialize),
+           ));
+         }),
     |])
   );
