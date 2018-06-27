@@ -37,9 +37,9 @@ fn rocket() -> rocket::Rocket {
         .mount(
             "/api/v1/",
             routes![
-                v1::item::new_item,
-                v1::item::delete_item,
+                v1::item::create_item,
                 v1::item::retrieve_item,
+                v1::item::delete_item,
             ],
         )
         .manage(v1::item::SequenceNumber { id: AtomicUsize::new(0) })

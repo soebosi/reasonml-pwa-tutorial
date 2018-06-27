@@ -13,7 +13,7 @@ pub struct SequenceNumber {
 }
 
 #[post("/items", format = "application/json", data = "<message>")]
-pub fn new_item(message: Json<Message>, sequence_number: State<SequenceNumber>) -> Json<Value> {
+pub fn create_item(message: Json<Message>, sequence_number: State<SequenceNumber>) -> Json<Value> {
     sequence_number.id.fetch_add(1, Ordering::Relaxed);
     Json(json!({
       "id": sequence_number.id.load(Ordering::Relaxed).to_string(),
