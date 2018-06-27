@@ -21,6 +21,16 @@ let create = name => {
   |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
 };
 
+let retrieve = id => {
+  let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
+  Fetch.fetchWithInit(
+    "/api/v1/items/" ++ id,
+    Fetch.RequestInit.make(~method_=Get, ~headers, ()),
+  )
+  |> Js.Promise.then_(Fetch.Response.text)
+  |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
+};
+
 [@bs.deriving abstract]
 type error = {
   code: int,
