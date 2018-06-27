@@ -21,6 +21,14 @@ pub fn new_item(message: Json<Message>, sequence_number: State<SequenceNumber>) 
     }))
 }
 
+#[get("/items/<id>")]
+pub fn retrieve_item(id: String) -> Json<Value> {
+    Json(json!({
+      "id":   id,
+      "name": "",
+    }))
+}
+
 #[delete("/items/<id>")]
 pub fn delete_item(id: String) -> Json<Value> {
     Json(json!({
