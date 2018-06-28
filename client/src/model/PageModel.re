@@ -1,6 +1,6 @@
 open MostEx;
 
-[@bs.deriving jsConverter]
+[@bs.deriving accessors]
 type id =
   | TopPage
   | ItemPage(string)

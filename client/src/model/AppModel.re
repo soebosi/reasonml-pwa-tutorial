@@ -73,5 +73,10 @@ let getChangeUrl = ((a, s)) =>
 let actionEpic = stream =>
   PageModelMap.models
   |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
-  |. Array.concat([|stream |> Most.keepMap(getChangeUrl) |> Router.epic|])
+  |. Array.concat([|
+       stream
+       |> Most.keepMap(getChangeUrl)
+       |> Router.epic
+       |> Most.map(a => `InitialPageState(a)),
+     |])
   |. Most.mergeArray;
