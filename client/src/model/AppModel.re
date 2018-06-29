@@ -5,7 +5,7 @@ open MostEx;
 type action = [
   PageModel.adaptedAction
   | `ChangeUrl(ReasonReact.Router.url)
-  | `InitialPageState(PageModel.id, PageModel.adaptedAction)
+  | `InitializePageState(PageModel.id, PageModel.adaptedAction)
 ];
 
 let changeUrl = a => `ChangeUrl(a);
@@ -33,7 +33,7 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) => {...state, url}
-    | `InitialPageState(id, action) =>
+    | `InitializePageState(id, action) =>
       let model = PageModelMap.getModel(id);
       let pageStates =
         Map.updateU(state.pageStates, id, (. state) =>
@@ -77,6 +77,6 @@ let actionEpic = stream =>
        stream
        |> Most.keepMap(getChangeUrl)
        |> Router.epic
-       |> Most.map(a => `InitialPageState(a)),
+       |> Most.map(a => `InitializePageState(a)),
      |])
   |. Most.mergeArray;
