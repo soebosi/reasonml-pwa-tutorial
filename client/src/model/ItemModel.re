@@ -31,15 +31,6 @@ let retrieve = id => {
   |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
 };
 
-[@bs.deriving abstract]
-type error = {
-  code: int,
-  message: string,
-};
-
-[@bs.scope "JSON"] [@bs.val]
-external parseIntoError : string => error = "parse";
-
 let delete = id => {
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   Fetch.fetchWithInit(
