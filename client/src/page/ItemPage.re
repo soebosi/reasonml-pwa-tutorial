@@ -15,7 +15,7 @@ module Styles = {
 
 let component = ReasonReact.statelessComponent("ItemPage");
 
-let make = (~id, ~send, ~state, _children) => {
+let make = (~send, ~state, _children) => {
   let onChange = e => {
     let dom = ReactEventRe.Form.target(e);
     let text = ReactDOMRe.domElementToObj(dom)##value;
@@ -25,7 +25,7 @@ let make = (~id, ~send, ~state, _children) => {
     ...component,
     render: _self =>
       <div>
-        <h2> (s_(id)) </h2>
+        <h2> (s_(state.name)) </h2>
         <MyTextarea onChange value=state.text />
         <div className=Styles.textarea> <Markdown source=state.source /> </div>
       </div>,

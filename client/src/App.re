@@ -28,9 +28,9 @@ let make = _children => {
         | (TopPage, Some(TopPageState(state))) =>
           let send = send << (a => `TopPageAction(a));
           <TopPage send state />;
-        | (ItemPage(id), Some(ItemPageState(state))) =>
+        | (ItemPage(_), Some(ItemPageState(state))) =>
           let send = send << (a => `ItemPageAction(a));
-          <ItemPage send state id />;
+          <ItemPage send state />;
         | (ErrorPage, _) => <ErrorPage />
         | (_, _) => s_("Now Loading")
         }

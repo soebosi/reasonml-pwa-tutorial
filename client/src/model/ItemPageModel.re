@@ -1,21 +1,22 @@
 open MostEx;
 
 type state = {
+  name: string,
   text: string,
   source: string,
 };
 
-let initialState = () => {text: "", source: ""};
+let initialState = () => {name: "", text: "", source: ""};
 
 [@bs.deriving accessors]
 type action =
-  | Initialize
+  | Initialize(string)
   | ChangeText(string)
   | ChangeSource(string);
 
 let reducer = (action, state) =>
   switch (action) {
-  | Initialize => state
+  | Initialize(name) => {...state, name}
   | ChangeText(text) => {...state, text}
   | ChangeSource(source) => {...state, source}
   };
