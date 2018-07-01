@@ -21,7 +21,7 @@ let make = (~send, ~state, _children) => {
     send @@ createItem(state.text);
     send @@ changeText("");
   };
-  let onSubmitRemove = (id, e) => {
+  let onSubmitDelete = (id, e) => {
     ReactEventRe.Form.preventDefault(e);
     send @@ deleteItem(id);
   };
@@ -49,7 +49,7 @@ let make = (~send, ~state, _children) => {
                  (. item) => {
                    let (id, name) = item |. ItemModel.(id, name);
                    let href = Router.getURL @@ ItemPage(id);
-                   let onSubmit = onSubmitRemove(id);
+                   let onSubmit = onSubmitDelete(id);
                    <MyListItem key=id>
                      <Link href> (s_(name)) </Link>
                      <form onSubmit className=Styles.removeBtn>
