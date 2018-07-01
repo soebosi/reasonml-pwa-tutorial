@@ -1,21 +1,22 @@
 open MostEx;
 
-open Belt;
-
 open Util;
 
 module ItemCmp =
-  Id.MakeComparable({
+  Belt.Id.MakeComparable({
     type t = string;
     let cmp = Pervasives.compare;
   });
 
 type state = {
   text: string,
-  itemMap: Map.t(ItemCmp.t, ItemModel.t, ItemCmp.identity),
+  itemMap: Belt.Map.t(ItemCmp.t, ItemModel.t, ItemCmp.identity),
 };
 
-let initialState = () => {text: "", itemMap: Map.make(~id=(module ItemCmp))};
+let initialState = () => {
+  text: "",
+  itemMap: Belt.Map.make(~id=(module ItemCmp)),
+};
 
 [@bs.deriving accessors]
 type action =
@@ -31,11 +32,11 @@ let reducer = (action, state) =>
   | Initialize => state
   | ChangeText(text) => {...state, text}
   | DeletedItem(id) =>
-    let itemMap = Map.remove(state.itemMap, id);
+    let itemMap = Belt.Map.remove(state.itemMap, id);
     {...state, itemMap};
   | CreatedItem(item) =>
     let id = ItemModel.id(item);
-    let itemMap = Map.set(state.itemMap, id, item);
+    let itemMap = Belt.Map.set(state.itemMap, id, item);
     {...state, itemMap};
   | _ => state
   };

@@ -1,5 +1,3 @@
-open Belt;
-
 let baseStyle =
   Css.[
     fontSize(`rem(1.0)),
@@ -35,7 +33,7 @@ let baseColor = type_ =>
 let make = (~style=?, ~type_, children) => {
   ...component,
   render: _self => {
-    let customStyle = Option.getWithDefault(style, []);
+    let customStyle = Belt.Option.getWithDefault(style, []);
     let className =
       Css.style @@ Css.merge([customStyle, baseColor(type_), baseStyle]);
     ReasonReact.createDomElement(

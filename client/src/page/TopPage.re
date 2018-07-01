@@ -1,5 +1,3 @@
-open Belt;
-
 open Util;
 
 open TopPageModel;
@@ -46,7 +44,7 @@ let make = (~send, ~state, _children) => {
         </form>
         <MyList>
           ...(
-               Map.mapU(
+               Belt.Map.mapU(
                  state.itemMap,
                  (. item) => {
                    let (id, name) = item |. ItemModel.(id, name);
@@ -60,7 +58,7 @@ let make = (~send, ~state, _children) => {
                    </MyListItem>;
                  },
                )
-               |. Map.valuesToArray
+               |. Belt.Map.valuesToArray
              )
         </MyList>
       </div>,

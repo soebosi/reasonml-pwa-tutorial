@@ -1,5 +1,3 @@
-open Belt;
-
 open MostEx;
 
 type action = [
@@ -11,18 +9,19 @@ type action = [
 let changeUrl = a => `ChangeUrl(a);
 
 module PageCmp =
-  Id.MakeComparable({
+  Belt.Id.MakeComparable({
     type t = PageModel.id;
     let cmp = (a, b) => Pervasives.compare(a, b);
   });
 
 type state = {
-  pageStates: Map.t(PageModel.id, PageModel.adaptedState, PageCmp.identity),
+  pageStates:
+    Belt.Map.t(PageModel.id, PageModel.adaptedState, PageCmp.identity),
   url: ReasonReact.Router.url,
 };
 
 let initialState = () => {
-  pageStates: Map.make(~id=(module PageCmp)),
+  pageStates: Belt.Map.make(~id=(module PageCmp)),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
@@ -36,7 +35,7 @@ let reducer = (action, state) => {
     | `InitializePageState(id, action) =>
       let model = PageModelMap.getModel(id);
       let pageStates =
-        Map.updateU(state.pageStates, id, (. state) =>
+        Belt.Map.updateU(state.pageStates, id, (. state) =>
           switch (state, model) {
           | (None, Some((module M))) =>
             Some(M.reducer(action, M.initialState()))
@@ -48,7 +47,7 @@ let reducer = (action, state) => {
       let id = Router.getStateID(state.url);
       let model = PageModelMap.getModel(id);
       let pageStates =
-        Map.updateU(state.pageStates, id, (. state) =>
+        Belt.Map.updateU(state.pageStates, id, (. state) =>
           switch (state, model) {
           | (Some(s), Some((module M))) => Some(M.reducer(action, s))
           | (_, _) => None
@@ -57,7 +56,7 @@ let reducer = (action, state) => {
       {...state, pageStates};
     };
   let id = Router.getStateID(newState.url);
-  let pageState = Map.get(state.pageStates, id);
+  let pageState = Belt.Map.get(state.pageStates, id);
   ReasonReact.UpdateWithSideEffects(
     newState,
     _self => Most.Subject.next((action, pageState), actionSubject) |. ignore,
@@ -72,8 +71,8 @@ let getChangeUrl = ((a, s)) =>
 
 let actionEpic = stream =>
   PageModelMap.models
-  |. Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
-  |. Array.concat([|
+  |. Belt.Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
+  |. Belt.Array.concat([|
        stream
        |> Most.keepMap(getChangeUrl)
        |> Router.epic

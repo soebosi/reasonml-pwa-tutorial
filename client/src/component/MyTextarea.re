@@ -1,5 +1,3 @@
-open Belt;
-
 let baseStyle =
   Css.[
     Css.float(`left),
@@ -16,7 +14,7 @@ let component = ReasonReact.statelessComponent("MyTextarea");
 let make = (~onChange, ~value, ~style=?, children) => {
   ...component,
   render: _self => {
-    let customStyle = Option.getWithDefault(style, []);
+    let customStyle = Belt.Option.getWithDefault(style, []);
     let className = Css.style @@ Css.merge([customStyle, baseStyle]);
     ReasonReact.createDomElement(
       "textarea",
