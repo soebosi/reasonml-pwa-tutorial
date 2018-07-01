@@ -3,7 +3,7 @@ open MostEx;
 type action = [
   PageModel.adaptedAction
   | `ChangeUrl(ReasonReact.Router.url)
-  | `InitializePageState(PageModel.id, PageModel.adaptedAction)
+  | `InitializePageState(PageModel.adaptedAction)
 ];
 
 let changeUrl = a => `ChangeUrl(a);
@@ -32,7 +32,8 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) => {...state, url}
-    | `InitializePageState(id, action) =>
+    | `InitializePageState(action) =>
+      let id = Router.getStateID(state.url);
       let model = PageModelMap.getModel(id);
       let pageStates =
         Belt.Map.updateU(state.pageStates, id, (. state) =>
