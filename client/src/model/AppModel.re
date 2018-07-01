@@ -34,25 +34,27 @@ let reducer = (action, state) => {
   let newState =
     switch (action) {
     | `ChangeUrl(url) => {...state, url}
-    | `InitializePageState(action) =>
-      let pageStates =
-        Belt.Map.updateU(state.pageStates, id, (. state) =>
-          switch (state, model) {
-          | (None, Some((module M))) =>
-            Some(M.reducer(action, M.initialState()))
-          | (s, _) => s
-          }
-        );
-      {...state, pageStates};
-    | _ =>
-      let pageStates =
-        Belt.Map.updateU(state.pageStates, id, (. state) =>
-          switch (state, model) {
-          | (Some(s), Some((module M))) => Some(M.reducer(action, s))
-          | (_, _) => None
-          }
-        );
-      {...state, pageStates};
+    | `InitializePageState(action) => {
+        ...state,
+        pageStates:
+          Belt.Map.updateU(state.pageStates, id, (. pState) =>
+            switch (pState, model) {
+            | (None, Some((module M))) =>
+              Some(M.reducer(action, M.initialState()))
+            | (s, _) => s
+            }
+          ),
+      }
+    | _ => {
+        ...state,
+        pageStates:
+          Belt.Map.updateU(state.pageStates, id, (. pState) =>
+            switch (pState, model) {
+            | (Some(s), Some((module M))) => Some(M.reducer(action, s))
+            | (_, _) => None
+            }
+          ),
+      }
     };
   let id = Router.getStateID(newState.url);
   let pageState = Belt.Map.get(state.pageStates, id);
