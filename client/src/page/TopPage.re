@@ -21,8 +21,10 @@ let make = (~send, ~state, _children) => {
     send @@ createItem(state.text);
     send @@ changeText("");
   };
-  let onSubmitDelete = (id, e) => {
+  let onSubmitDelete = e => {
     ReactEventRe.Form.preventDefault(e);
+    let dom = ReactEventRe.Form.target(e);
+    let id = ReactDOMRe.domElementToObj(dom)##dataset##id;
     send @@ deleteItem(id);
   };
   {
@@ -49,12 +51,20 @@ let make = (~send, ~state, _children) => {
                  (. item) => {
                    let (id, name) = item |. ItemModel.(id, name);
                    let href = Router.getURL @@ ItemPage(id);
-                   let onSubmit = onSubmitDelete(id);
                    <MyListItem key=id>
                      <Link href> (s_(name)) </Link>
-                     <form onSubmit className=Styles.removeBtn>
-                       <MyButton type_=Remove> (s_("remove")) </MyButton>
-                     </form>
+                     (
+                       ReasonReact.cloneElement(
+                         <form
+                           onSubmit=onSubmitDelete
+                           className=Styles.removeBtn
+                         />,
+                         ~props={"data-id": id},
+                         [|
+                           <MyButton type_=Remove> (s_("remove")) </MyButton>,
+                         |],
+                       )
+                     )
                    </MyListItem>;
                  },
                )
