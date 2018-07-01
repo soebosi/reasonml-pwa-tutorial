@@ -70,7 +70,7 @@ let getChangeUrl = ((a, s)) =>
   | _ => None
   };
 
-let actionEpic = stream =>
+let epic = stream =>
   PageModelMap.models
   |. Belt.Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
   |. Belt.Array.concat([|

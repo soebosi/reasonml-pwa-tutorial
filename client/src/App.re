@@ -13,10 +13,7 @@ let make = _children => {
     onUnmount(() => unwatchUrl(watcherID));
     send @@ changeUrl @@ dangerouslyGetInitialUrl();
     Most.(
-      Subject.asStream(actionSubject)
-      |> actionEpic
-      |> observe(send)
-      |> ignore
+      Subject.asStream(actionSubject) |> epic |> observe(send) |> ignore
     );
   },
   render: ({send, state}) => {
