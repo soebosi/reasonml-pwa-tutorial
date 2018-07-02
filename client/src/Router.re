@@ -37,13 +37,12 @@ let epic = stream =>
     mergeArray([|
       stream
       |> keepMap(getTopPageID)
-      |> map(_ => `TopPageAction(TopPageModel.Initialize)),
+      |> map(_ => TopPageModel.Initialize)
+      |> map(a => `TopPageAction(a)),
       stream
       |> keepMap(getItemPageID)
       |> flatMap(fromPromise << ItemModel.retrieve)
-      |> map(item => {
-           let name = ItemModel.name(item);
-           `ItemPageAction(ItemPageModel.Initialize(name));
-         }),
+      |> map(ItemPageModel.initialize << ItemModel.name)
+      |> map(a => `ItemPageAction(a)),
     |])
   );
