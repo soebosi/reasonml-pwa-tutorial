@@ -64,7 +64,7 @@ let reducer = (action, state) => {
   );
 };
 
-let getChangeUrl = ((a, s)) =>
+let getStateIDFromChangeUrl = ((a, s)) =>
   switch (a) {
   | `ChangeUrl(url) => Some((Router.getStateID(url), s))
   | _ => None
@@ -75,7 +75,7 @@ let epic = stream =>
   |. Belt.Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
   |. Belt.Array.concat([|
        stream
-       |> Most.keepMap(getChangeUrl)
+       |> Most.keepMap(getStateIDFromChangeUrl)
        |> Router.epic
        |> Most.map(a => `InitializePageState(a)),
      |])
