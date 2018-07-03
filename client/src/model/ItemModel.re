@@ -24,7 +24,7 @@ let create = name => {
 let retrieve = id => {
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   Fetch.fetchWithInit(
-    "/api/v1/items/" ++ id,
+    {j|/api/v1/items/$id|j},
     Fetch.RequestInit.make(~method_=Get, ~headers, ()),
   )
   |> Js.Promise.then_(Fetch.Response.text)
@@ -34,7 +34,7 @@ let retrieve = id => {
 let delete = id => {
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   Fetch.fetchWithInit(
-    "/api/v1/items/" ++ id,
+    {j|/api/v1/items/$id|j},
     Fetch.RequestInit.make(~method_=Delete, ~headers, ()),
   )
   |> Js.Promise.then_(Fetch.Response.text)

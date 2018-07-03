@@ -15,7 +15,7 @@ let getURL = id =>
   PageModel.(
     switch (id) {
     | TopPage => "/"
-    | ItemPage(name) => "/items/" ++ name
+    | ItemPage(name) => {j|/items/$name|j}
     | _ => ""
     }
   );
