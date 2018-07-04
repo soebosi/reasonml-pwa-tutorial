@@ -29,7 +29,7 @@ let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
   Most.Subject.make();
 
 let reducer = (action, state) => {
-  let id = Router.getStateID(state.url);
+  let id = Router.getPageStateID(state.url);
   let model = PageModelMap.getModel(id);
   let newState =
     switch (action) {
@@ -56,7 +56,7 @@ let reducer = (action, state) => {
           ),
       }
     };
-  let id = Router.getStateID(newState.url);
+  let id = Router.getPageStateID(newState.url);
   let pageState = Belt.Map.get(state.pageStates, id);
   ReasonReact.UpdateWithSideEffects(
     newState,
@@ -66,7 +66,7 @@ let reducer = (action, state) => {
 
 let getStateIDFromChangeUrl = ((a, s)) =>
   switch (a) {
-  | `ChangeUrl(url) => Some((Router.getStateID(url), s))
+  | `ChangeUrl(url) => Some((Router.getPageStateID(url), s))
   | _ => None
   };
 

@@ -2,7 +2,7 @@ open Util;
 
 open MostEx;
 
-let getStateID = (url: ReasonReact.Router.url) =>
+let getPageStateID = (url: ReasonReact.Router.url) =>
   PageModel.(
     switch (url.path) {
     | [] => TopPage
