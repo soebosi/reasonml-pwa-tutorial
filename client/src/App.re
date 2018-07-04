@@ -17,11 +17,11 @@ let make = _children => {
     );
   },
   render: ({send, state}) => {
-    let id = Router.getStateID(state.url);
-    let pageState = Belt.Map.get(state.pageStates, id);
+    let stateID = Router.getStateID(state.url);
+    let pageState = Belt.Map.get(state.pageStates, stateID);
     <div>
       (
-        switch (id, pageState) {
+        switch (stateID, pageState) {
         | (TopPage, Some(TopPageState(state))) =>
           let send = send << (a => `TopPageAction(a));
           <TopPage send state />;
