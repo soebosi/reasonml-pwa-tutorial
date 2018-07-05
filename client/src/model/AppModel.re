@@ -28,6 +28,12 @@ let initialState = () => {
 let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
   Most.Subject.make();
 
+let optionFlatMap2 = (a, b, f) =>
+  switch (a, b) {
+  | (Some(a), Some(b)) => f(a, b)
+  | (_, _) => None
+  };
+
 let reducer = (action, state) => {
   let id = Router.getPageStateID(state.url);
   let model = PageModelMap.getModel(id);
@@ -38,21 +44,22 @@ let reducer = (action, state) => {
         ...state,
         pageStates:
           Belt.Map.updateU(state.pageStates, id, (. pState) =>
-            switch (pState, model) {
-            | (None, Some((module M))) =>
+            switch (model, pState) {
+            | (Some((module M)), None) =>
               Some(M.reducer(action, M.initialState()))
-            | (s, _) => s
+            | (_, s) => s
             }
           ),
       }
     | _ => {
         ...state,
         pageStates:
-          Belt.Map.updateU(state.pageStates, id, (. pState) =>
-            switch (pState, model) {
-            | (Some(s), Some((module M))) => Some(M.reducer(action, s))
-            | (_, _) => None
-            }
+          Belt.Map.update(
+            state.pageStates,
+            id,
+            optionFlatMap2(model, _, ((module M), s) =>
+              Some(M.reducer(action, s))
+            ),
           ),
       }
     };
