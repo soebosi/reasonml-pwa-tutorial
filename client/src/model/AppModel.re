@@ -67,9 +67,15 @@ let reducer = (action, state) => {
   );
 };
 
-let getStateIDFromChangeUrl = ((a, s)) =>
-  switch (a, s) {
-  | (`ChangeUrl(url), None) => Some(Router.getPageStateID(url))
+let getStateIDFromChangeUrl = a =>
+  switch (a) {
+  | `ChangeUrl(url) => Some(Router.getPageStateID(url))
+  | _ => None
+  };
+
+let getActionIfPageIsEmpty = ((a, s)) =>
+  switch (s) {
+  | None => Some(a)
   | _ => None
   };
 
@@ -78,6 +84,7 @@ let epic = stream =>
   |. Belt.Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
   |. Belt.Array.concat([|
        stream
+       |> Most.keepMap(getActionIfPageIsEmpty)
        |> Most.keepMap(getStateIDFromChangeUrl)
        |> Router.epic
        |> Most.map(a => `InitializePageState(a)),
