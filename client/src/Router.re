@@ -20,15 +20,15 @@ let getURL = id =>
     }
   );
 
-let getTopPageID = ((stateID, state)) =>
-  switch (stateID, state) {
-  | (PageModel.TopPage, None) => Some(stateID)
+let getTopPageID = stateID =>
+  switch (stateID) {
+  | PageModel.TopPage => Some(stateID)
   | _ => None
   };
 
-let getItemPageID = ((stateID, state)) =>
-  switch (stateID, state) {
-  | (PageModel.ItemPage(id), None) => Some(id)
+let getItemPageID = stateID =>
+  switch (stateID) {
+  | PageModel.ItemPage(id) => Some(id)
   | _ => None
   };
 

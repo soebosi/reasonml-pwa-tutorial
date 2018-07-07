@@ -68,8 +68,8 @@ let reducer = (action, state) => {
 };
 
 let getStateIDFromChangeUrl = ((a, s)) =>
-  switch (a) {
-  | `ChangeUrl(url) => Some((Router.getPageStateID(url), s))
+  switch (a, s) {
+  | (`ChangeUrl(url), None) => Some(Router.getPageStateID(url))
   | _ => None
   };
 
