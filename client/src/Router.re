@@ -20,12 +20,6 @@ let getURL = id =>
     }
   );
 
-let getTopPageID = stateID =>
-  switch (stateID) {
-  | PageModel.TopPage => Some(stateID)
-  | _ => None
-  };
-
 let getItemPageID = stateID =>
   switch (stateID) {
   | PageModel.ItemPage(id) => Some(id)
@@ -36,7 +30,7 @@ let epic = stream =>
   Most.(
     mergeArray([|
       stream
-      |> keepMap(getTopPageID)
+      |> filter((==)(PageModel.TopPage))
       |> map(_ => TopPageModel.Initialize)
       |> map(a => `TopPageAction(a)),
       stream
