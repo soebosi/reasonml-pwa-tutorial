@@ -73,7 +73,7 @@ let getStateIDFromChangeUrl = a =>
   | _ => None
   };
 
-let getActionIfPageIsEmpty = ((a, s)) =>
+let getActionIfPageStateIsEmpty = ((a, s)) =>
   switch (s) {
   | None => Some(a)
   | _ => None
@@ -84,7 +84,7 @@ let epic = stream =>
   |. Belt.Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
   |. Belt.Array.concat([|
        stream
-       |> Most.keepMap(getActionIfPageIsEmpty)
+       |> Most.keepMap(getActionIfPageStateIsEmpty)
        |> Most.keepMap(getStateIDFromChangeUrl)
        |> Router.epic
        |> Most.map(a => `InitializePageState(a)),
