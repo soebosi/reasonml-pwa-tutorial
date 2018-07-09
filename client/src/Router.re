@@ -36,10 +36,7 @@ let epic = stream =>
       stream
       |> keepMap(getItemPageID)
       |> flatMap(fromPromise << ItemModel.retrieve)
-      |> map(item => {
-           let (id, name) = ItemModel.(id(item), name(item));
-           ItemPageModel.initialize(id, name);
-         })
+      |> map(ItemPageModel.initialize)
       |> map(a => `ItemPageAction(a)),
     |])
   );
