@@ -31,6 +31,20 @@ let retrieve = id => {
   |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
 };
 
+let update = item => {
+  let (id, name) = item |. (id, name);
+  let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
+  let payload = Js.Dict.empty();
+  Js.Dict.set(payload, "name", Js.Json.string(name));
+  let body = Fetch.BodyInit.make @@ dict2string(payload);
+  Fetch.fetchWithInit(
+    {j|/api/v1/items/$id|j},
+    Fetch.RequestInit.make(~method_=Put, ~body, ~headers, ()),
+  )
+  |> Js.Promise.then_(Fetch.Response.text)
+  |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
+};
+
 let delete = id => {
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   Fetch.fetchWithInit(
