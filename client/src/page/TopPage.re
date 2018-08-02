@@ -49,7 +49,7 @@ let make = (~send, ~state, _children) => {
                Belt.Map.mapU(
                  state.itemMap,
                  (. item) => {
-                   let (id, name) = item |. ItemModel.(id, name);
+                   let (id, name) = item |. ItemModel.(idGet, nameGet);
                    let href = Router.getURL @@ ItemPage(id);
                    <MyListItem key=id>
                      <Link href> (s_(name)) </Link>

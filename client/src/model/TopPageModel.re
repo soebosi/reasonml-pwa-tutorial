@@ -35,7 +35,7 @@ let reducer = (action, state) =>
     let itemMap = Belt.Map.remove(state.itemMap, id);
     {...state, itemMap};
   | CreatedItem(item) =>
-    let id = ItemModel.id(item);
+    let id = ItemModel.idGet(item);
     let itemMap = Belt.Map.set(state.itemMap, id, item);
     {...state, itemMap};
   | _ => state

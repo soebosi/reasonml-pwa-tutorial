@@ -32,7 +32,7 @@ let retrieve = id => {
 };
 
 let update = item => {
-  let (id, name) = item |. (id, name);
+  let (id, name) = item |. (idGet, nameGet);
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "name", Js.Json.string(name));

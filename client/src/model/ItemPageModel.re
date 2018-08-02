@@ -19,8 +19,8 @@ let reducer = (action, state) =>
   switch (action) {
   | Initialize(item) => {
       ...state,
-      id: ItemModel.id(item),
-      name: ItemModel.name(item),
+      id: ItemModel.idGet(item),
+      name: ItemModel.nameGet(item),
     }
   | ChangeText(text) => {...state, text}
   | ChangeSource(source) => {...state, source}
