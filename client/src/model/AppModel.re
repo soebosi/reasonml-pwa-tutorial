@@ -3,8 +3,7 @@ open MostEx;
 [@bs.deriving accessors]
 type action =
   | PageAction(PageModel.adaptedAction)
-  | ChangeUrl(ReasonReact.Router.url)
-  | InitializePageState(PageModel.adaptedAction);
+  | ChangeUrl(ReasonReact.Router.url);
 
 module PageCmp =
   Belt.Id.MakeComparable({
@@ -32,20 +31,17 @@ let reducer = (action, state) => {
   let newState =
     switch (action, model) {
     | (ChangeUrl(url), _) => {...state, url}
-    | (InitializePageState(action), Some((module M))) => {
-        ...state,
-        pageStates:
-          Belt.Map.updateU(state.pageStates, id, (. _) =>
-            Some(M.reducer(action, M.initialState()))
-          ),
-      }
     | (PageAction(action), Some((module M))) => {
         ...state,
         pageStates:
-          Belt.Map.update(
-            state.pageStates,
-            id,
-            Belt.Option.mapU(_, (. s) => M.reducer(action, s)),
+          Belt.Map.update(state.pageStates, id, state =>
+            (
+              switch (state) {
+              | Some(s) => M.reducer(action, s)
+              | None => M.reducer(action, M.initialState())
+              }
+            )
+            |. Some
           ),
       }
     | _ => state
@@ -89,6 +85,6 @@ let epic = stream =>
        |> Most.keepMap(getActionIfPageStateIsEmpty)
        |> Most.keepMap(getStateIDFromChangeUrl)
        |> Router.epic
-       |> Most.map(a => InitializePageState(a)),
+       |> Most.map(a => PageAction(a)),
      |])
   |. Most.mergeArray;
