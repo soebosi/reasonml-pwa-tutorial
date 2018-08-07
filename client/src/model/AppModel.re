@@ -41,7 +41,7 @@ let reducer = (action, store) => {
         ...store,
         pageStates: Belt.Map.update(store.pageStates, pageID, updater),
       };
-    | _ => store
+    | (PageAction(_), None) => store
     };
   let newPageID = Router.getPageStateID(newStore.url);
   let pageState = Belt.Map.get(store.pageStates, newPageID);
