@@ -25,17 +25,17 @@ let initialState = () => {
 let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
   Most.Subject.make();
 
-let reducer = (action, state) => {
-  let id = Router.getPageStateID(state.url);
+let reducer = (action, store) => {
+  let id = Router.getPageStateID(store.url);
   let model = PageModelMap.getModel(id);
-  let newState =
+  let newStore =
     switch (action, model) {
-    | (ChangeUrl(url), _) => {...state, url}
+    | (ChangeUrl(url), _) => {...store, url}
     | (PageAction(action), Some((module M))) => {
-        ...state,
+        ...store,
         pageStates:
           Belt.Map.update(
-            state.pageStates,
+            store.pageStates,
             id,
             nullableState => {
               let state =
@@ -44,12 +44,12 @@ let reducer = (action, state) => {
             },
           ),
       }
-    | _ => state
+    | _ => store
     };
-  let id = Router.getPageStateID(newState.url);
-  let pageState = Belt.Map.get(state.pageStates, id);
+  let id = Router.getPageStateID(newStore.url);
+  let pageState = Belt.Map.get(store.pageStates, id);
   ReasonReact.UpdateWithSideEffects(
-    newState,
+    newStore,
     _self => Most.Subject.next((action, pageState), actionSubject) |. ignore,
   );
 };
