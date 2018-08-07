@@ -26,28 +26,25 @@ let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
   Most.Subject.make();
 
 let reducer = (action, store) => {
-  let id = Router.getPageStateID(store.url);
-  let model = PageModelMap.getModel(id);
+  let pageID = Router.getPageStateID(store.url);
+  let model = PageModelMap.getModel(pageID);
   let newStore =
     switch (action, model) {
     | (ChangeUrl(url), _) => {...store, url}
-    | (PageAction(action), Some((module M))) => {
+    | (PageAction(action), Some((module M))) =>
+      let updater = nullableState => {
+        let state =
+          Belt.Option.getWithDefault(nullableState, M.initialState());
+        Some(M.reducer(action, state));
+      };
+      {
         ...store,
-        pageStates:
-          Belt.Map.update(
-            store.pageStates,
-            id,
-            nullableState => {
-              let state =
-                Belt.Option.getWithDefault(nullableState, M.initialState());
-              Some(M.reducer(action, state));
-            },
-          ),
-      }
+        pageStates: Belt.Map.update(store.pageStates, pageID, updater),
+      };
     | _ => store
     };
-  let id = Router.getPageStateID(newStore.url);
-  let pageState = Belt.Map.get(store.pageStates, id);
+  let newPageID = Router.getPageStateID(newStore.url);
+  let pageState = Belt.Map.get(store.pageStates, newPageID);
   ReasonReact.UpdateWithSideEffects(
     newStore,
     _self => Most.Subject.next((action, pageState), actionSubject) |. ignore,
@@ -75,16 +72,13 @@ let getActionIfPageStateIsEmpty = ((a, s)) =>
 let epic = stream =>
   PageModelMap.models
   |. Belt.Array.mapU((. (module M): (module PageModel.T)) =>
-       stream
-       |> Most.keepMap(getPageAction)
-       |> M.epic
-       |> Most.map(a => PageAction(a))
+       stream |> Most.keepMap(getPageAction) |> M.epic
      )
   |. Belt.Array.concat([|
        stream
        |> Most.keepMap(getActionIfPageStateIsEmpty)
        |> Most.keepMap(getStateIDFromChangeUrl)
-       |> Router.epic
-       |> Most.map(a => PageAction(a)),
+       |> Router.epic,
      |])
-  |. Most.mergeArray;
+  |> Most.mergeArray
+  |> Most.map(a => PageAction(a));
