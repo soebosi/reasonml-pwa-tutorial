@@ -1,12 +1,10 @@
 open MostEx;
 
-type action = [
-  PageModel.adaptedAction
-  | `ChangeUrl(ReasonReact.Router.url)
-  | `InitializePageState(PageModel.adaptedAction)
-];
-
-let changeUrl = a => `ChangeUrl(a);
+[@bs.deriving accessors]
+type action =
+  | PageAction(PageModel.adaptedAction)
+  | ChangeUrl(ReasonReact.Router.url)
+  | InitializePageState(PageModel.adaptedAction);
 
 module PageCmp =
   Belt.Id.MakeComparable({
@@ -39,8 +37,8 @@ let reducer = (action, state) => {
   let model = PageModelMap.getModel(id);
   let newState =
     switch (action) {
-    | `ChangeUrl(url) => {...state, url}
-    | `InitializePageState(action) => {
+    | ChangeUrl(url) => {...state, url}
+    | InitializePageState(action) => {
         ...state,
         pageStates:
           Belt.Map.updateU(state.pageStates, id, (. _) =>
@@ -49,7 +47,7 @@ let reducer = (action, state) => {
             )
           ),
       }
-    | _ => {
+    | PageAction(action) => {
         ...state,
         pageStates:
           Belt.Map.update(
@@ -67,9 +65,15 @@ let reducer = (action, state) => {
   );
 };
 
+let getPageAction = ((a, s)) =>
+  switch (a) {
+  | PageAction(a) => Some((a, s))
+  | _ => None
+  };
+
 let getStateIDFromChangeUrl = a =>
   switch (a) {
-  | `ChangeUrl(url) => Some(Router.getPageStateID(url))
+  | ChangeUrl(url) => Some(Router.getPageStateID(url))
   | _ => None
   };
 
@@ -81,12 +85,17 @@ let getActionIfPageStateIsEmpty = ((a, s)) =>
 
 let epic = stream =>
   PageModelMap.models
-  |. Belt.Array.mapU((. (module M): (module PageModel.T)) => M.epic(stream))
+  |. Belt.Array.mapU((. (module M): (module PageModel.T)) =>
+       stream
+       |> Most.keepMap(getPageAction)
+       |> M.epic
+       |> Most.map(a => PageAction(a))
+     )
   |. Belt.Array.concat([|
        stream
        |> Most.keepMap(getActionIfPageStateIsEmpty)
        |> Most.keepMap(getStateIDFromChangeUrl)
        |> Router.epic
-       |> Most.map(a => `InitializePageState(a)),
+       |> Most.map(a => InitializePageState(a)),
      |])
   |. Most.mergeArray;
