@@ -2,8 +2,8 @@ open MostEx;
 
 [@bs.deriving accessors]
 type action =
-  | PageAction(PageModel.adaptedAction)
-  | ChangeUrl(ReasonReact.Router.url);
+  | ChangeUrl(ReasonReact.Router.url)
+  | PageAction(PageModel.adaptedAction);
 
 module PageCmp =
   Belt.Id.MakeComparable({
@@ -34,14 +34,14 @@ let reducer = (action, state) => {
     | (PageAction(action), Some((module M))) => {
         ...state,
         pageStates:
-          Belt.Map.update(state.pageStates, id, state =>
-            (
-              switch (state) {
-              | Some(s) => M.reducer(action, s)
-              | None => M.reducer(action, M.initialState())
-              }
-            )
-            |. Some
+          Belt.Map.update(
+            state.pageStates,
+            id,
+            nullableState => {
+              let state =
+                Belt.Option.getWithDefault(nullableState, M.initialState());
+              Some(M.reducer(action, state));
+            },
           ),
       }
     | _ => state
