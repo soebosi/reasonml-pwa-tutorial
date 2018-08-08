@@ -13,7 +13,11 @@ let make = _children => {
     onUnmount(() => unwatchUrl(watcherID));
     send @@ changeUrl @@ dangerouslyGetInitialUrl();
     Most.(
-      Subject.asStream(actionSubject) |> epic |> observe(send) |> ignore
+      Subject.asStream(actionSubject)
+      |> epic
+      |> map(pageAction)
+      |> observe(send)
+      |> ignore
     );
   },
   render: ({send, state}) => {
@@ -23,10 +27,10 @@ let make = _children => {
       (
         switch (stateID, pageState) {
         | (TopPage, Some(TopPageState(state))) =>
-          let send = send << (a => PageAction(TopPageAction(a)));
+          let send = send << pageAction << PageModel.topPageAction;
           <TopPage send state />;
         | (ItemPage(_), Some(ItemPageState(state))) =>
-          let send = send << (a => PageAction(ItemPageAction(a)));
+          let send = send << pageAction << PageModel.itemPageAction;
           <ItemPage send state />;
         | (ErrorPage, _) => <ErrorPage />
         | (_, _) => s_("Now Loading")

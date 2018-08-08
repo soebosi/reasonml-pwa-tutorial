@@ -6,6 +6,7 @@ type id =
   | ItemPage(string)
   | ErrorPage;
 
+[@bs.deriving accessors]
 type adaptedAction =
   | TopPageAction(TopPageModel.action)
   | ItemPageAction(ItemPageModel.action);

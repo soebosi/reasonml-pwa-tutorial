@@ -84,5 +84,4 @@ let epic = stream =>
        |> Most.keepMap(getStateIDFromChangeUrl)
        |> Router.epic,
      |])
-  |> Most.mergeArray
-  |> Most.map(a => PageAction(a));
+  |> Most.mergeArray;
