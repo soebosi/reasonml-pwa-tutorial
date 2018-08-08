@@ -6,10 +6,9 @@ type id =
   | ItemPage(string)
   | ErrorPage;
 
-type adaptedAction = [
-  | `TopPageAction(TopPageModel.action)
-  | `ItemPageAction(ItemPageModel.action)
-];
+type adaptedAction =
+  | TopPageAction(TopPageModel.action)
+  | ItemPageAction(ItemPageModel.action);
 
 [@bs.deriving accessors]
 type adaptedState =
@@ -24,26 +23,26 @@ module type Model = {
   let epic: Most.stream((action, option(state))) => Most.stream(action);
   let getState: adaptedState => option(state);
   let adaptState: state => adaptedState;
-  let getAction: [> adaptedAction] => option(action);
-  let adaptAction: action => [> adaptedAction];
+  let getAction: adaptedAction => option(action);
+  let adaptAction: action => adaptedAction;
 };
 
 module type T = {
   let initialState: unit => adaptedState;
-  let reducer: ([> adaptedAction], adaptedState) => adaptedState;
+  let reducer: (adaptedAction, adaptedState) => adaptedState;
   let epic:
-    Most.stream(([> adaptedAction], option(adaptedState))) =>
-    Most.stream([> adaptedAction]);
+    Most.stream((adaptedAction, option(adaptedState))) =>
+    Most.stream(adaptedAction);
 };
 
 module Make = (M: Model) : T => {
   let initialState = () => M.(initialState() |. adaptState);
-  let reducer = (action: [> adaptedAction], state) =>
+  let reducer = (action: adaptedAction, state) =>
     switch (M.(getAction(action), getState(state))) {
     | (Some(a), Some(s)) => M.(reducer(a, s) |. adaptState)
     | _ => state
     };
-  let epic = stream : Most.stream([> adaptedAction]) =>
+  let epic = stream : Most.stream(adaptedAction) =>
     Most.(
       stream
       |> keepMap(((action, state)) =>

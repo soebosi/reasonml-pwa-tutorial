@@ -32,11 +32,11 @@ let epic = stream =>
       stream
       |> filter((==)(PageModel.TopPage))
       |> map(_ => TopPageModel.Initialize)
-      |> map(a => `TopPageAction(a)),
+      |> map(a => PageModel.TopPageAction(a)),
       stream
       |> keepMap(getItemPageID)
       |> flatMap(fromPromise << ItemModel.retrieve)
       |> map(ItemPageModel.initialize)
-      |> map(a => `ItemPageAction(a)),
+      |> map(a => PageModel.ItemPageAction(a)),
     |])
   );

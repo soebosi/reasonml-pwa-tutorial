@@ -23,10 +23,10 @@ let make = _children => {
       (
         switch (stateID, pageState) {
         | (TopPage, Some(TopPageState(state))) =>
-          let send = send << (a => PageAction(`TopPageAction(a)));
+          let send = send << (a => PageAction(TopPageAction(a)));
           <TopPage send state />;
         | (ItemPage(_), Some(ItemPageState(state))) =>
-          let send = send << (a => PageAction(`ItemPageAction(a)));
+          let send = send << (a => PageAction(ItemPageAction(a)));
           <ItemPage send state />;
         | (ErrorPage, _) => <ErrorPage />
         | (_, _) => s_("Now Loading")

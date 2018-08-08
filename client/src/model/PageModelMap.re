@@ -7,10 +7,10 @@ module AdaptedTopPageModel =
       | PageModel.TopPageState(a) => Some(a)
       | _ => None
       };
-    let adaptAction = a => `TopPageAction(a);
+    let adaptAction = a => PageModel.TopPageAction(a);
     let getAction = a =>
       switch (a) {
-      | `TopPageAction(a) => Some(a)
+      | PageModel.TopPageAction(a) => Some(a)
       | _ => None
       };
   });
@@ -23,10 +23,10 @@ module AdaptedItemPageModel =
       | PageModel.ItemPageState(a) => Some(a)
       | _ => None
       };
-    let adaptAction = a => `ItemPageAction(a);
+    let adaptAction = a => PageModel.ItemPageAction(a);
     let getAction = a =>
       switch (a) {
-      | `ItemPageAction(a) => Some(a)
+      | PageModel.ItemPageAction(a) => Some(a)
       | _ => None
       };
   });
