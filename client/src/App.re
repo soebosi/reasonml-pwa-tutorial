@@ -5,7 +5,7 @@ open AppModel;
 let component = ReasonReact.reducerComponent("App");
 let make = _children => {
   ...component,
-  initialState,
+  initialState: initialStore,
   reducer,
   didMount: ({send, onUnmount}) => {
     open ReasonReact.Router;

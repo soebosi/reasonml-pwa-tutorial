@@ -11,23 +11,22 @@ module PageCmp =
     let cmp = (a, b) => Pervasives.compare(a, b);
   });
 
-type state = {
+type store = {
   pageStates:
     Belt.Map.t(PageModel.id, PageModel.adaptedState, PageCmp.identity),
   url: ReasonReact.Router.url,
 };
 
-let initialState = () => {
+let initialStore = () => {
   pageStates: Belt.Map.make(~id=(module PageCmp)),
   url: ReasonReact.Router.dangerouslyGetInitialUrl(),
 };
 
-let actionSubject: Most.Subject.t((action, option(PageModel.adaptedState))) =
-  Most.Subject.make();
+let actionSubject: Most.Subject.t((action, store)) = Most.Subject.make();
 
 let reducer = (action, store) => {
-  let pageID = Router.getPageStateID(store.url);
-  let model = PageModelMap.getModel(pageID);
+  let pageStateID = Router.getPageStateID(store.url);
+  let model = PageModelMap.getModel(pageStateID);
   let newStore =
     switch (action, model) {
     | (ChangeUrl(url), _) => {...store, url}
@@ -39,23 +38,34 @@ let reducer = (action, store) => {
       };
       {
         ...store,
-        pageStates: Belt.Map.update(store.pageStates, pageID, updater),
+        pageStates: Belt.Map.update(store.pageStates, pageStateID, updater),
       };
     | (PageAction(_), None) => store
     };
-  let newPageID = Router.getPageStateID(newStore.url);
-  let pageState = Belt.Map.get(store.pageStates, newPageID);
   ReasonReact.UpdateWithSideEffects(
     newStore,
-    _self => Most.Subject.next((action, pageState), actionSubject) |. ignore,
+    _self => Most.Subject.next((action, newStore), actionSubject) |. ignore,
   );
 };
 
-let getPageAction = ((a, s)) =>
-  switch (a) {
-  | PageAction(a) => Some((a, s))
+let getCurrentPageState = store => {
+  let id = Router.getPageStateID(store.url);
+  Belt.Map.get(store.pageStates, id);
+};
+
+let getPageActionAndState = ((action, store)) =>
+  switch (action) {
+  | PageAction(a) => Some((a, getCurrentPageState(store)))
   | _ => None
   };
+
+let getActionIfPageStateIsEmpty = ((action, store)) => {
+  let state = getCurrentPageState(store);
+  switch (state) {
+  | None => Some(action)
+  | _ => None
+  };
+};
 
 let getStateIDFromChangeUrl = a =>
   switch (a) {
@@ -63,16 +73,10 @@ let getStateIDFromChangeUrl = a =>
   | _ => None
   };
 
-let getActionIfPageStateIsEmpty = ((a, s)) =>
-  switch (s) {
-  | None => Some(a)
-  | _ => None
-  };
-
 let epic = stream =>
   PageModelMap.models
   |. Belt.Array.mapU((. (module M): (module PageModel.T)) =>
-       stream |> Most.keepMap(getPageAction) |> M.epic
+       stream |> Most.keepMap(getPageActionAndState) |> M.epic
      )
   |. Belt.Array.concat([|
        stream
