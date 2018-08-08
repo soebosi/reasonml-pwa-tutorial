@@ -24,23 +24,33 @@ let initialStore = () => {
 
 let actionSubject: Most.Subject.t((action, store)) = Most.Subject.make();
 
-let reducer = (action, store) => {
+let currentPageReducer = (action, store) => {
+  let pageStates = store.pageStates;
   let pageStateID = Router.getPageStateID(store.url);
   let model = PageModelMap.getModel(pageStateID);
-  let newStore =
-    switch (action, model) {
-    | (ChangeUrl(url), _) => {...store, url}
-    | (PageAction(action), Some((module M))) =>
-      let updater = nullableState => {
+  switch (model) {
+  | Some((module M)) =>
+    Belt.Map.update(
+      pageStates,
+      pageStateID,
+      nullableState => {
         let state =
           Belt.Option.getWithDefault(nullableState, M.initialState());
         Some(M.reducer(action, state));
-      };
-      {
+      },
+    )
+  | None => pageStates
+  };
+};
+
+let reducer = (action, store) => {
+  let newStore =
+    switch (action) {
+    | ChangeUrl(url) => {...store, url}
+    | PageAction(action) => {
         ...store,
-        pageStates: Belt.Map.update(store.pageStates, pageStateID, updater),
-      };
-    | (PageAction(_), None) => store
+        pageStates: currentPageReducer(action, store),
+      }
     };
   ReasonReact.UpdateWithSideEffects(
     newStore,
