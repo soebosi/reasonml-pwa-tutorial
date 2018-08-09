@@ -77,8 +77,8 @@ let getActionIfPageStateIsEmpty = ((action, store)) => {
   };
 };
 
-let getStateIDFromChangeUrl = a =>
-  switch (a) {
+let getStateIDFromChangeUrl = action =>
+  switch (action) {
   | ChangeUrl(url) => Some(Router.getPageStateID(url))
   | _ => None
   };
