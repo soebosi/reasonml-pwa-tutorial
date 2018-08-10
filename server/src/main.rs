@@ -3,6 +3,7 @@
 
 extern crate rocket;
 
+extern crate diesel;
 #[macro_use]
 extern crate rocket_contrib;
 #[macro_use]
@@ -10,11 +11,11 @@ extern crate serde_derive;
 
 use std::io;
 use std::path::{Path, PathBuf};
-use std::sync::atomic::AtomicUsize;
 
 use rocket::response::NamedFile;
 
 mod v1;
+mod db;
 
 #[get("/")]
 fn index() -> io::Result<NamedFile> {
@@ -42,7 +43,7 @@ fn rocket() -> rocket::Rocket {
                 v1::item::delete_item,
             ],
         )
-        .manage(v1::item::SequenceNumber { id: AtomicUsize::new(0) })
+        .manage(db::init_pool())
 }
 
 fn main() {

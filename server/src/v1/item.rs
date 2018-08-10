@@ -1,22 +1,16 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
-
 use rocket_contrib::{Json, Value};
-use rocket::State;
+
+use super::super::db;
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     name: String,
 }
 
-pub struct SequenceNumber {
-    pub id: AtomicUsize,
-}
-
 #[post("/items", format = "application/json", data = "<message>")]
-pub fn create_item(message: Json<Message>, sequence_number: State<SequenceNumber>) -> Json<Value> {
-    sequence_number.id.fetch_add(1, Ordering::Relaxed);
+pub fn create_item(message: Json<Message>, _conn: db::Conn) -> Json<Value> {
     Json(json!({
-      "id": sequence_number.id.load(Ordering::Relaxed).to_string(),
+      "id":   "1",
       "name": message.name,
     }))
 }
