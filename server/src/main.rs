@@ -1,13 +1,15 @@
 #![feature(plugin, decl_macro)]
 #![plugin(rocket_codegen)]
 
+extern crate diesel;
+extern crate rand;
 extern crate rocket;
 
-extern crate diesel;
 #[macro_use]
 extern crate rocket_contrib;
 #[macro_use]
 extern crate serde_derive;
+
 
 use std::io;
 use std::path::{Path, PathBuf};

@@ -1,3 +1,5 @@
+use rand::prelude::random;
+
 use rocket_contrib::{Json, Value};
 
 use super::super::db;
@@ -9,8 +11,9 @@ pub struct Message {
 
 #[post("/items", format = "application/json", data = "<message>")]
 pub fn create_item(message: Json<Message>, _conn: db::Conn) -> Json<Value> {
+    let id: u32 = random();
     Json(json!({
-      "id":   "1",
+      "id":   id.to_string(),
       "name": message.name,
     }))
 }
