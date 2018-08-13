@@ -14,8 +14,7 @@ let make = _children => {
     Most.(
       Subject.asStream(actionSubject)
       |> epic
-      |> map(pageAction)
-      |> observe(send)
+      |> observe(send << pageAction)
       |> ignore
     );
   },
