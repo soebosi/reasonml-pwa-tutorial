@@ -8,10 +8,9 @@ let make = _children => {
   initialState: initialStore,
   reducer,
   didMount: ({send, onUnmount}) => {
-    open ReasonReact.Router;
-    let watcherID = watchUrl(send << changeUrl);
-    onUnmount(() => unwatchUrl(watcherID));
-    send @@ changeUrl @@ dangerouslyGetInitialUrl();
+    let watcherID = ReasonReact.Router.watchUrl(send << changeUrl);
+    onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
+    send @@ changeUrl @@ ReasonReact.Router.dangerouslyGetInitialUrl();
     Most.(
       Subject.asStream(actionSubject)
       |> epic
