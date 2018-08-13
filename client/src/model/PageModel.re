@@ -43,7 +43,7 @@ module Make = (M: Model) : T => {
     | (Some(a), Some(s)) => M.(reducer(a, s) |. adaptState)
     | _ => state
     };
-  let epic = stream : Most.stream(adaptedAction) =>
+  let epic = stream =>
     Most.(
       stream
       |> keepMap(((action, state)) =>
