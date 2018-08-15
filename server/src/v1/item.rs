@@ -18,6 +18,7 @@ mod schema {
 }
 
 use self::schema::items;
+use self::schema::items::dsl::items as all_items;
 
 #[table_name = "items"]
 #[derive(Serialize, Queryable, Insertable, Debug, Clone)]
@@ -48,11 +49,14 @@ pub fn create_item(message: Json<Message>, conn: db::Conn) -> Json<Value> {
 }
 
 #[get("/items/<id>")]
-pub fn retrieve_item(id: String) -> Json<Value> {
-    Json(json!({
-      "id":   id,
-      "name": "",
-    }))
+pub fn retrieve_item(id: String, conn: db::Conn) -> Json<Value> {
+    let item = all_items.find(id.clone()).get_result::<Item>(
+        &conn as &SqliteConnection,
+    );
+    match item {
+        Ok(i) => Json(json!({ "id":   id, "name": i.name })),
+        Err(e) => Json(json!({ "error": e.to_string() })),
+    }
 }
 
 #[delete("/items/<id>")]
