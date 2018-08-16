@@ -33,16 +33,19 @@ pub struct Message {
 }
 
 #[post("/items", format = "application/json", data = "<message>")]
-pub fn create_item(message: Json<Message>, conn: db::Conn) -> Json<Item> {
+pub fn create_item(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     let id: u32 = random();
     let item = Item {
         id: id.to_string(),
         name: message.name.clone(),
     };
-    let _ = diesel::insert_into(items::table).values(&item).execute(
+    let result = diesel::insert_into(items::table).values(&item).execute(
         &conn as &SqliteConnection,
     );
-    Json(item)
+    match result {
+        Ok(_) => Ok(Json(item)),
+        Err(e) => Err(Json(json!({ "error": e.to_string() }))),
+    }
 }
 
 #[get("/items/<id>")]
