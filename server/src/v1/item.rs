@@ -33,36 +33,34 @@ pub struct Message {
 }
 
 #[post("/items", format = "application/json", data = "<message>")]
-pub fn create_item(message: Json<Message>, conn: db::Conn) -> Json<Value> {
+pub fn create_item(message: Json<Message>, conn: db::Conn) -> Json<Item> {
     let id: u32 = random();
-    let i = Item {
+    let item = Item {
         id: id.to_string(),
         name: message.name.clone(),
     };
-    let _ = diesel::insert_into(items::table).values(&i).execute(
+    let _ = diesel::insert_into(items::table).values(&item).execute(
         &conn as &SqliteConnection,
     );
-    Json(json!({
-      "id":   id.to_string(),
-      "name": message.name,
-    }))
+    Json(item)
 }
 
 #[get("/items/<id>")]
-pub fn retrieve_item(id: String, conn: db::Conn) -> Json<Value> {
+pub fn retrieve_item(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     let item = all_items.find(id.clone()).get_result::<Item>(
         &conn as &SqliteConnection,
     );
     match item {
-        Ok(i) => Json(json!({ "id":   id, "name": i.name })),
-        Err(e) => Json(json!({ "error": e.to_string() })),
+        Ok(i) => Ok(Json(i)),
+        Err(e) => Err(Json(json!({ "error": e.to_string() }))),
     }
 }
 
 #[delete("/items/<id>")]
 pub fn delete_item(id: String, conn: db::Conn) -> Json<Value> {
-    let _ = diesel::delete(all_items.find(id.clone())).execute(&conn as &SqliteConnection);
-    Json(json!({
-      "id": id,
-    }))
+    let item = diesel::delete(all_items.find(id.clone())).execute(&conn as &SqliteConnection);
+    match item {
+        Ok(_) => Json(json!({})),
+        Err(e) => Json(json!({ "error": e.to_string() })),
+    }
 }
