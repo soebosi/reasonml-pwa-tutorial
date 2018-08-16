@@ -60,7 +60,8 @@ pub fn retrieve_item(id: String, conn: db::Conn) -> Json<Value> {
 }
 
 #[delete("/items/<id>")]
-pub fn delete_item(id: String) -> Json<Value> {
+pub fn delete_item(id: String, conn: db::Conn) -> Json<Value> {
+    let _ = diesel::delete(all_items.find(id.clone())).execute(&conn as &SqliteConnection);
     Json(json!({
       "id": id,
     }))
