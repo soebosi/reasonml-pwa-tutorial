@@ -33,7 +33,7 @@ pub struct Message {
 }
 
 #[post("/items", format = "application/json", data = "<message>")]
-pub fn create_item(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
+pub fn create(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     let id: u32 = random();
     let item = Item {
         id: id.to_string(),
@@ -49,7 +49,7 @@ pub fn create_item(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>,
 }
 
 #[get("/items/<id>")]
-pub fn retrieve_item(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
+pub fn retrieve(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     let item = all_items.find(id.clone()).get_result::<Item>(
         &conn as &SqliteConnection,
     );
@@ -60,7 +60,7 @@ pub fn retrieve_item(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Valu
 }
 
 #[delete("/items/<id>")]
-pub fn delete_item(id: String, conn: db::Conn) -> Json<Value> {
+pub fn delete(id: String, conn: db::Conn) -> Json<Value> {
     let item = diesel::delete(all_items.find(id.clone())).execute(&conn as &SqliteConnection);
     match item {
         Ok(_) => Json(json!({})),

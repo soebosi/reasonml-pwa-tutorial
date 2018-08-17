@@ -41,9 +41,9 @@ fn rocket() -> rocket::Rocket {
         .mount(
             "/api/v1/",
             routes![
-                v1::item::create_item,
-                v1::item::retrieve_item,
-                v1::item::delete_item,
+                v1::item::create,
+                v1::item::retrieve,
+                v1::item::delete,
             ],
         )
         .manage(db::init_pool())
