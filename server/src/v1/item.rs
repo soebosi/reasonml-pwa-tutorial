@@ -18,7 +18,7 @@ mod schema {
 }
 
 use self::schema::items;
-use self::schema::items::dsl::items as all_items;
+use self::schema::items::dsl::{items as all_items, name as item_name};
 
 #[table_name = "items"]
 #[derive(Serialize, Queryable, Insertable, Debug, Clone)]
@@ -56,6 +56,18 @@ pub fn retrieve(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     match item {
         Ok(i) => Ok(Json(i)),
         Err(e) => Err(Json(json!({ "error": e.to_string() }))),
+    }
+}
+
+#[put("/items/<id>", format = "application/json", data = "<message>")]
+pub fn update(id: String, message: Json<Message>, conn: db::Conn) -> Json<Value> {
+    let item = diesel::update(all_items.find(id.clone()));
+    let item = item.set(item_name.eq(message.name.clone())).execute(
+        &conn as &SqliteConnection,
+    );
+    match item {
+        Ok(_) => Json(json!({})),
+        Err(e) => Json(json!({ "error": e.to_string() })),
     }
 }
 
