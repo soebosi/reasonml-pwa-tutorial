@@ -1,6 +1,6 @@
 let baseStyle =
   Css.[
-    display(`block),
+    display(`inline),
     fontSize(`rem(1.0)),
     lineHeight(1.5),
     padding2(`rem(0.375), `rem(0.75)),

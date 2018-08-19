@@ -33,7 +33,6 @@ let make = (~send, ~state, _children) => {
       <div className=Styles.contents>
         <form onSubmit>
           <MyFormGroup>
-            <MyLabel htmlFor="nameInput"> (s_("Name:")) </MyLabel>
             <MyInputText
               id="nameInput"
               name="name"
@@ -42,7 +41,6 @@ let make = (~send, ~state, _children) => {
               onChange
             />
           </MyFormGroup>
-          <MyButton type_=Add> (s_("submit")) </MyButton>
         </form>
         <MyList>
           ...(
