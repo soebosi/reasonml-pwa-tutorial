@@ -4,6 +4,7 @@ open Util;
 type t = {
   id: string,
   name: string,
+  text: string,
 };
 
 [@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => t = "parse";
@@ -11,6 +12,7 @@ type t = {
 let create = name => {
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "name", Js.Json.string(name));
+  Js.Dict.set(payload, "text", Js.Json.string(""));
   let body = Fetch.BodyInit.make @@ dict2string(payload);
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   Fetch.fetchWithInit(
@@ -31,11 +33,11 @@ let retrieve = id => {
   |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
 };
 
-let update = item => {
-  let (id, name) = item |. (idGet, nameGet);
+let update = (id, name, text) => {
   let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "name", Js.Json.string(name));
+  Js.Dict.set(payload, "text", Js.Json.string(text));
   let body = Fetch.BodyInit.make @@ dict2string(payload);
   Fetch.fetchWithInit(
     {j|/api/v1/items/$id|j},

@@ -7,13 +7,16 @@ type state = {
   source: string,
 };
 
+let updateSourceDurationMS = 400;
+
 let initialState = () => {id: "", name: "", text: "", source: ""};
 
 [@bs.deriving accessors]
 type action =
   | Initialize(ItemModel.t)
   | ChangeText(string)
-  | ChangeSource(string);
+  | ChangeSource(string)
+  | UpdatedItem;
 
 let reducer = (action, state) =>
   switch (action) {
@@ -24,6 +27,7 @@ let reducer = (action, state) =>
     }
   | ChangeText(text) => {...state, text}
   | ChangeSource(source) => {...state, source}
+  | UpdatedItem => state
   };
 
 let getChangeText = ((a, _s)) =>
@@ -32,7 +36,23 @@ let getChangeText = ((a, _s)) =>
   | _ => None
   };
 
+let getStateWhenChangeSource = ((a, s)) =>
+  switch (a) {
+  | ChangeSource(_) => s
+  | _ => None
+  };
+
 let epic = stream =>
   Most.(
-    stream |> keepMap(getChangeText) |> debounce(200) |> map(changeSource)
+    mergeArray([|
+      stream
+      |> keepMap(getChangeText)
+      |> debounce(updateSourceDurationMS)
+      |> map(changeSource),
+      stream
+      |> keepMap(getStateWhenChangeSource)
+      |> map(s => ItemModel.update(s.id, s.name, s.text))
+      |> flatMap(fromPromise)
+      |> map(_ => UpdatedItem),
+    |])
   );

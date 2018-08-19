@@ -13,23 +13,26 @@ mod schema {
         items {
             id   -> Text,
             name -> Text,
+            text -> Text,
         }
     }
 }
 
 use self::schema::items;
-use self::schema::items::dsl::{items as all_items, name as item_name};
+use self::schema::items::dsl::{items as all_items, text as item_text};
 
 #[table_name = "items"]
 #[derive(Serialize, Queryable, Insertable, Debug, Clone)]
 pub struct Item {
     pub id: String,
     pub name: String,
+    pub text: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     name: String,
+    text: String,
 }
 
 #[post("/items", format = "application/json", data = "<message>")]
@@ -38,6 +41,7 @@ pub fn create(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>, Json
     let item = Item {
         id: id.to_string(),
         name: message.name.clone(),
+        text: message.text.clone(),
     };
     let result = diesel::insert_into(items::table).values(&item).execute(
         &conn as &SqliteConnection,
@@ -62,7 +66,7 @@ pub fn retrieve(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
 #[put("/items/<id>", format = "application/json", data = "<message>")]
 pub fn update(id: String, message: Json<Message>, conn: db::Conn) -> Json<Value> {
     let item = diesel::update(all_items.find(id.clone()));
-    let item = item.set(item_name.eq(message.name.clone())).execute(
+    let item = item.set(item_text.eq(message.text.clone())).execute(
         &conn as &SqliteConnection,
     );
     match item {
