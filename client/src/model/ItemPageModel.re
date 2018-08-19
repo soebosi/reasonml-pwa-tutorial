@@ -39,7 +39,7 @@ let getChangeText = ((a, _s)) =>
 
 let getStateWhenChangeSource = ((a, s)) =>
   switch (a) {
-  | ChangeSource(_) => s
+  | ChangeSource(_) => Some(s)
   | _ => None
   };
 

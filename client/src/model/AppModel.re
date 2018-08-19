@@ -64,8 +64,8 @@ let getCurrentPageState = store => {
 };
 
 let getPageActionAndState = ((action, store)) =>
-  switch (action) {
-  | PageAction(a) => Some((a, getCurrentPageState(store)))
+  switch (action, getCurrentPageState(store)) {
+  | (PageAction(a), Some(s)) => Some((a, s))
   | _ => None
   };
 
