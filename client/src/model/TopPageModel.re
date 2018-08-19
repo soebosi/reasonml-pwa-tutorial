@@ -20,7 +20,7 @@ let initialState = () => {
 
 [@bs.deriving accessors]
 type action =
-  | Initialize
+  | Initialize(array(ItemModel.t))
   | CreateItem(string)
   | CreatedItem(ItemModel.t)
   | DeleteItem(string)
@@ -29,7 +29,12 @@ type action =
 
 let reducer = (action, state) =>
   switch (action) {
-  | Initialize => state
+  | Initialize(items) =>
+    let itemMap =
+      items
+      |. Belt.Array.map(item => (item |. ItemModel.idGet, item))
+      |. Belt.Map.fromArray(~id=(module ItemCmp));
+    {...state, itemMap};
   | ChangeText(text) => {...state, text}
   | DeletedItem(id) =>
     let itemMap = Belt.Map.remove(state.itemMap, id);

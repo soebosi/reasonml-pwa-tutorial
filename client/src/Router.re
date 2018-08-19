@@ -31,7 +31,8 @@ let epic = stream =>
     mergeArray([|
       stream
       |> filter((==)(PageModel.TopPage))
-      |> map(_ => TopPageModel.Initialize)
+      |> flatMap(_ => fromPromise @@ ItemModel.retrieveAll())
+      |> map(TopPageModel.initialize)
       |> map(a => PageModel.TopPageAction(a)),
       stream
       |> keepMap(getItemPageID)

@@ -8,6 +8,8 @@ type t = {
 };
 
 [@bs.scope "JSON"] [@bs.val] external parseIntoItem : string => t = "parse";
+[@bs.scope "JSON"] [@bs.val]
+external parseIntoItems : string => array(t) = "parse";
 
 let create = name => {
   let payload = Js.Dict.empty();
@@ -21,6 +23,16 @@ let create = name => {
   )
   |> Js.Promise.then_(Fetch.Response.text)
   |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
+};
+
+let retrieveAll = () => {
+  let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
+  Fetch.fetchWithInit(
+    {j|/api/v1/items|j},
+    Fetch.RequestInit.make(~method_=Get, ~headers, ()),
+  )
+  |> Js.Promise.then_(Fetch.Response.text)
+  |> Js.Promise.then_(Js.Promise.resolve << parseIntoItems);
 };
 
 let retrieve = id => {

@@ -52,6 +52,15 @@ pub fn create(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>, Json
     }
 }
 
+#[get("/items")]
+pub fn retrieve_all(conn: db::Conn) -> Result<Json<Vec<Item>>, Json<Value>> {
+    let items = all_items.load::<Item>(&conn as &SqliteConnection);
+    match items {
+        Ok(i) => Ok(Json(i)),
+        Err(e) => Err(Json(json!({ "error": e.to_string() }))),
+    }
+}
+
 #[get("/items/<id>")]
 pub fn retrieve(id: String, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     let item = all_items.find(id.clone()).get_result::<Item>(

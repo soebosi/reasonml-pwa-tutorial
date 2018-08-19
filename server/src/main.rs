@@ -42,6 +42,7 @@ fn rocket() -> rocket::Rocket {
             "/api/v1/",
             routes![
                 v1::item::create,
+                v1::item::retrieve_all,
                 v1::item::retrieve,
                 v1::item::update,
                 v1::item::delete,
