@@ -4,7 +4,7 @@ open TopPageModel;
 
 module Styles = {
   open Css;
-  let contents = style([maxWidth(`percent(75.0))]);
+  let contents = style([maxWidth(`percent(75.0)), padding(`rem(0.75))]);
   let removeBtn = style([textAlign(`right)]);
 };
 
