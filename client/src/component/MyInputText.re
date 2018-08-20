@@ -6,8 +6,10 @@ let baseStyle =
     padding2(`rem(0.375), `rem(0.75)),
     border(px(1), `solid, rgb(180, 180, 180)),
     borderRadius(`rem(0.25)),
-    width(`percent(100.0)),
-    maxWidth(px(400)),
+    width(`percent(1.0)),
+    flexGrow(1),
+    flexShrink(1),
+    flexBasis(`auto),
     transition(~duration=150, ~timingFunction=`easeInOut, "box-shadow"),
     focus([MyBoxShadow.style]),
   ];

@@ -1,4 +1,4 @@
-let baseStyle = Css.[marginBottom(`rem(1.0))];
+let baseStyle = Css.[display(`flex), marginBottom(`rem(1.0))];
 
 let component = ReasonReact.statelessComponent("MyFormGroup");
 
