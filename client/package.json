@@ -7,7 +7,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bs-css": "^6.7.0",
+    "bs-css": "^7.1.0",
     "bs-fetch": "^0.3.0",
     "bs-most": "^1.0.0",
     "react": "^16.4.2",

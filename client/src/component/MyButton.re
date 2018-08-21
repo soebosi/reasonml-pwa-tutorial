@@ -1,7 +1,7 @@
 let baseStyle =
   Css.[
     fontSize(`rem(1.0)),
-    lineHeight(1.5),
+    lineHeight(`em(1.5)),
     padding2(`rem(0.375), `rem(0.75)),
     color(rgb(256, 256, 256)),
     border(px(1), `solid, rgb(180, 180, 180)),
