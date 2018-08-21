@@ -1,7 +1,7 @@
 let baseStyle =
   Css.[
     Css.float(`left),
-    width(`percent(40.0)),
+    width(`percent(45.0)),
     height(`px(500)),
     margin(`px(10)),
     borderRadius(`rem(0.25)),
