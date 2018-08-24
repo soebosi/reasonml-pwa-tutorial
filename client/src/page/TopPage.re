@@ -51,7 +51,10 @@ let make = (~send, ~state, _children) => {
                      item |. ItemModel.(idGet, nameGet, textGet);
                    let href = Router.getURL @@ ItemPage(id);
                    <MyListItem href key=id>
-                     <h2> (s_(name)) </h2>
+                     <h5
+                       className=(Css.style([Css.marginBottom(`rem(0.75))]))>
+                       (s_(name))
+                     </h5>
                      <div
                        className=(
                          Css.style(
