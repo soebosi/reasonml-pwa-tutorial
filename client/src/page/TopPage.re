@@ -67,12 +67,14 @@ let make = (~send, ~state, _children) => {
                        (s_(text))
                      </div>
                      (
-                       ReasonReact.cloneElement(
-                         <form
-                           onSubmit=onSubmitDelete
-                           className=Styles.removeBtn
-                         />,
-                         ~props={"data-id": id},
+                       ReactDOMRe.createElementVariadic(
+                         "form",
+                         ~props=
+                           ReactDOMRe.objToDOMProps({
+                             "data-id": id,
+                             "onSubmit": onSubmitDelete,
+                             "className": Styles.removeBtn,
+                           }),
                          [||],
                        )
                      )
