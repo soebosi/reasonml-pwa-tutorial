@@ -7,10 +7,6 @@ let make = (~htmlFor, ~style=?, children) => {
   render: _self => {
     let customStyle = Belt.Option.getWithDefault(style, []);
     let className = Css.style @@ Css.merge([customStyle, baseStyle]);
-    ReasonReact.createDomElement(
-      "label",
-      ~props={"type": "submit", "className": className, "htmlFor": htmlFor},
-      children,
-    );
+    <label type_="submit" className htmlFor> ...children </label>;
   },
 };

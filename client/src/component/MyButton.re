@@ -36,10 +36,6 @@ let make = (~style=?, ~type_, children) => {
     let customStyle = Belt.Option.getWithDefault(style, []);
     let className =
       Css.style @@ Css.merge([customStyle, baseColor(type_), baseStyle]);
-    ReasonReact.createDomElement(
-      "button",
-      ~props={"type": "submit", "className": className},
-      children,
-    );
+    <button type_="submit" className> ...children </button>;
   },
 };

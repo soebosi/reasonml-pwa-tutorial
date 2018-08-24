@@ -3,15 +3,14 @@ let component = ReasonReact.statelessComponent("Link");
 let make = (~href, children) => {
   ...component,
   render: _self =>
-    ReasonReact.createDomElement(
-      "a",
-      ~props={
-        "href": href,
-        "onClick": event => {
-          ReactEventRe.Mouse.preventDefault(event);
+    <a
+      href
+      onClick=(
+        event => {
+          ReactEvent.Mouse.preventDefault(event);
           ReasonReact.Router.push(href);
-        },
-      },
-      children,
-    ),
+        }
+      )>
+      ...children
+    </a>,
 };

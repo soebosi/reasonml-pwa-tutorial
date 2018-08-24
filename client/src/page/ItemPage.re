@@ -18,8 +18,7 @@ let component = ReasonReact.statelessComponent("ItemPage");
 
 let make = (~send, ~state, _children) => {
   let onChange = e => {
-    let dom = ReactEventRe.Form.target(e);
-    let text = ReactDOMRe.domElementToObj(dom)##value;
+    let text = ReactEvent.Form.target(e)##value;
     send @@ changeText(text);
   };
   {

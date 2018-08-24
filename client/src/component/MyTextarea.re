@@ -16,15 +16,6 @@ let make = (~onChange, ~value, ~style=?, children) => {
   render: _self => {
     let customStyle = Belt.Option.getWithDefault(style, []);
     let className = Css.style @@ Css.merge([customStyle, baseStyle]);
-    ReasonReact.createDomElement(
-      "textarea",
-      ~props={
-        "type": "submit",
-        "className": className,
-        "onChange": onChange,
-        "value": value,
-      },
-      children,
-    );
+    <textarea type_="submit" className onChange value> ...children </textarea>;
   },
 };

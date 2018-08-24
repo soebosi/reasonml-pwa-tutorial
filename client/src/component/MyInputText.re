@@ -20,7 +20,7 @@ let make = (~id, ~name, ~value, ~onChange, ~placeholder, _children) => {
   ...component,
   render: _self =>
     <input
-      _type="text"
+      type_="text"
       className=(Css.style(baseStyle))
       id
       name

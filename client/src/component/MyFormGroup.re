@@ -4,10 +4,5 @@ let component = ReasonReact.statelessComponent("MyFormGroup");
 
 let make = children => {
   ...component,
-  render: _self =>
-    ReasonReact.createDomElement(
-      "div",
-      ~props={"className": Css.style(baseStyle)},
-      children,
-    ),
+  render: _self => <div className=(Css.style(baseStyle))> ...children </div>,
 };

@@ -25,12 +25,6 @@ let make = (~href, children) => {
           ],
         )
       )>
-      (
-        ReasonReact.createDomElement(
-          "li",
-          ~props={"className": Css.style(baseStyle)},
-          children,
-        )
-      )
+      <li className=(Css.style(baseStyle))> ...children </li>
     </a>,
 };

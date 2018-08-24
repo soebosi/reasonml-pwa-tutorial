@@ -12,19 +12,17 @@ let component = ReasonReact.statelessComponent("TopPage");
 
 let make = (~send, ~state, _children) => {
   let onChange = e => {
-    let dom = ReactEventRe.Form.target(e);
-    let name = ReactDOMRe.domElementToObj(dom)##value;
+    let name = ReactEvent.Form.target(e)##value;
     send @@ changeText(name);
   };
   let onSubmit = e => {
-    ReactEventRe.Form.preventDefault(e);
+    ReactEvent.Form.preventDefault(e);
     send @@ createItem(state.text);
     send @@ changeText("");
   };
   let onSubmitDelete = e => {
-    ReactEventRe.Form.preventDefault(e);
-    let dom = ReactEventRe.Form.target(e);
-    let id = ReactDOMRe.domElementToObj(dom)##dataset##id;
+    ReactEvent.Form.preventDefault(e);
+    let id = ReactEvent.Form.target(e)##dataset##id;
     send @@ deleteItem(id);
   };
   {
