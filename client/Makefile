@@ -16,3 +16,6 @@ webpack:
 
 analyze:
 	NODE_ENV=production npx webpack --json | npx webpack-bundle-size-analyzer
+
+genrei:
+	find lib/bs/src/**/*.cmi | xargs npx bsc -bs-re-out
