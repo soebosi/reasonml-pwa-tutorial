@@ -13,13 +13,13 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-markdown": "^3.4.1",
-    "reason-react": "^0.4.2",
+    "reason-react": "^0.5.0",
     "webpack-bundle-size-analyzer": "^2.7.0"
   },
   "devDependencies": {
-    "bs-platform": "^4.0.3",
+    "bs-platform": "^4.0.5",
     "reason-cli": "^3.2.0-linux",
-    "webpack": "^4.16.5",
+    "webpack": "^4.17.1",
     "webpack-cli": "^2.1.5"
   }
 }
