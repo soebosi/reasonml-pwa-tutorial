@@ -47,10 +47,24 @@ let make = (~send, ~state, _children) => {
                Belt.Map.mapU(
                  state.itemMap,
                  (. item) => {
-                   let (id, name) = item |. ItemModel.(idGet, nameGet);
+                   let (id, name, text) =
+                     item |. ItemModel.(idGet, nameGet, textGet);
                    let href = Router.getURL @@ ItemPage(id);
-                   <MyListItem key=id>
-                     <Link href> (s_(name)) </Link>
+                   <MyListItem href key=id>
+                     <h2> (s_(name)) </h2>
+                     <div
+                       className=(
+                         Css.style(
+                           Css.[
+                             overflow(`hidden),
+                             textOverflow(`ellipsis),
+                             width(`px(100)),
+                             height(`px(50)),
+                           ],
+                         )
+                       )>
+                       (s_(text))
+                     </div>
                      (
                        ReasonReact.cloneElement(
                          <form
@@ -58,9 +72,7 @@ let make = (~send, ~state, _children) => {
                            className=Styles.removeBtn
                          />,
                          ~props={"data-id": id},
-                         [|
-                           <MyButton type_=Remove> (s_("remove")) </MyButton>,
-                         |],
+                         [||],
                        )
                      )
                    </MyListItem>;
