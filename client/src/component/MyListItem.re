@@ -14,7 +14,7 @@ let component = ReasonReact.statelessComponent("MyListItem");
 let make = (~href, children) => {
   ...component,
   render: _self =>
-    <a
+    <Link
       href
       className=(
         Css.style(
@@ -26,5 +26,5 @@ let make = (~href, children) => {
         )
       )>
       <li className=(Css.style(baseStyle))> ...children </li>
-    </a>,
+    </Link>,
 };

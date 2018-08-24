@@ -1,10 +1,11 @@
 let component = ReasonReact.statelessComponent("Link");
 
-let make = (~href, children) => {
+let make = (~href, ~className, children) => {
   ...component,
   render: _self =>
     <a
       href
+      className
       onClick=(
         event => {
           ReactEvent.Mouse.preventDefault(event);
