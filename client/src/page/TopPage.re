@@ -20,11 +20,6 @@ let make = (~send, ~state, _children) => {
     send @@ createItem(state.text);
     send @@ changeText("");
   };
-  let onSubmitDelete = e => {
-    ReactEvent.Form.preventDefault(e);
-    let id = ReactEvent.Form.target(e)##dataset##id;
-    send @@ deleteItem(id);
-  };
   {
     ...component,
     render: _self =>
@@ -66,18 +61,6 @@ let make = (~send, ~state, _children) => {
                        )>
                        (s_(text))
                      </div>
-                     (
-                       ReactDOMRe.createElementVariadic(
-                         "form",
-                         ~props=
-                           ReactDOMRe.objToDOMProps({
-                             "data-id": id,
-                             "onSubmit": onSubmitDelete,
-                             "className": Styles.removeBtn,
-                           }),
-                         [||],
-                       )
-                     )
                    </MyListItem>;
                  },
                )
