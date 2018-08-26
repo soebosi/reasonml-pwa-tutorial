@@ -23,8 +23,6 @@ type action =
   | Initialize(array(ItemModel.t))
   | CreateItem(string)
   | CreatedItem(ItemModel.t)
-  | DeleteItem(string)
-  | DeletedItem(string)
   | ChangeText(string);
 
 let reducer = (action, state) =>
@@ -36,9 +34,6 @@ let reducer = (action, state) =>
       |. Belt.Map.fromArray(~id=(module ItemCmp));
     {...state, itemMap};
   | ChangeText(text) => {...state, text}
-  | DeletedItem(id) =>
-    let itemMap = Belt.Map.remove(state.itemMap, id);
-    {...state, itemMap};
   | CreatedItem(item) =>
     let id = ItemModel.idGet(item);
     let itemMap = Belt.Map.set(state.itemMap, id, item);
@@ -52,12 +47,6 @@ let getAddItem = ((a, _s)) =>
   | _ => None
   };
 
-let getDeleteItem = ((a, _s)) =>
-  switch (a) {
-  | DeleteItem(id) => Some(id)
-  | _ => None
-  };
-
 let epic = stream =>
   Most.(
     mergeArray([|
@@ -65,9 +54,5 @@ let epic = stream =>
       |> keepMap(getAddItem)
       |> flatMap(fromPromise << ItemModel.create)
       |> map(createdItem),
-      stream
-      |> keepMap(getDeleteItem)
-      |> flatMap(fromPromise << ItemModel.delete)
-      |> map(deletedItem),
     |])
   );
