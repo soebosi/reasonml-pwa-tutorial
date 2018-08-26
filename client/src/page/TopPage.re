@@ -1,5 +1,3 @@
-open Util;
-
 open TopPageModel;
 
 module Styles = {
@@ -42,34 +40,7 @@ let make = (~send, ~state, _children) => {
                    let (id, name, text) =
                      item |. ItemModel.(idGet, nameGet, textGet);
                    let href = Router.getURL @@ ItemPage(id);
-                   <MyListItem href key=id>
-                     <h5
-                       className=(
-                         Css.style(
-                           Css.[
-                             marginBottom(`rem(0.75)),
-                             overflow(`hidden),
-                             textOverflow(`ellipsis),
-                             width(`px(100)),
-                           ],
-                         )
-                       )>
-                       (s_(name))
-                     </h5>
-                     <div
-                       className=(
-                         Css.style(
-                           Css.[
-                             overflow(`hidden),
-                             textOverflow(`ellipsis),
-                             width(`px(100)),
-                             height(`px(50)),
-                           ],
-                         )
-                       )>
-                       (s_(text))
-                     </div>
-                   </MyListItem>;
+                   <MyListItem href key=id> <Card name text /> </MyListItem>;
                  },
                )
                |. Belt.Map.valuesToArray
