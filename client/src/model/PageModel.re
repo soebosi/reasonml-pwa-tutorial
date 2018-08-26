@@ -43,15 +43,13 @@ module Make = (M: Model) : T => {
     | _ => state
     };
   let epic = stream =>
-    Most.(
-      stream
-      |> keepMap(((action, state)) =>
-           switch (M.(getAction(action), getState(state))) {
-           | (Some(a), Some(s)) => Some((a, s))
-           | _ => None
-           }
-         )
-      |> M.epic
-      |> map(M.adaptAction)
-    );
+    stream
+    |> Most.keepMap(((action, state)) =>
+         switch (M.(getAction(action), getState(state))) {
+         | (Some(a), Some(s)) => Some((a, s))
+         | _ => None
+         }
+       )
+    |> M.epic
+    |> Most.map(M.adaptAction);
 };

@@ -11,12 +11,10 @@ let make = _children => {
     let watcherID = ReasonReact.Router.watchUrl(send << changeUrl);
     onUnmount(() => ReasonReact.Router.unwatchUrl(watcherID));
     send @@ changeUrl @@ ReasonReact.Router.dangerouslyGetInitialUrl();
-    Most.(
-      Subject.asStream(actionSubject)
-      |> epic
-      |> observe(send << pageAction)
-      |> ignore
-    );
+    Most.Subject.asStream(actionSubject)
+    |> epic
+    |> Most.observe(send << pageAction)
+    |> ignore;
   },
   render: ({send, state}) => {
     let stateID = Router.getPageStateID(state.url);
