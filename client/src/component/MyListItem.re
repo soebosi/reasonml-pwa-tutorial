@@ -16,15 +16,13 @@ let make = (~href, children) => {
   render: _self =>
     <Link
       href
-      className=(
-        Css.style(
-          Css.[
-            textDecoration(`none),
-            margin(`rem(0.50)),
-            color(rgb(0x36, 0x3C, 0x49)),
-          ],
-        )
-      )>
+      className=Css.(
+                  style([
+                    textDecoration(`none),
+                    margin(`rem(0.50)),
+                    color(rgb(0x36, 0x3C, 0x49)),
+                  ])
+                )>
       <li className=(Css.style(baseStyle))> ...children </li>
     </Link>,
 };
