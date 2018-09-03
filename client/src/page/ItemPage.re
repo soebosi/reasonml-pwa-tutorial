@@ -27,7 +27,20 @@ let make = (~send, ~state, _children) => {
       <div className=Styles.contents>
         <h2> (s_ @@ state.name) </h2>
         <MyTextarea onChange value=state.text />
-        <div className=Styles.textarea> <Markdown source=state.source /> </div>
+        <div className=Styles.textarea>
+          <Markdown
+            source=state.source
+            renderers=(
+              Markdown.renderers(~code=args =>
+                switch (Markdown.(languageFromJs @@ languageGet(args))) {
+                | Some(`Mermaid) =>
+                  <Mermaid value=(Markdown.valueGet(args)) />
+                | _ => <div> (s_("no support")) </div>
+                }
+              )
+            )
+          />
+        </div>
       </div>,
   };
 };
