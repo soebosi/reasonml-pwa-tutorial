@@ -25,7 +25,7 @@ let make = (~send, ~state, _children) => {
     ...component,
     render: _self =>
       <div className=Styles.contents>
-        <h2> (s_ @@ state.name) </h2>
+        <h2> (s_(state.name)) </h2>
         <MyTextarea onChange value=state.text />
         <div className=Styles.textarea>
           <Markdown

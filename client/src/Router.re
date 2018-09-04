@@ -32,12 +32,10 @@ let epic = stream =>
       stream
       |> filter((==)(PageModel.TopPage))
       |> flatMap(_ => fromPromise @@ ItemModel.retrieveAll())
-      |> map(TopPageModel.initialize)
-      |> map(a => PageModel.TopPageAction(a)),
+      |> map(PageModel.topPageAction << TopPageModel.initialize),
       stream
       |> keepMap(getItemPageID)
       |> flatMap(fromPromise << ItemModel.retrieve)
-      |> map(ItemPageModel.initialize)
-      |> map(a => PageModel.ItemPageAction(a)),
+      |> map(PageModel.itemPageAction << ItemPageModel.initialize),
     |])
   );
