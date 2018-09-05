@@ -29,9 +29,7 @@ let make = (~value, _children) => {
     },
   reducer: (_action: action, state: state) => ReasonReact.Update(state),
   render: self =>
-    <>
-      <div ref=(theRef => self.state.divRef := Js.Nullable.toOption(theRef))>
-        (s_(value))
-      </div>
-    </>,
+    <div ref=(theRef => self.state.divRef := Js.Nullable.toOption(theRef))>
+      (s_(value))
+    </div>,
 };
