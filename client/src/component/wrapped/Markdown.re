@@ -1,3 +1,5 @@
+open Util;
+
 [@bs.module]
 external reactMarkdown : ReasonReact.reactClass = "react-markdown";
 
@@ -17,12 +19,18 @@ type renderers = {
   code: codeArguments => ReasonReact.reactElement,
 };
 
-let make = (~source, ~renderers, children) =>
+let make = (~source, children) =>
   ReasonReact.wrapJsForReason(
     ~reactClass=reactMarkdown,
     ~props={
       "source": source,
-      "renderers": renderers,
+      "renderers": renderers(~code=args =>
+                switch (languageFromJs @@ languageGet(args)) {
+                | Some(`Mermaid) =>
+                  <Mermaid value=valueGet(args) />
+                | _ => <div> (s_("no support")) </div>
+                }
+            ),
     },
     children,
   );
