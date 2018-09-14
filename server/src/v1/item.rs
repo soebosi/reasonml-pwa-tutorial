@@ -78,17 +78,19 @@ pub fn update(id: String, message: Json<Message>, conn: db::Conn) -> Json<Value>
     let item = item.set(item_text.eq(message.text.clone())).execute(
         &conn as &SqliteConnection,
     );
-    match item {
-        Ok(_) => Json(json!({})),
-        Err(e) => Json(json!({ "error": e.to_string() })),
-    }
+    let v = match item {
+        Ok(_) => json!({}),
+        Err(e) => json!({ "error": e.to_string() }),
+    };
+    Json(v)
 }
 
 #[delete("/items/<id>")]
 pub fn delete(id: String, conn: db::Conn) -> Json<Value> {
     let item = diesel::delete(all_items.find(id.clone())).execute(&conn as &SqliteConnection);
-    match item {
-        Ok(_) => Json(json!({})),
-        Err(e) => Json(json!({ "error": e.to_string() })),
-    }
+    let v = match item {
+        Ok(_) => json!({}),
+        Err(e) => json!({ "error": e.to_string() }),
+    };
+    Json(v)
 }
