@@ -39,7 +39,7 @@ pub struct Message {
 pub fn create(message: Json<Message>, conn: db::Conn) -> Result<Json<Item>, Json<Value>> {
     let id: u32 = random();
     let item = Item {
-        id: id.to_string(),
+        id: format!("{:015}", id),
         name: message.name.clone(),
         text: message.text.clone(),
     };
