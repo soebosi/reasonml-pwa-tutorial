@@ -24,25 +24,25 @@ let make = (~send, ~state, _children) => {
         <form onSubmit>
           <MyFormGroup>
             <MyInputText
-              id="nameInput"
-              name="name"
+              id="filterInput"
+              name="filter"
               value=state.text
-              placeholder="name"
+              placeholder="filter"
               onChange
             />
           </MyFormGroup>
         </form>
         <MyList>
           ...(
-               Belt.Map.mapU(
-                 state.itemMap,
-                 (. item) => {
-                   let (id, name, text) =
-                     item |. ItemModel.(idGet, nameGet, textGet);
-                   let href = Router.getURL @@ ItemPage(id);
-                   <MyListItem href key=id> <Card name text /> </MyListItem>;
-                 },
+               Belt.Map.keepU(state.itemMap, (. _, item) =>
+                 Js.String.includes(state.text, item |. ItemModel.nameGet)
                )
+               |. Belt.Map.mapU((. item) => {
+                    let (id, name, text) =
+                      item |. ItemModel.(idGet, nameGet, textGet);
+                    let href = Router.getURL @@ ItemPage(id);
+                    <MyListItem href key=id> <Card name text /> </MyListItem>;
+                  })
                |. Belt.Map.valuesToArray
              )
         </MyList>
