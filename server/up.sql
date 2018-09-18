@@ -1,5 +1,5 @@
 CREATE TABLE items (
-    id   INTEGER PRIMARY KEY,
+    id   TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     text TEXT NOT NULL
 );
