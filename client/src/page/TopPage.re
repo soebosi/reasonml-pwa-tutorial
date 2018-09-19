@@ -33,17 +33,19 @@ let make = (~send, ~state, _children) => {
           </MyFormGroup>
         </form>
         <MyList>
-          ...(
-               Belt.Map.keepU(state.itemMap, (. _, item) =>
-                 Js.String.includes(state.text, item |. ItemModel.nameGet)
-               )
-               |. Belt.Map.mapU((. item) => {
+          ...Belt.Map.(
+               state.itemMap
+               |. keepU((. _, item) => {
+                    let name = item |. ItemModel.nameGet;
+                    Js.String.includes(state.text, name);
+                  })
+               |. mapU((. item) => {
                     let (id, name, text) =
                       item |. ItemModel.(idGet, nameGet, textGet);
                     let href = Router.getURL @@ ItemPage(id);
                     <MyListItem href key=id> <Card name text /> </MyListItem>;
                   })
-               |. Belt.Map.valuesToArray
+               |. valuesToArray
              )
         </MyList>
       </div>,
