@@ -7,21 +7,21 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bs-css": "^7.1.0",
-    "bs-fetch": "^0.3.0",
+    "bs-css": "^7.3.0",
+    "bs-fetch": "^0.3.1",
     "bs-most": "^1.0.0",
     "mermaid": "^8.0.0-rc.8",
-    "react": "^16.5.0",
-    "react-dom": "^16.5.0",
-    "react-markdown": "^3.4.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-markdown": "^3.6.0",
     "reason-react": "^0.5.0",
     "remark": "^9.0.0",
     "webpack-bundle-size-analyzer": "^2.7.0"
   },
   "devDependencies": {
-    "bs-platform": "^4.0.5",
+    "bs-platform": "^4.0.7",
     "reason-cli": "^3.2.0-linux",
-    "webpack": "^4.17.1",
+    "webpack": "^4.23.1",
     "webpack-cli": "^2.1.5"
   }
 }
