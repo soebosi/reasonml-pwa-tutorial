@@ -3,14 +3,9 @@ open Util;
 [@bs.module]
 external reactMarkdown : ReasonReact.reactClass = "react-markdown";
 
-let memo: ReasonReact.reactClass => ReasonReact.reactClass = [%raw {|
-  function(component) {
-    return React.memo((props) => {
-      console.log(props);
-      return component(props);
-    });
-  }
-|}];
+[@bs.scope "React"]
+[@bs.val]
+external memo : ReasonReact.reactClass => ReasonReact.reactClass = "memo";
 
 [@bs.deriving jsConverter]
 type language = [
