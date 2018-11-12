@@ -15,14 +15,10 @@ let create = name => {
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "name", Js.Json.string(name));
   Js.Dict.set(payload, "text", Js.Json.string(""));
-  let body = Fetch.BodyInit.make @@ dict2string(payload);
-  let headers = Fetch.HeadersInit.make({"Content-Type": "application/json"});
-  Fetch.fetchWithInit(
-    "/api/v1/items/",
-    Fetch.RequestInit.make(~method_=Post, ~body, ~headers, ()),
-  )
-  |> Js.Promise.then_(Fetch.Response.text)
-  |> Js.Promise.then_(Js.Promise.resolve << parseIntoItem);
+  Dom.Storage.setItem("id", dict2string(payload), Dom.Storage.localStorage);
+  Js.Promise.make((~resolve, ~reject as _) =>
+    resolve(. t(~id="id", ~name="name", ~text="text"))
+  );
 };
 
 let retrieveAll = () => {
