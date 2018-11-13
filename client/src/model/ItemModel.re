@@ -15,9 +15,10 @@ let create = name => {
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "name", Js.Json.string(name));
   Js.Dict.set(payload, "text", Js.Json.string(""));
-  Dom.Storage.setItem("id", dict2string(payload), Dom.Storage.localStorage);
+  let id = Format.sprintf("%016d", Js.Math.random_int(0, Js_int.max));
+  Dom.Storage.setItem(id, dict2string(payload), Dom.Storage.localStorage);
   Js.Promise.make((~resolve, ~reject as _) =>
-    resolve(. t(~id="id", ~name="name", ~text="text"))
+    resolve(. t(~id, ~name, ~text=""))
   );
 };
 
